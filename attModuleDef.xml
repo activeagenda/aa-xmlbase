@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Module 
+	name="Attachments" moduleID="att"
+	allowAddRecord="no" isGlobal="yes"
+	singularRecordName="Attachment" pluralRecordName="Attachments">
+	
+	<ModuleFields>
+		<TableField 
+			name="AttachmentID" type="int" dbFlags="unsigned auto_increment not null" 
+			phrase="Record ID|Numerical ID to identify and track attachments uploaded within this application"/>
+		<StaticField 
+			name="ruler1" type="text" content="" phrase=" "/>
+		<TableField 
+			name="RelatedModuleID" type="varchar(5)" validate="noValidation" 
+			phrase="Related Module ID|A character ID assigned to each module of the application"/>
+		<ForeignField 
+			name="RelatedModule" foreignTable="mod" foreignKey="ModuleID" foreignField="Name" key="RelatedModuleID" joinType="left" 
+			phrase="Related Module|The name or title of the module which is associated with the record"/>
+		
+        <!-- Module Level Related Module section -->
+        <CalculatedField 
+			name="IsModuleLevel" type="boolean" calcFunction="is_equal" params="RelatedModuleID +mod" 
+			phrase="Module Level|Displays 1 if the action is a module level action"/>
+        <CalculatedField 
+			name="DisplayRelatedRecordID" type="varchar(5)" calcFunction="if" params="IsModuleLevel +list RelatedRecordID" 
+			phrase="Related Record"/>
+
+        <ForeignField 
+			name="ModuleLevelRelatedModuleID" foreignTable="mod" foreignKey="RecordID" foreignField="ModuleID" key="RelatedRecordID" joinType="left" 
+			phrase="Module Level Related Module|The name or title of the module which is associated with the record"/>
+        <CalculatedField 
+			name="DisplayRelatedModuleID" type="varchar(5)" calcFunction="if" params="IsModuleLevel ModuleLevelRelatedModuleID RelatedModuleID" 
+			phrase="Related Module"/>
+
+        <ForeignField 
+			name="ModuleLevelRelatedModule" foreignTable="mod" foreignKey="RecordID" foreignField="Name" key="RelatedRecordID" joinType="left" 
+			phrase="Module Level Related Module|The name or title of the module which is associated with the record"/>
+        <CalculatedField 
+			name="DisplayRelatedModule" type="text" calcFunction="if" params="IsModuleLevel ModuleLevelRelatedModule RelatedModule" 
+			phrase="Related Module|The name or title of the module which is associated with the record"/>
+
+        <CombinedField 
+			name="ModuleLevelRelatedModuleRecord" 
+			phrase="Module Level Related Record|A combined field used to display the related module name and that is is a module level item">
+			<CombinedFieldRef name="ModuleLevelRelatedModule"/>_(general)
+		</CombinedField>
+        <CalculatedField 
+			name="DisplayRelatedModuleRecord" type="text" calcFunction="if" params="IsModuleLevel ModuleLevelRelatedModuleRecord RelatedModuleRecord" 
+			phrase="Related Record|A combined field used to display the related module name and what record, if any, it is related to"/>
+
+        <CombinedField 
+			name="ModuleLevelRelatedRecordLink" 
+			phrase="Related Record Link|An internal link to the related record.">
+			internal:global.php?mdl=<CombinedFieldRef name="DisplayRelatedModuleID"/>&amp;rid=list&amp;gmd=att
+		</CombinedField>
+        <CalculatedField 
+			name="DisplayRelatedRecordLink" type="text" calcFunction="if" params="IsModuleLevel ModuleLevelRelatedRecordLink RelatedRecordLink" 
+			phrase="Related Record Link|An internal link to the related record."/>
+        <!-- End Module Level Related Module section -->
+		
+		<TableField 
+			name="RelatedRecordID" type="int" validate="noValidation" 
+			phrase="Related Record ID|The unique ID of the related record within the related module"/>
+		<DynamicForeignField 
+			name="RelatedRecordDescription" key="RelatedRecordID" moduleIDField="RelatedModuleID" foreignField="RecordDescription" joinType="left" 
+			phrase="Record Description|A description of the related record based on a combination of field values assigned from within the related module"/>
+		<TableField 
+			name="FileName" type="varchar(255)"
+			phrase="* File|The file to be attached"/>
+		<CombinedField 
+			name="FileName1" 
+			phrase="File|The file to be attached">
+			<CombinedFieldRef name="FileName"/>
+		</CombinedField>
+		<TableField 
+			name="Description" type="varchar(128)"
+			phrase="Description|A short description of the file contents"/>
+		<TableField 
+			name="FileSize" type="float" 
+			phrase="File Size|The size of the uploaded file"/>
+		<CalculatedField 
+			name="FileSizeDisplay" type="varchar(50)" calcFunction="filesize" params="FileSize" 
+			phrase="File Size|The size of the uploaded file"/>
+        <LinkField 
+			name="RelatedRecordLink" moduleIDField="RelatedModuleID" recordIDField="RelatedRecordID" 
+			phrase="Related Record Link|An internal link to the related record."/>		
+		<CombinedField 
+			name="RelatedModuleRecord" 
+			phrase="Related Record|A combined field used to display the related module name and record ID">
+			<CombinedFieldRef name="RelatedModule"/>_(ID:_<CombinedFieldRef name="RelatedRecordID"/>)
+		</CombinedField>
+		<CombinedField 
+			name="DownloadLink" 
+			phrase="Download Link|A link to the download utilty">
+			external:download.php?mdl=<CombinedFieldRef name="RelatedModuleID"/>&amp;rid=<CombinedFieldRef name="RelatedRecordID"/>&amp;fid=<CombinedFieldRef name="AttachmentID"/>
+		</CombinedField>
+		
+		<StaticField 
+			name="ruler2" type="text" content="" phrase=" "/>		
+		<RecordMetaField  
+			name="_ThisCreatedByPersonID"  returnType="userID" lookupType="created" 
+			phrase="Created By|Record created by person"/>
+		<ForeignField 
+			name="_ThisCreatedByPerson" foreignTable="ppl" foreignKey="PersonID" foreignField="DisplayName" key="_ThisCreatedByPersonID" 
+			phrase="Created By|Record created by person"/>
+		<ForeignField 
+			name="_ThisCreatedByOrganizationID" foreignTable="ppl" foreignKey="PersonID" foreignField="OrganizationID" key="_ThisCreatedByPersonID" 
+			phrase="Organization|Name of organization associated with the creating individual"/>
+		<ForeignField 
+			name="_ThisCreatedByOrganization" foreignTable="org" foreignKey="OrganizationID" foreignField="Name" key="_ThisCreatedByOrganizationID" 
+			phrase="Organization|Name of organization associated with the creating individual"/>		
+		<RecordMetaField 
+			name="_ThisCreationDate"  returnType="date" lookupType="created"  
+			phrase="Created|Record created on date"/>
+		<CombinedField 
+			name="_ThisCreated" 
+			phrase="Created|Created on date by person from organization">
+			<CombinedFieldRef name="_ThisCreationDate"/>_<CombinedFieldRef name="_ThisCreatedByPerson"/>_/_<CombinedFieldRef name="_ThisCreatedByOrganization"/>
+		</CombinedField>
+		<RecordMetaField  
+			name="_ThisLastChangedByPersonID"  returnType="userID" lookupType="modified" 
+			phrase="Last Changed by|Last changed by person"/>
+		<ForeignField 
+			name="_ThisLastChangedByPerson" foreignTable="ppl" foreignKey="PersonID" foreignField="DisplayName" key="_ThisLastChangedByPersonID" 
+			phrase="Last Changed By|Last changed by person"/>
+		<ForeignField 
+			name="_ThisLastChangedByOrganizationID" foreignTable="ppl" foreignKey="PersonID" foreignField="OrganizationID" key="_ThisLastChangedByPersonID" 
+			phrase="Organization|Name of organization associated with the last changing individual"/>
+		<ForeignField 
+			name="_ThisLastChangedByOrganization" foreignTable="org" foreignKey="OrganizationID" foreignField="Name" key="_ThisLastChangedByOrganizationID" 
+			phrase="Organization|Name of organization associated with the last changing individual"/>		
+		<RecordMetaField 
+			name="_ThisLastChangedDate"  returnType="date" lookupType="modified"  
+			phrase="Last Modified|Record modified last on date"/>
+		<CombinedField 
+			name="_ThisLastChanged" 
+			phrase="Last Modified|Last modified on date by person from organization">
+			<CombinedFieldRef name="_ThisLastChangedDate"/>_<CombinedFieldRef name="_ThisLastChangedByPerson"/>_/_<CombinedFieldRef name="_ThisLastChangedByOrganization"/>
+		</CombinedField>
+		<TableField 
+			name="_OwnedBy" type="int" dbFlags="unsigned default 0" validate="eval: userID_is( $_OwnedBy )" defaultValue="userID" orgListOptions="intpar" 
+			phrase="Attachment owner|Displays attachment owners name"/>
+		<ForeignField 
+			name="_Owned" foreignTable="ppl" foreignKey="PersonID" foreignField="DisplayName" key="_OwnedBy" 
+			phrase="Attachment owner|Displays attachment owners name"/>
+		<LinkField 
+			name="_OwnedLink" foreignModuleID="ppl" recordIDField="_OwnedBy" 
+			phrase="Attachment owner|Displays attachment owners name"/>
+		<ForeignField 
+			name="_OrganizationID" foreignTable="ppl" foreignKey="PersonID" foreignField="OrganizationID" key="_OwnedBy" 
+			phrase="Organization|Name of organization associated with the owner"/>
+		<ForeignField 
+			name="_Organization" foreignTable="org" foreignKey="OrganizationID" foreignField="Name" key="_OrganizationID" 
+			phrase="Organization|Name of organization associated with the owner"/>
+		<CombinedField name="_OwnedOrganization"  
+			phrase="Attachment owner|Displays attachment owners name and his organization name">
+			<CombinedFieldRef name="_Owned"/>_/_<CombinedFieldRef name="_Organization"/>
+		</CombinedField>  		
+		
+		<CombinedField 
+			name="RecordLabel" 
+			phrase="Record Label|The short, concise, label of the record for display purposes">
+			<CombinedFieldRef name="FileName"/>;_<CombinedFieldRef name="RelatedRecordID"/>;_<CombinedFieldRef name="RelatedModule"/>
+		</CombinedField>
+		<CombinedField 
+			name="Attachment" phrase="Attachment|A summary field to describe this attachment">
+            <CombinedFieldRef name="FileName"/>_(<CombinedFieldRef name="Description"/>);_<CombinedFieldRef name="RelatedModule"/>;_[<CombinedFieldRef name="RelatedRecordDescription"/>]
+		</CombinedField>
+		<StaticField 
+			name="ruler3" type="text" content="" phrase=" "/>
+	</ModuleFields>
+	<ModuleInfo>
+		<PrimaryKey>
+			<FieldRef name="AttachmentID"/>
+		</PrimaryKey>
+		<Index name="RelatedModuleIDRecordID">
+			<FieldRef name="RelatedModuleID"/>
+			<FieldRef name="RelatedRecordID"/>
+			<FieldRef name="_Deleted"/>
+		</Index>
+		<OwnerField name="_OrganizationID"/>
+		<RecordDescriptionField name="Attachment"/>
+		<RecordLabelField name="RecordLabel"/>
+	</ModuleInfo>
+	<SubModules>
+		<!-- no submodules -->
+	</SubModules>
+	<Screens>
+		<ListScreen name="List">
+			<ListField name="AttachmentID" phrase="ID"/>
+            <ListField name="DisplayRelatedModule" align="center"/>
+            <ListField name="RelatedRecordDescription" link="DisplayRelatedRecordLink"/>
+            <InvisibleField name="DisplayRelatedRecordLink"/>
+			<InvisibleField name="DownloadLink"/>
+			<ListField name="FileName" phrase="File Name" link="DownloadLink"  icon="attachment.png"/>	
+			<ListField name="FileSizeDisplay" phrase="File Size"/>
+			<ListField name="_OwnedOrganization"/>
+		</ListScreen>
+		<SearchScreen name="Search">
+			<EditField name="AttachmentID" FromTo="no" size="50" maxLength="250"/>		
+            <ComboField name="DisplayRelatedModuleID" listField="RelatedModule" findMode="text"/>
+			<InvisibleField name="RelatedRecordID"/>
+			<EditField name="FileName1"/>
+			<EditField name="Description"/>
+			<PersonComboField name="_OwnedBy" findMode="text" suppressItemAdd="yes"/>
+		</SearchScreen>
+		<ViewScreen name="View">
+			<ViewField name="AttachmentID"/>
+			<ViewField name="ruler1"/>
+            <ViewField name="DisplayRelatedModuleRecord" link="DisplayRelatedRecordLink"/>
+			<ViewField name="RelatedRecordDescription"/>
+			<ViewField name="ruler2"/>
+			<InvisibleField name="DownloadLink"/>			
+			<ViewField name="FileName1" link="DownloadLink"  icon="attachment.png"/>
+			<ViewField name="Description" />
+			<ViewField name="FileSizeDisplay"/>	
+			<ViewField name="ruler3"/>			
+			<ViewField name="_OwnedOrganization" link="_OwnedLink"/>
+			<ViewField name="_ThisCreated"/>
+			<ViewField name="_ThisLastChanged"/>			
+		</ViewScreen>
+		<EditScreen
+			name="Form"
+			phrase="Form|Edit summary information about an attachment associated with a related record">
+			<CustomCode location="init">
+				<![CDATA[ $form_enctype = 'enctype="multipart/form-data"'; ]]>
+			</CustomCode>
+			<CustomCode location="sql_update">
+				<![CDATA[ 
+                    include(INCLUDE_PATH.'/uploads_include.php');
+                    CheckFileUploads('FileName'); ]]>
+			</CustomCode>
+			<CustomCode location="sql_insert">
+				<![CDATA[ CheckFileUploads('FileName'); ]]>
+			</CustomCode>
+			<CustomCode location="sql_done">
+				<![CDATA[ HandleFileUploads('FileName', $recordID); ]]>
+			</CustomCode>
+			<ViewField name="AttachmentID"/>
+            <ViewField name="DisplayRelatedModuleRecord" link="DisplayRelatedRecordLink"/>
+			<ViewField name="RelatedRecordDescription"/>
+			<ViewField name="ruler1"/>
+			<ViewField name="FileName1"/>			
+			<UploadField name="FileName" size="50" maxLength="255"/>
+			<EditField name="Description" size="50" maxLength="128"/>
+			<ViewField name="ruler2"/>			
+			<HiddenField name="_OwnedBy"/>
+			<ViewField name="_OwnedOrganization"/>
+		</EditScreen>
+	</Screens>
+	<Exports>
+		<ViewGrid moduleID="att" rowIDon="RelatedRecordID" moduleOn="DisplayRelatedModuleID" phrase="Attachments">
+			<InvisibleField name="DownloadLink"/>			
+			<ViewField name="FileName" link="DownloadLink" icon="attachment.png" phrase="File Name"/>
+			<ViewField name="Description"/>
+			<ViewField name="_OwnedOrganization" link="_OwnedLink" phrase="Owner"/>
+			<OrderByField name="FileName"/>
+		</ViewGrid>
+		<!-- edit grid to be included in all modules... -->
+		<UploadGrid
+			moduleID="att" phrase="Attachments" allowEditOn="_OwnedBy"
+			rowIDon="RelatedRecordID" moduleOn="DisplayRelatedModuleID">
+			<InvisibleField name="_OwnedBy"/>			
+			<InvisibleField name="DownloadLink"/>			
+			<ViewField name="FileName1" link="DownloadLink" icon="attachment.png"/>
+			<ViewField name="Description"/>
+			<ViewField name="_OwnedOrganization" phrase="Owner"/>
+			<GridForm>							
+				<UploadField name="FileName" size="50" maxlength="255"/>
+				<EditField name="Description" size="50" maxlength="128"/>
+				<HiddenField name="_OwnedBy"/>
+				<ViewField name="_OwnedOrganization"/>
+			</GridForm>				
+		</UploadGrid>
+	</Exports>	
+	<Documentation>
+		<DocumentationSection sectionID="Introduction" title="Wprowadzenie">		
+<![CDATA[
+<br/>	
+<p>Wprowadzenie do obsługi systemu jest dostępne po naciśnięciu przycisku „Tutorial”, który znajduje się na Listwie Głównej u góry ekranu przeglądarki. Tutorial zawiera prezentację:</p>
+<ul>
+<li>Koncepcji systemu:</li>
+<ul>
+<li>związku lista-wiersz jako podstawy modułu,</li>
+<li>pojęcia działań w kontekście listy,</li>
+<li>pojęcia działań w kontekście wiersza,</li>
+<li>powiązania wiersza z innymi modułami,</li>
+</ul>
+<li>Logowania i nawigacji po systemie;</li>
+<li>Funkcjonalności dostępnych na ekranie Listy;</li>
+<li>Funkcjonalności dostępnych na ekranie Wiersza;</li>
+<li>Funkcjonalności związanych z edycją zawartości danych wiersza;</li>
+<li>Funkcjonalności raportów;</li>
+<li>Funkcjonalności wykresów.</li>
+</ul>
+<p>Powyższe możliwości systemu mogą być wypróbowane na modułach demonstracyjnych:</p>
+<ul>
+<li>Państwa;</li>
+<li>Województwa;</li>
+<li>Powiaty.</li>
+</ul>
+<p>Moduły demonstracyjne dostępne są po najechaniu myszą na "Menu Główne" w Listwie Głównej i wybranie ścieżki menu: "Menu Główne/Pomocnicze/Piaskownica/*". Zmiany wprowadzone w modułach demonstracyjnych nie mają wpływu na funkcje biznesowe aplikacji i mogą być wycofane przez administratora systemu.</p>
+]]>
+		</DocumentationSection>		
+	</Documentation>
+	<Revision author="$Author: dan $" id="$Revision: 1515 $" date="$Date: 2009-02-11 18:59:24 +0100 (Śr, 11 lut 2009) $"/>
+</Module>

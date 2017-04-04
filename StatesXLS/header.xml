@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<?mso-application progid="Excel.Sheet"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+ xmlns:o="urn:schemas-microsoft-com:office:office"
+ xmlns:x="urn:schemas-microsoft-com:office:excel"
+ xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
+ xmlns:html="http://www.w3.org/TR/REC-html40">
+ <DocumentProperties xmlns="urn:schemas-microsoft-com:office:office">
+  <Version>11.9999</Version>
+ </DocumentProperties>
+ <OfficeDocumentSettings xmlns="urn:schemas-microsoft-com:office:office">
+  <RelyOnVML/>
+  <AllowPNG/>
+ </OfficeDocumentSettings>
+ <ExcelWorkbook xmlns="urn:schemas-microsoft-com:office:excel">
+  <WindowHeight>8910</WindowHeight>
+  <WindowWidth>19095</WindowWidth>
+  <WindowTopX>0</WindowTopX>
+  <WindowTopY>45</WindowTopY>
+  <ProtectStructure>False</ProtectStructure>
+  <ProtectWindows>False</ProtectWindows>
+ </ExcelWorkbook>
+ <Styles>
+  <Style ss:ID="Default" ss:Name="Normal">
+   <Alignment ss:Vertical="Bottom"/>
+   <Borders/>
+   <Font x:CharSet="238"/>
+   <Interior/>
+   <NumberFormat/>
+   <Protection/>
+  </Style>
+  <Style ss:ID="s21">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Top" ss:WrapText="1"/>
+   <Font x:CharSet="238" ss:Size="12"/>
+  </Style>
+  <Style ss:ID="s22">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Top" ss:WrapText="1"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"/>
+   </Borders>
+   <Font x:CharSet="238" x:Family="Swiss" ss:Size="12" ss:Color="#333333"
+    ss:Bold="1"/>
+   <Interior ss:Color="#CCFFFF" ss:Pattern="Solid"/>
+  </Style>
+ </Styles>
+ <Worksheet ss:Name="Województwa i Powiaty">
+  <Names>
+   <NamedRange ss:Name="Print_Titles" ss:RefersTo="='Województwa i Powiaty'!R1"/>
+  </Names>
+  <Table ss:ExpandedColumnCount="5" x:FullColumns="1"
+   x:FullRows="1" ss:StyleID="s21" ss:DefaultRowHeight="15">
+   <Column ss:StyleID="s21" ss:AutoFitWidth="0" ss:Width="55.5"/>
+   <Column ss:StyleID="s21" ss:AutoFitWidth="0" ss:Width="111"/>
+   <Column ss:StyleID="s21" ss:AutoFitWidth="0" ss:Width="204.75"/>
+   <Column ss:StyleID="s21" ss:AutoFitWidth="0" ss:Width="66.75"/>
+   <Column ss:StyleID="s21" ss:AutoFitWidth="0" ss:Width="210"/>
+   <Row ss:AutoFitHeight="0" ss:Height="15.75">
+    <Cell ss:StyleID="s22"><Data ss:Type="String">Lp</Data><NamedCell
+      ss:Name="Print_Titles"/></Cell>
+    <Cell ss:StyleID="s22"><Data ss:Type="String">Państwo</Data><NamedCell
+      ss:Name="Print_Titles"/></Cell>
+    <Cell ss:StyleID="s22"><Data ss:Type="String">Województwo</Data><NamedCell
+      ss:Name="Print_Titles"/></Cell>
+    <Cell ss:StyleID="s22"><Data ss:Type="String">Kod ISO</Data><NamedCell
+      ss:Name="Print_Titles"/></Cell>
+    <Cell ss:StyleID="s22"><Data ss:Type="String">Powiat</Data><NamedCell
+      ss:Name="Print_Titles"/></Cell>
+   </Row>

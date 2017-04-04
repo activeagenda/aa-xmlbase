@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module name="Glossary" moduleID="glo" singularRecordName="Glossary Item" pluralRecordName="Glossary Items" allowAddRecord="yes" dataCollectionForm="yes" isImplementationPlanningModule="yes" isMasterData="yes">
+	<ModuleFields>
+		<TableField name="GlossaryID" type="int" dbFlags="unsigned auto_increment not null" phrase="Glossary ID|An automatically assigned number used to track glossary items associated with the application, technology and the domain" sample="1"/>
+		<TableField name="OrganizationID" type="int" defaultValue="defaultorgID" validate="RequireSelection" phrase="Organization|The name of the organization introducing the glossary term and associated definition to assist with organizational communication" sample="1"/>
+		<ForeignField name="Organization" foreignTable="org" foreignKey="OrganizationID" foreignField="Name" key="OrganizationID" joinType="left" phrase="Organization|The name of the organization introducing the glossary term and associated definition to assist with organizational communication" sample="Active Agenda, HQ"/>
+		<TableField name="PersonAccountableID" type="int" defaultValue="defaultorgID" validate="RequireSelection" phrase="Person Accountable|The individual assigned primary accountability for the assigned action" sample="1"/>
+		<ForeignField name="PersonAccountable" foreignTable="ppl" foreignKey="PersonID" foreignField="DisplayName" key="PersonAccountableID" joinType="left" phrase="Person Accountable|The individual assigned primary accountability for maintaining the currency and accuracy of this glossary item" sample="Mattias Thorslund"/>
+		<TableField name="GlossaryItem" type="varchar(128)" validate="notEmpty" phrase="Glossary Item|The term, title, or phrase to be included as a glossary item" sample="Activity Based Costing (ABC)"/>
+		<TableField name="Definition" type="text" validate="notEmpty" phrase="Definition|The definition of the glossary item as it is uesd throughout the enterprise" sample="A method that measures the cost and performance of process-related activities and cost objects...(that) assigns cost activities based on their use of resources, and assigns cost to cost objects, such as products or customers, based on their use of activities...(to help organizations recognize) the causal relationship of cost drivers to activities."/>
+		<TableField name="GlossaryURL" type="varchar(128)" validate="noValidation" phrase="Uniform Resource Locator|The internet address of a useful glossary or definition page" sample="http://www.glossary.com"/>
+		<TableField name="Protected" type="bool" phrase="Protected|Protect these changes from being automatically overwritten while importing glossary records from another database" sample="no"/>
+		<TableField name="Display" type="bool" phrase="Display|Display this glossary item within the application glossary" sample="Yes"/>
+		<CombinedField name="RecordLabel" phrase="Record Label|The short, concise, label of the record for display purposes" sample="Mattias Thorslund | 01-01-2006 | Ongoing"><CombinedFieldRef name="GlossaryItem"/>;_<CombinedFieldRef name="Organization"/></CombinedField>
+		<CombinedField name="Glossary" phrase="Glossary|A combined field used to describe this glossary item when associating it with other records" sample="Activity Based Costing (ABC); Active Agenda, HQ">
+			<CombinedFieldRef name="GlossaryItem"/>
+		</CombinedField>
+	</ModuleFields>
+	<ModuleInfo>
+		<PrimaryKey>
+			<FieldRef name="GlossaryID"/>
+		</PrimaryKey>
+		<OwnerField name="OrganizationID"/>
+		<RecordDescriptionField name="Glossary"/>
+		<RecordLabelField name="RecordLabel"/>
+	</ModuleInfo>
+	<Screens>
+		<ListScreen name="List" phrase="List|List glossary terms">
+			<ListField name="GlossaryID" phrase="ID"/>
+			<ListField name="GlossaryItem" phrase="Glossary Item"/>
+			<ListField name="Definition" phrase="Definition"/>
+		</ListScreen>
+		<SearchScreen name="Search" phrase="Search|Search glossary terms">
+			<OrgComboField name="OrganizationID" findMode="text"/>
+			<PersonComboField name="PersonAccountableID" findMode="alpha"/>
+			<EditField name="GlossaryItem" size="75" maxLength="128"/>
+			<CheckBoxField name="Protected"/>
+			<CheckBoxField name="Display"/>
+		</SearchScreen>
+		<ViewScreen name="View" phrase="View|View summary information about a glossary term used throughout the organization">
+			<ViewField name="GlossaryID"/>
+			<ViewField name="Organization"/>
+			<ViewField name="PersonAccountable"/>
+			<ViewField name="GlossaryItem"/>
+			<ViewField name="Definition"/>
+			<ViewField name="GlossaryURL" link="GlossaryURL"/>
+			<ViewField name="Protected"/>
+			<ViewField name="Display"/>
+		</ViewScreen>
+		<EditScreen name="Form" phrase="Form|Edit summary information about a glossary term used throughout the organization">
+			<ViewField name="GlossaryID"/>
+			<OrgComboField name="OrganizationID" findMode="text"/>
+			<PersonComboField name="PersonAccountableID" findMode="alpha"/>
+			<EditField name="GlossaryItem" size="75" maxLength="75"/>
+			<MemoField name="Definition" rows="5" cols="60"/>
+			<EditField name="GlossaryURL" size="75" maxLength="75"/>
+			<CheckBoxField name="Protected"/>
+			<CheckBoxField name="Display"/>
+		</EditScreen>
+	</Screens>
+	<Documentation>
+		<DocumentationSection sectionID="Introduction" title="Wprowadzenie">		
+<![CDATA[
+<br/>	
+<p>Wprowadzenie do obsługi systemu jest dostępne po naciśnięciu przycisku „Tutorial”, który znajduje się na Listwie Głównej u góry ekranu przeglądarki. Tutorial zawiera prezentację:</p>
+<ul>
+<li>Koncepcji systemu:</li>
+<ul>
+<li>związku lista-wiersz jako podstawy modułu,</li>
+<li>pojęcia działań w kontekście listy,</li>
+<li>pojęcia działań w kontekście wiersza,</li>
+<li>powiązania wiersza z innymi modułami,</li>
+</ul>
+<li>Logowania i nawigacji po systemie;</li>
+<li>Funkcjonalności dostępnych na ekranie Listy;</li>
+<li>Funkcjonalności dostępnych na ekranie Wiersza;</li>
+<li>Funkcjonalności związanych z edycją zawartości danych wiersza;</li>
+<li>Funkcjonalności raportów;</li>
+<li>Funkcjonalności wykresów.</li>
+</ul>
+<p>Powyższe możliwości systemu mogą być wypróbowane na modułach demonstracyjnych:</p>
+<ul>
+<li>Państwa;</li>
+<li>Województwa;</li>
+<li>Powiaty.</li>
+</ul>
+<p>Moduły demonstracyjne dostępne są po najechaniu myszą na "Menu Główne" w Listwie Głównej i wybranie ścieżki menu: "Menu Główne/Pomocnicze/Piaskownica/*". Zmiany wprowadzone w modułach demonstracyjnych nie mają wpływu na funkcje biznesowe aplikacji i mogą być wycofane przez administratora systemu.</p>
+]]>
+		</DocumentationSection>		
+	</Documentation>
+	<Revision author="$Author: mattias $" id="$Revision: 1526 $" date="$Date: 2009-02-18 16:39:02 +0100 (Śr, 18 lut 2009) $"/>
+</Module>

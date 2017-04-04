@@ -1,0 +1,6 @@
+   <Row ss:AutoFitHeight="0" ss:Height="30">
+    <Cell><Data ss:Type="Number">_ROWCOUNTER</Data></Cell>
+    <Cell><Data ss:Type="String">Country</Data></Cell>
+    <Cell><Data ss:Type="String">StateName</Data></Cell>
+    <Cell><Data ss:Type="String">StateAbbreviation</Data></Cell>
+   </Row>

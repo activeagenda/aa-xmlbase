@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Module 
+	name="Support Document Sections" moduleID="spts" 
+	allowAddRecord="yes"
+	singularRecordName="Document Section" pluralRecordName="Document Sections">
+	
+	<ModuleFields>
+		<TableField 
+			name="SupportDocumentSectionID" type="int" dbFlags="unsigned auto_increment not null" 
+			phrase="Record ID|An automatically assigned number used to track support documents"/>
+		<TableField 
+			name="SupportDocumentID" type="int" dbFlags="unsigned not null" 
+			phrase="Support Document ID|The ID of the related Support Document"/>
+		<ForeignField 
+			name="SupportDocument" key="SupportDocumentID"
+			foreignTable="spt" foreignKey="SupportDocumentID" foreignField="SupportDocument" joinType="left" 
+			phrase="Support Document|A combined field used to describe this support document when associating it with other records"/>
+		<TableField 
+			name="Title" type="varchar(128)" validate="notEmpty" dbFlags="not null" 
+			phrase="Section Title|The title of the Support Document Section"/>
+		<TableField 
+			name="SectionText" type="text" 
+			phrase="Support Document Text|The text of the Support Document Section"/>
+		<TableField 
+			name="SortOrder" type="int" 
+			phrase="Sort Order|A numeric sort order"/>
+		<TableField 
+			name="Protected" type="bool" 
+			phrase="Protected|Protect these changes from being automatically overwritten by the parser"/>
+		<TableField 
+			name="Display" type="bool" 
+			phrase="Display|Display this support section within the module support documentation"/>
+		<TableField 
+			name="SectionID" type="varchar(25)" 
+			phrase="Section ID|The section ID of the element from where this section was imported."/>
+		<CombinedField 
+			name="RecordLabel" 
+			phrase="Record Label|The short, concise, label of the record for display purposes">
+			<CombinedFieldRef name="SupportDocument"/>_;_<CombinedFieldRef name="Title"/>
+		</CombinedField>
+		<CombinedField 
+			name="SupportDocumentSection" 
+			phrase="Support Document|A combined field used to describe this support document section when associating it with other records">
+			<CombinedFieldRef name="SupportDocument"/>_;_<CombinedFieldRef name="Title"/>
+		</CombinedField>
+	</ModuleFields>
+	<ModuleInfo>
+		<PrimaryKey>
+			<FieldRef name="SupportDocumentSectionID"/>
+		</PrimaryKey>
+		<Index name="Doc_SectionID">
+			<FieldRef name="SupportDocumentID"/>
+			<FieldRef name="SectionID"/>
+		</Index>
+		<!--<OwnerField name="OrganizationID"/> Not required-->
+		<RecordDescriptionField name="SupportDocumentSection"/>
+		<RecordLabelField name="RecordLabel"/>
+	</ModuleInfo>
+	<Screens>
+		<ListScreen name="List">
+			<ListField name="SupportDocumentSectionID" phrase="ID"/>
+			<ListField name="Title" phrase="Title"/>
+		</ListScreen>
+		<ViewScreen name="View">
+			<ViewField name="SupportDocumentSectionID"/>
+			<ViewField name="SupportDocumentID"/>
+			<ViewField name="Title"/>
+			<ViewField name="SectionText"/>
+			<ViewField name="SortOrder"/>
+			<ViewField name="Protected"/>
+			<ViewField name="Display"/>
+		</ViewScreen>
+		<EditScreen name="Form" phrase="Form|The screen used to edit a module support documentation section">
+			<ViewField name="SupportDocumentSectionID"/>
+			<ViewField name="SupportDocumentID"/>
+			<EditField name="Title" size="30" maxlength="50"/>
+			<MemoField name="SectionText" rows="25" cols="50"/>
+			<EditField name="SortOrder" size="5" maxlength="5"/>
+			<CheckBoxField name="Protected"/>
+			<CheckBoxField name="Display"/>
+		</EditScreen>
+	</Screens>
+	<Exports>
+		<ViewGrid moduleID="spts" phrase="Sections">
+			<InvisibleField name="SupportDocumentSectionID"/>
+			<ViewField name="Title"/>
+			<ViewField name="SectionText"/>
+			<ViewField name="SortOrder"/>
+			<ViewField name="Protected"/>
+		</ViewGrid>
+		<EditGrid moduleID="spts" phrase="Sections">
+			<GridForm>
+				<InvisibleField name="SupportDocumentSectionID"/>
+				<EditField name="Title" size="30" maxlength="50"/>
+				<MemoField name="SectionText" rows="25" cols="80"/>
+				<EditField name="SortOrder" size="5" maxlength="5"/>
+				<CheckBoxField name="Protected"/>
+			</GridForm>
+			<InvisibleField name="SupportDocumentSectionID"/>
+			<ViewField name="Title"/>
+			<ViewField name="SectionText"/>
+			<ViewField name="SortOrder"/>
+			<ViewField name="Protected"/>
+		</EditGrid>
+	</Exports>
+	<Documentation>
+		<DocumentationSection sectionID="Introduction" title="Wprowadzenie">		
+			  <div id='introduction' align="center"/><script type='text/javascript'>play_tutorial( 'introduction', 'tut_intro.flv')</script>
+		</DocumentationSection>		
+	</Documentation>
+	<Revision author="$Author: mattias $" id="$Revision: 1512 $" date="$Date: 2009-02-10 19:44:34 +0100 (Wt, 10 lut 2009) $"/>
+</Module>

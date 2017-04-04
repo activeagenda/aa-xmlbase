@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module name="Submodule Record Cache" moduleID="smc" singularRecordName="Cache Record" pluralRecordName="Cache Records" isCacheModule="yes" isSystemModule="yes">
+	<ModuleFields>
+		<TableField name="CacheID" type="int" dbFlags="unsigned auto_increment not null" phrase="Cache ID|An automatically assigned number used to track dashboard items" sample="11"/>
+		<TableField name="ModuleID" type="varchar(5)" dbFlags="not null" phrase="Module ID|The module ID of the (parent) record" sample="abc"/>
+		<TableField name="RecordID" type="int" dbFlags="not null" phrase="Record ID|The record ID of the (parent) record" sample="11"/>
+		<TableField name="SubModuleID" type="varchar(5)" dbFlags="not null" phrase="SubModule ID|The module ID of the (submodule) record" sample="def"/>
+		<TableField name="SubRecordID" type="int" dbFlags="not null" phrase="SubModule Record ID|The record ID of the (submodule) record" sample="11"/>
+	</ModuleFields>
+	<ModuleInfo>
+		<PrimaryKey>
+			<FieldRef name="CacheID"/>
+		</PrimaryKey>
+		<Index name="Parent">
+			<FieldRef name="ModuleID"/>
+			<FieldRef name="RecordID"/>
+		</Index>
+		<Index name="Sub">
+			<FieldRef name="SubModuleID"/>
+			<FieldRef name="SubRecordID"/>
+		</Index>
+	</ModuleInfo>
+	<Revision author="$Author: mattias $" id="$Revision: 1512 $" date="$Date: 2009-02-10 19:44:34 +0100 (Wt, 10 lut 2009) $"/>
+</Module>

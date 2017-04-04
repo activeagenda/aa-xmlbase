@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module name="Transaction Records" moduleID="trxr" singularRecordName="Transaction Record" pluralRecordName="Transaction Records" allowAddRecord="No" isSystemModule="yes">
+    <ModuleFields>
+        <TableField name="TransactionRecordID" type="bigint" dbFlags="unsigned auto_increment not null" phrase="Transaction Record ID|An automatically assigned ID for internal purposes (primary key)" sample="1"/>
+        <TableField name="TransactionID" type="bigint" dbFlags="unsigned not null default 0" phrase="Transaction ID|An automatically assigned ID for internal purposes" sample="1"/>
+        <TableField name="RelatedModuleID" type="varchar(5)" validate="noValidation" phrase="Related Module ID|A character ID assigned to each module of the application" sample="par"/>
+        <ForeignField name="RelatedModule" foreignTable="mod" foreignKey="ModuleID" foreignField="Name" key="RelatedModuleID" joinType="left" phrase="Related Module|The name or title of the module which is associated with the record" sample="Partnerships"/>
+        <TableField name="RelatedRecordID" type="int" validate="noValidation" phrase="Related Record ID|The unique ID of the related record within the related module" sample="1"/>
+        <DynamicForeignField name="RelatedRecordDescription" key="RelatedRecordID" moduleIDField="RelatedModuleID" foreignField="RecordDescription" joinType="left" phrase="Record Description|A description of the related record based on a combination of field values assigned from within the related module" sample="Hearing Conservation, Active Agenda, HQ, Complete"/>
+        <LinkField name="RelatedRecordLink" moduleIDField="RelatedModuleID" recordIDField="RelatedRecordID" phrase="Related Record Link|An internal link to the related record."/>
+        <TableField name="Indirect" type="bool" dbFlags="default 0" phrase="Indirect|Whether this record was updated because of changes in a different module (by a remote field relationship)" sample="No"/>
+        <TableField name="ActionTypeID" type="tinyint" dbFlags="unsigned not null default 0" validate="noValidation" phrase="Action Type ID|The type of action taken: Insert, Update, Delete" sample="1"/>
+	</ModuleFields>
+    <ModuleInfo>
+        <PrimaryKey>
+            <FieldRef name="TransactionRecordID"/>
+        </PrimaryKey>
+        <Index name="TransactionID">
+          <FieldRef name="TransactionID"/>
+        </Index>
+        <Index name="RelatedModuleID_RelatedRecordID">
+            <FieldRef name="RelatedModuleID"/>
+            <FieldRef name="RelatedRecordID"/>
+        </Index>
+    </ModuleInfo>
+    <Screens>
+        <ListScreen name="List" phrase="List|List transaction records">
+            <ListField name="TransactionRecordID" phrase="ID"/>
+            <ListField name="TransactionID"/>
+            <ListField name="RelatedModule"/>
+            <ListField name="RelatedRecordID"/>
+            <ListField name="RelatedRecordDescription" link="RelatedRecordLink"/>
+            <InvisibleField name="RelatedRecordLink"/>
+            <ListField name="Indirect"/>
+            <ListField name="ActionTypeID"/>
+        </ListScreen>
+    </Screens>
+    <Exports>
+        <ViewGrid moduleID="trxr" phrase="Transaction Records" isInfo="yes">
+            <InvisibleField name="TransactionRecordID"/>
+            <ViewField name="RelatedModule"/>
+            <ViewField name="RelatedRecordID" link="RelatedRecordLink"/>
+            <ViewField name="RelatedRecordDescription" link="RelatedRecordLink"/>
+            <ViewField name="Indirect"/>
+            <ViewField name="ActionTypeID"/>
+        </ViewGrid>
+    </Exports>
+    <Revision author="$Author: dan $" id="$Revision: 949 $" date="$Date: 2007-08-07 12:41:58 -0700 (Tue, 07 Aug 2007) $"/>
+</Module>

@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Module 
+	name="Code Type Dependencies" moduleID="codtd"
+	allowAddRecord="No"
+	singularRecordName="Code Type Dependency" pluralRecordName="Code Type Dependencies">
+	
+	<ModuleFields>
+		<TableField 
+			name="CodeTypeDependencyID" type="int" dbFlags="unsigned auto_increment not null" 
+			phrase="Record ID|An automatically assigned number used to associate code type dependencies with dependent modules" sample="1"/>
+		<TableField 
+			name="CodeTypeID" type="int" dbFlags="not null" 
+			phrase="Code Type ID|A number used to track code type records."/>
+		<ForeignField 
+			name="CodeType" key="CodeTypeID"
+			foreignTable="codt" foreignKey="CodeTypeID" foreignField="Name" joinType="left" 
+			phrase="Code Type|A combined field used to describe this code type when associating it with other records" sample="Risk Imperatives | ID: 234"/>
+		<TableField 
+			name="DependencyID" type="varchar(5)" dbFlags="" validate="noValidation" 
+			phrase="Module ID|The name of the module dependent upon the code type"/>
+		<ForeignField 
+			name="Dependency"  key="DependencyID"
+			foreignTable="mod" foreignKey="ModuleID" foreignField="Name"  joinType="left" 
+			phrase="Dependent Module|The name of the module dependent upon the code type"/>
+        <LinkField 
+			name="DependentModuleLink" foreignModuleID="mod" recordIDField="DependencyID" 
+			phrase="Dependent Module Link|A link to the module record of the dependent module."/>
+		<CombinedField 
+			name="CodeTypeDesc" 
+			phrase="Code Type Description|A combined field used to display a Code Type ID and name within the module worksheet report">
+			<CombinedFieldRef name="CodeType"/>_(ID:_<CombinedFieldRef name="CodeTypeID"/>)
+		</CombinedField>
+		<CombinedField 
+			name="RecordLabel" 
+			phrase="Record Label|The short, concise, label of the record for display purposes">
+			<CombinedFieldRef name="CodeType"/>_;_<CombinedFieldRef name="Dependency"/>
+		</CombinedField>
+		<CombinedField 
+			name="CodeTypeDependency" 
+			phrase="Code Type Dependency|A combined field used to describe this code type dependency when associating it with other records">
+			<CombinedFieldRef name="CodeType"/>_;_<CombinedFieldRef name="Dependency"/>
+		</CombinedField>
+	</ModuleFields>
+	<ModuleInfo>
+		<PrimaryKey>
+			<FieldRef name="CodeTypeDependencyID"/>
+		</PrimaryKey>
+		<!--<OwnerField name="OrganizationID"/>-->
+		<!--<RecordDescriptionField name="CodeTypeDependency"/>-->
+		<RecordLabelField name="RecordLabel"/>
+	</ModuleInfo>
+	<Screens>
+		<ListScreen name="List">
+			<ListField name="CodeTypeDependencyID" phrase="ID"/>
+			<ListField name="CodeTypeID" phrase="Code Type ID" align="center"/>
+			<ListField name="CodeType" phrase="Code Type"/>
+         <ListField name="DependencyID" phrase="Module ID" align="center" link="DependentModuleLink"/>
+			<ListField name="Dependency" phrase="Dependent Module"/>
+         <InvisibleField name="DependentModuleLink"/>
+		</ListScreen>
+		<SearchScreen name="Search">
+			<ComboField name="CodeTypeID" findMode="text"/>
+			<ComboField name="DependencyID" findMode="text"/>
+		</SearchScreen>
+		<ViewScreen name="View">
+			<ViewField name="CodeTypeDependencyID"/>
+			<ViewField name="CodeTypeID"/>
+			<ViewField name="CodeType"/>
+			<ViewField name="Dependency"/>
+         <ViewField name="DependencyID" link="DependentModuleLink"/>
+		</ViewScreen>
+	</Screens>
+	<Exports>
+		<ViewGrid moduleID="codtd" phrase="Code Type Dependencies">
+			<InvisibleField name="CodeTypeDependencyID"/>
+         <ViewField name="DependencyID" link="DependentModuleLink"/>
+			<ViewField name="Dependency"/>
+		</ViewGrid>
+	</Exports>
+	<Charts>
+		<PieChart name="Pie01" title="Code Dependencies By Code Type">
+			<GroupByField name="CodeType"/>
+			<SummaryField name="CodeTypeDependencyID" type="count"/>
+		</PieChart>
+		<ParetoChart name="Pareto01" title="Code Dependencies By Code Type">
+			<GroupByField name="CodeType"/>
+			<SummaryField name="CodeTypeDependencyID" type="count"/>
+		</ParetoChart>
+		<PieChart name="Pie02" title="Code Dependencies By Code ID">
+			<GroupByField name="CodeTypeID"/>
+			<SummaryField name="CodeTypeDependencyID" type="count"/>
+		</PieChart>
+		<ParetoChart name="Pareto02" title="Code Dependencies By Code ID">
+			<GroupByField name="CodeTypeID"/>
+			<SummaryField name="CodeTypeDependencyID" type="count"/>
+		</ParetoChart>
+		<PieChart name="Pie03" title="Code Dependencies By Module">
+			<GroupByField name="Dependency"/>
+			<SummaryField name="CodeTypeDependencyID" type="count"/>
+		</PieChart>
+		<ParetoChart name="Pareto03" title="Code Dependencies By Module">
+			<GroupByField name="Dependency"/>
+			<SummaryField name="CodeTypeDependencyID" type="count"/>
+		</ParetoChart>
+		<PieChart name="Pie04" title="Code Dependencies By Module ID">
+			<GroupByField name="DependencyID"/>
+			<SummaryField name="CodeTypeDependencyID" type="count"/>
+		</PieChart>
+		<ParetoChart name="Pareto04" title="Code Dependencies By Module ID">
+			<GroupByField name="DependencyID"/>
+			<SummaryField name="CodeTypeDependencyID" type="count"/>
+		</ParetoChart>
+	</Charts>
+	<Documentation>
+		<DocumentationSection sectionID="Introduction" title="Wprowadzenie">		
+<![CDATA[
+<br/>	
+<p>Wprowadzenie do obsługi systemu jest dostępne po naciśnięciu przycisku „Tutorial”, który znajduje się na Listwie Głównej u góry ekranu przeglądarki. Tutorial zawiera prezentację:</p>
+<ul>
+<li>Koncepcji systemu:</li>
+<ul>
+<li>związku lista-wiersz jako podstawy modułu,</li>
+<li>pojęcia działań w kontekście listy,</li>
+<li>pojęcia działań w kontekście wiersza,</li>
+<li>powiązania wiersza z innymi modułami,</li>
+</ul>
+<li>Logowania i nawigacji po systemie;</li>
+<li>Funkcjonalności dostępnych na ekranie Listy;</li>
+<li>Funkcjonalności dostępnych na ekranie Wiersza;</li>
+<li>Funkcjonalności związanych z edycją zawartości danych wiersza;</li>
+<li>Funkcjonalności raportów;</li>
+<li>Funkcjonalności wykresów.</li>
+</ul>
+<p>Powyższe możliwości systemu mogą być wypróbowane na modułach demonstracyjnych:</p>
+<ul>
+<li>Państwa;</li>
+<li>Województwa;</li>
+<li>Powiaty.</li>
+</ul>
+<p>Moduły demonstracyjne dostępne są po najechaniu myszą na "Menu Główne" w Listwie Głównej i wybranie ścieżki menu: "Menu Główne/Pomocnicze/Piaskownica/*". Zmiany wprowadzone w modułach demonstracyjnych nie mają wpływu na funkcje biznesowe aplikacji i mogą być wycofane przez administratora systemu.</p>
+]]>
+		</DocumentationSection>		
+	</Documentation>
+	<Revision author="$Author: mattias $" id="$Revision: 1583 $" date="$Date: 2009-04-28 07:11:50 +0200 (Wt, 28 kwi 2009) $"/>
+</Module>

@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<ReportGroup name="Main" author="JWach">
+    <Report name="StatesXLS" title="States in sandbox"  
+	singularRecordName="State" displayFormat="XLS" maxRecords="1000">
+        <ReportLocation level="List" group="Main"/> 
+		<ReportField name="StateName"/>
+		<ReportField name="Country"/>
+		<ReportField name="StateAbbreviation" />
+		<SubReport moduleID="bcti">
+			<ReportField name="CountyName"/>
+		</SubReport>
+    </Report>
+</ReportGroup>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Module 
+	name="Counties" moduleID="cti" 
+	updateImports="yes" isMasterData="yes" 
+	singularRecordName="County" pluralRecordName="Counties">
+
+	<ModuleFields>
+		<TableField 
+			name="CountyID" type="int" dbFlags="unsigned auto_increment not null" 
+			phrase="County ID|A combined field used to track and associate counties" sample="1"/>
+		<TableField 
+			name="StateID" validate="RequireSelection" type="int" dbFlags="unsigned" 
+			phrase="State|A combined field used to associate this state with another record"/>
+		<ForeignField 
+			name="CountryID" validate="RequireSelection" 
+			foreignTable="sta" foreignKey="StateID" foreignField="CountryID" key="StateID" joinType="left" 
+			phrase="Country|The internationally recognized name of the country"/>
+		<ForeignField 
+			name="Country" 
+			foreignTable="ctr" foreignKey="CountryID" foreignField="Country" key="CountryID" joinType="left" 
+			phrase="Country|A combined field used to associate this country with another record"/>
+		<ForeignField 
+			name="State" 
+			foreignTable="sta" foreignKey="StateID" foreignField="State" key="StateID" joinType="left" 
+			phrase="State|A combined field used to associate this state with another record"/>
+		<TableField 
+			name="CountyName" validate="notEmpty" type="varchar(50)"
+			phrase="County Name|The name of the county or equivalent geographic zone" sample="Fresno"/>
+		<CombinedField 
+			name="RecordLabel" phrase="Record Label|The short, concise, label of the record for display purposes">
+			<CombinedFieldRef name="CountyName"/>
+		</CombinedField>
+		<CombinedField 
+			name="County" phrase="County|A combined field used to associate this county with another record">
+			<CombinedFieldRef name="CountyName"/>
+		</CombinedField>
+	</ModuleFields>
+	<ModuleInfo>
+		<PrimaryKey>
+			<FieldRef name="CountyID"/>
+		</PrimaryKey>
+		<RecordDescriptionField name="County"/>
+		<RecordLabelField name="RecordLabel"/>
+	</ModuleInfo>
+	<Screens>
+		<ListScreen name="List" phrase="List|List counties">
+			<ListField name="CountyID" phrase="ID"/>
+			<ListField name="Country" phrase="Country"/>
+			<ListField name="State" phrase="State"/>
+			<ListField name="CountyName" phrase="County Name"/>
+		</ListScreen>
+		<SearchScreen name="Search" phrase="Search|Search counties">
+			<ComboField name="CountryID" findMode="text">
+				<UpdateFieldRef name="StateID"/>
+			</ComboField>
+			<ComboField name="StateID" findMode="text" parentField="CountryID"/>
+			<EditField name="CountyName" size="30" maxLength="50"/>
+		</SearchScreen>
+		<ViewScreen name="View" phrase="View|View summary information about a county">
+			<ViewField name="CountyID"/>
+			<ViewField name="Country"/>
+			<ViewField name="State"/>
+			<ViewField name="CountyName"/>
+		</ViewScreen>
+		<EditScreen name="Form" phrase="Form|edit summary information about a county">
+			<ViewField name="CountyID"/>
+			<ComboField name="CountryID" findMode="text">
+				<UpdateFieldRef name="StateID"/>
+			</ComboField>
+			<ComboField name="StateID" findMode="text" parentField="CountryID"/>
+			<EditField name="CountyName" size="30" maxLength="50"/>
+		</EditScreen>
+	</Screens>
+	<Documentation>
+		<DocumentationSection sectionID="Introduction" title="Wprowadzenie">		
+<![CDATA[
+<br/>	
+<p>Wprowadzenie do obsługi systemu jest dostępne po naciśnięciu przycisku „Tutorial”, który znajduje się na Listwie Głównej u góry ekranu przeglądarki. Tutorial zawiera prezentację:</p>
+<ul>
+<li>Koncepcji systemu:</li>
+<ul>
+<li>związku lista-wiersz jako podstawy modułu,</li>
+<li>pojęcia działań w kontekście listy,</li>
+<li>pojęcia działań w kontekście wiersza,</li>
+<li>powiązania wiersza z innymi modułami,</li>
+</ul>
+<li>Logowania i nawigacji po systemie;</li>
+<li>Funkcjonalności dostępnych na ekranie Listy;</li>
+<li>Funkcjonalności dostępnych na ekranie Wiersza;</li>
+<li>Funkcjonalności związanych z edycją zawartości danych wiersza;</li>
+<li>Funkcjonalności raportów;</li>
+<li>Funkcjonalności wykresów.</li>
+</ul>
+<p>Powyższe możliwości systemu mogą być wypróbowane na modułach demonstracyjnych:</p>
+<ul>
+<li>Państwa;</li>
+<li>Województwa;</li>
+<li>Powiaty.</li>
+</ul>
+<p>Moduły demonstracyjne dostępne są po najechaniu myszą na "Menu Główne" w Listwie Głównej i wybranie ścieżki menu: "Menu Główne/Pomocnicze/Piaskownica/*". Zmiany wprowadzone w modułach demonstracyjnych nie mają wpływu na funkcje biznesowe aplikacji i mogą być wycofane przez administratora systemu.</p>
+]]>
+		</DocumentationSection>		
+	</Documentation>
+	<Revision author="$Author: mattias $" id="$Revision: 1513 $" date="$Date: 2009-02-10 21:20:45 +0100 (Wt, 10 lut 2009) $"/>
+</Module>

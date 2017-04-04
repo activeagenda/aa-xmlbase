@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Module 
+	name="Support Documents" moduleID="spt" 
+	allowAddRecord="no" isImplementationPlanningModule="yes"  
+	singularRecordName="Support Document" pluralRecordName="Support Documents">
+	
+	<ModuleFields>
+		<TableField 
+			name="SupportDocumentID" type="int" dbFlags="unsigned auto_increment not null" 
+			phrase="Record ID|An automatically assigned number used to track support documents"/>
+		<TableField 
+			name="ModuleID" type="varchar(5)" validate="RequireSelection" 
+			phrase="Module ID|The module ID of the module this document is intended to support"/>
+		<ForeignField 
+			name="Module" key="ModuleID" 
+			foreignTable="mod" foreignKey="ModuleID" foreignField="Name" joinType="left" 
+			phrase="Module Name|The name of the module this document is intended to support"/>
+		<TableField 
+			name="LocalDocumentationStatusID" type="int" validate="noValidation" 
+			phrase="Local Status|Development status of the local support documentation"/>
+		<CodeField 
+			name="LocalDocumentationStatus" key="LocalDocumentationStatusID" codeTypeID="194"
+			phrase="Local Status|Development status of the local support documentation"/>
+		<TableField 
+			name="WikiArticle" type="varchar(128)" validate="noValidation" 
+			phrase="Implementation URL|The Internet address of the Wiki page corresponding with the module's implementation support guide"/>
+		<TableField 
+			name="WikiArticleStatusID" type="int" validate="noValidation" 
+			phrase="Implementation Wiki Status|Development status of the implementation support documentation Wiki on the Internet"/>
+		<CodeField 
+			name="WikiArticleStatus" key="WikiArticleStatusID" codeTypeID="194"
+			phrase="Implementation Wiki Status|Development status of the implementation support documentation Wiki on the Internet"/>
+		<TableField 
+			name="WikiGuide" type="varchar(128)" validate="noValidation" 
+			phrase="User Guide URL|The Internet address of the Wiki page corresponding with the module's user guide'"/>
+		<TableField 
+			name="WikiGuideStatusID" type="int" validate="noValidation" 
+			phrase="User Guide Wiki Status|Development status of the user guide Wiki on the Internet"/>
+		<CodeField 
+			name="WikiGuideStatus" key="WikiGuideStatusID"  codeTypeID="194"
+			phrase="User Guide Wiki Status|Development status of the user guide Wiki on the Internet"/>
+		<CombinedField 
+			name="RecordLabel" 
+			phrase="Record Label|The short, concise, label of the record for display purposes">
+			<CombinedFieldRef name="Module"/>_;_<CombinedFieldRef name="WikiArticle"/>
+		</CombinedField>
+		<CombinedField 
+			name="SupportDocument" 
+			phrase="Support Document|A combined field used to describe this support document when associating it with other records">
+			<CombinedFieldRef name="Module"/>_;_<CombinedFieldRef name="WikiArticle"/>
+		</CombinedField>
+	</ModuleFields>
+	<ModuleInfo>
+		<PrimaryKey>
+			<FieldRef name="SupportDocumentID"/>
+		</PrimaryKey>
+		<Index name="ModuleID">
+			<FieldRef name="ModuleID"/>
+		</Index>
+		<!--<OwnerField name="OrganizationID"/> Not required-->
+		<RecordDescriptionField name="SupportDocument"/>
+		<RecordLabelField name="RecordLabel"/>
+	</ModuleInfo>
+	<SubModules>
+		<SubModule 
+			name="Support Document Section" parentKey="SupportDocumentID" 
+			moduleID="spts" localKey="SupportDocumentID"/>
+	</SubModules>
+	<RecordSummaryFields>
+		<ViewField name="SupportDocumentID"/>
+		<ViewField name="ModuleID"/>
+		<ViewField name="Module"/>
+		<ViewField name="LocalDocumentationStatus"/>
+		<ViewField name="WikiArticle" link="WikiArticle"/>
+		<ViewField name="WikiArticleStatus"/>
+		<ViewField name="WikiGuide" link="WikiGuide"/>
+		<ViewField name="WikiGuideStatus"/>
+	</RecordSummaryFields>
+	<Screens>
+		<ListScreen name="List">
+			<ListField name="SupportDocumentID" phrase="ID"/>
+			<ListField name="ModuleID" phrase="Module ID"/>
+            <ListField name="Module" phrase="Module Name"/>
+			<ListField name="WikiArticle" link="WikiArticle" phrase="Implementation Support URL"/>
+		</ListScreen>
+		<SearchScreen name="Search">
+			<EditField name="SupportDocumentID" FromTo="no" size="50" maxLength="250"/>
+			<ComboField name="ModuleID" findMode="text"/>
+			<CodeComboField name="LocalDocumentationStatusID" findMode="text"/>
+			<CodeComboField name="WikiArticleStatusID" findMode="text"/>
+			<CodeComboField name="WikiGuideStatusID" findMode="text"/>
+		</SearchScreen>
+		<ViewScreen name="View">
+			<ViewField name="SupportDocumentID"/>
+			<ViewField name="ModuleID"/>
+			<ViewField name="Module"/>
+			<ViewField name="LocalDocumentationStatus"/>
+			<ViewField name="WikiArticle" link="WikiArticle"/>
+			<ViewField name="WikiArticleStatus"/>
+			<ViewField name="WikiGuide"/>
+			<ViewField name="WikiGuideStatus"/>
+			<ViewScreenSection name="Associations" phrase="Associations">
+                <ViewGrid moduleID="spts"/>
+			</ViewScreenSection>
+		</ViewScreen>
+		<EditScreen name="Form" phrase="Form|The screen used to edit module support documentation">
+			<ViewField name="SupportDocumentID"/>
+			<ViewField name="ModuleID"/>
+			<ViewField name="Module"/>
+			<CodeComboField name="LocalDocumentationStatusID" findMode="text"/>
+			<EditField name="WikiArticle" size="75" maxLength="128"/>
+			<CodeComboField name="WikiArticleStatusID" findMode="text"/>
+			<EditField name="WikiGuide" size="75" maxLength="128"/>
+			<CodeComboField name="WikiGuideStatusID" findMode="text"/>
+		</EditScreen>
+		<EditScreen name="Sections" phrase="Sections|The screen to edit sections of the documentation">
+			<RecordSummaryFieldsRef/>
+			<EditGrid moduleID="spts"/>
+		</EditScreen>
+	</Screens>	
+	<Charts>
+		<PieChart name="Pie02" title="Local Support Documentation By Status">
+			<GroupByField name="LocalDocumentationStatus"/>
+			<SummaryField name="SupportDocumentID" type="count"/>
+		</PieChart>
+		<ParetoChart name="Pareto02" title="Local Support Documentation By Status">
+			<GroupByField name="LocalDocumentationStatus"/>
+			<SummaryField name="SupportDocumentID" type="count"/>
+		</ParetoChart>
+		<PieChart name="Pie03" title="Implementation Wiki By Status">
+			<GroupByField name="WikiArticleStatus"/>
+			<SummaryField name="SupportDocumentID" type="count"/>
+		</PieChart>
+		<ParetoChart name="Pareto03" title="Implementation Wiki By Status">
+			<GroupByField name="WikiArticleStatus"/>
+			<SummaryField name="SupportDocumentID" type="count"/>
+		</ParetoChart>
+		<PieChart name="Pie04" title="User Guide Wiki By Status">
+			<GroupByField name="WikiGuideStatus"/>
+			<SummaryField name="SupportDocumentID" type="count"/>
+		</PieChart>
+		<ParetoChart name="Pareto04" title="User Guide Wiki By Status">
+			<GroupByField name="WikiGuideStatus"/>
+			<SummaryField name="SupportDocumentID" type="count"/>
+		</ParetoChart>
+	</Charts>
+	<Documentation>
+		<DocumentationSection sectionID="Introduction" title="Wprowadzenie">		
+			  <div id='introduction' align="center"/><script type='text/javascript'>play_tutorial( 'introduction', 'tut_intro.flv')</script>
+		</DocumentationSection>		
+	</Documentation>
+	<Revision author="$Author: mattias $" id="$Revision: 1646 $" date="$Date: 2009-05-22 23:37:17 +0200 (Pt, 22 maj 2009) $"/>
+</Module>

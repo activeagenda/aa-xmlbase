@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Module 
+	name="Notifications" moduleID="ntf"
+	allowAddRecord="no" isGlobal="yes"
+	singularRecordName="Notification" pluralRecordName="Notifications">
+	
+	<ModuleFields>
+		<TableField 
+			name="NotificationID" type="int" dbFlags="unsigned auto_increment not null" 
+			phrase="Notification ID|An automatically assigned number used to track notification associated with records throughout the application"/>
+		<StaticField 
+			name="ruler1" type="text" content="" 
+			phrase=" "/>
+		<TableField 
+			name="RelatedModuleID" type="varchar(5)" validate="noValidation" 
+			phrase="Related Module ID|A character ID assigned to each module of the application"/>
+		<ForeignField 
+			name="RelatedModule" foreignTable="mod" foreignKey="ModuleID" foreignField="Name" key="RelatedModuleID" joinType="left" 
+			phrase="Related Module|The name or title of the module which is associated with the tag"/>
+		
+        <!-- Module Level Related Module section -->
+        <CalculatedField 
+			name="IsModuleLevel" type="boolean" calcFunction="is_equal" params="RelatedModuleID +mod" 
+			phrase="Module Level|Displays 1 if the action is a module level action"/>
+        <CalculatedField 
+			name="DisplayRelatedRecordID" type="varchar(5)" calcFunction="if" params="IsModuleLevel +list RelatedRecordID" 
+			phrase="Related Record"/>
+        <ForeignField 
+			name="ModuleLevelRelatedModuleID" foreignTable="mod" foreignKey="RecordID" foreignField="ModuleID" key="RelatedRecordID" joinType="left" 
+			phrase="Module Level Related Module|The name or title of the module which is associated with the record"/>
+        <CalculatedField 
+			name="DisplayRelatedModuleID" type="varchar(5)" calcFunction="if" params="IsModuleLevel ModuleLevelRelatedModuleID RelatedModuleID" 
+			phrase="Related Module"/>
+        <ForeignField 
+			name="ModuleLevelRelatedModule" foreignTable="mod" foreignKey="RecordID" foreignField="Name" key="RelatedRecordID" joinType="left" 
+			phrase="Module Level Related Module|The name or title of the module which is associated with the record"/>
+        <CalculatedField 
+			name="DisplayRelatedModule" type="text" calcFunction="if" params="IsModuleLevel ModuleLevelRelatedModule RelatedModule" 
+			phrase="Related Module|The name or title of the module which is associated with the record"/>
+
+        <CombinedField 
+			name="ModuleLevelRelatedModuleRecord" 
+			phrase="Module Level Related Record|A combined field used to display the related module name and that is is a module level item">
+			<CombinedFieldRef name="ModuleLevelRelatedModule"/>_(general)</CombinedField>
+        <CalculatedField 
+			name="DisplayRelatedModuleRecord" type="text" calcFunction="if" params="IsModuleLevel ModuleLevelRelatedModuleRecord RelatedModuleRecord" 
+			phrase="Related Record|A combined field used to display the related module name and what record, if any, it is related to"/>
+        <CombinedField 
+			name="ModuleLevelRelatedRecordLink" phrase="Related Record Link|An internal link to the related record.">internal:global.php?mdl=<CombinedFieldRef name="DisplayRelatedModuleID"/>&amp;rid=list&amp;gmd=ntf</CombinedField>
+        <CalculatedField 
+			name="DisplayRelatedRecordLink" type="text" calcFunction="if" params="IsModuleLevel ModuleLevelRelatedRecordLink RelatedRecordLink" 
+			phrase="Related Record Link|An internal link to the related record."/>
+        <!-- End Module Level Related Module section -->
+		
+		<TableField 
+			name="RelatedRecordID" type="int" validate="noValidation" 
+			phrase="Related Record ID|The unique ID of the related record within the related module"/>
+		<DynamicForeignField 
+			name="RelatedRecordDescription" key="RelatedRecordID" 
+			moduleIDField="RelatedModuleID" foreignField="RecordDescription" joinType="left" 
+			phrase="Record Description|A description of the related record based on a combination of field values assigned from within the related module"/>
+		<DynamicForeignField 
+			name="OwnerOrganizationID" key="RelatedRecordID" 
+			moduleIDField="RelatedModuleID" foreignField="OwnerOrganizationID" joinType="left" 
+			phrase="Organization|The name of the organization associated with the tag"/>
+		<ForeignField 
+			name="OwnerOrganization"  key="OwnerOrganizationID"
+			foreignTable="org" foreignKey="OrganizationID" foreignField="Name" joinType="left" 
+			phrase="Organization|The name of the organization associated with the tag"/>
+		<TableField 
+			name="Remark" type="varchar(50)" 
+			phrase="Remark|Remark attached to the action"/>		
+		<TableField 
+			name="Error" type="varchar(128)" 
+			phrase="Error|Error encountered while sending the notification"/>
+		<TableField 
+			name="HandOver" type="datetime" 
+			phrase="Hand over|The date and time the notification was handed over to the internal mail server"/>
+		<TableField 
+			name="MessageTemplate" type="int" 
+			phrase="Message template|Message template ID for sending the notification"/>
+		<RecordMetaField 
+			name="SentDate" type="datetime" lookupType="created" returnType="date" 
+			phrase="Done on|Automatic entry of the date the action was taken"/>
+		<RecordMetaField 
+			name="SenderID" type="int" lookupType="created" returnType="userID" 
+			phrase="Action taker|Automatic entry of the name of the person taking the action"/>
+		<ForeignField 
+			name="Sender" foreignTable="ppl" foreignKey="PersonID" foreignField="DisplayName" key="SenderID" joinType="left" 
+			phrase="Action taker|Automatic entry of the name of the person taking the action"/>
+		<LinkField 
+			name="SenderLink" foreignModuleID="ppl" recordIDField="SenderID" 
+			phrase="Action taker|Automatic entry of the name of the person taking the action"/>
+		<ForeignField 
+			name="SenderOrganizationID" foreignTable="ppl" foreignKey="PersonID" foreignField="OrganizationID" key="SenderID" 
+			phrase="Organization|Name of organization associated with the action taker"/>		
+		<ForeignField 
+			name="SenderOrganization" foreignTable="org" foreignKey="OrganizationID" foreignField="Name" key="SenderOrganizationID" 
+			phrase="Organization|Name of organization associated with the action taker"/>
+		<CombinedField name="SenderAndOrganization"  
+			phrase="Action taker|Displays action takers name and his organisation name">
+			<CombinedFieldRef name="Sender"/>_/_<CombinedFieldRef name="SenderOrganization"/>
+		</CombinedField>
+
+		<TableField 
+			name="CaseownerID" type="int" validate="noValidation" 
+			phrase="Related Record ID|The unique ID of the related record within the related module"/>
+		
+		<RecordMetaField  
+			name="_ThisCreatedByPersonID"  returnType="userID" lookupType="created" 
+			phrase="Created By|Record created by person"/>
+		<ForeignField 
+			name="_ThisCreatedByPerson" foreignTable="ppl" foreignKey="PersonID" foreignField="DisplayName" key="_ThisCreatedByPersonID" 
+			phrase="Created By|Record created by person"/>
+		<ForeignField 
+			name="_ThisCreatedByOrganizationID" foreignTable="ppl" foreignKey="PersonID" foreignField="OrganizationID" key="_ThisCreatedByPersonID" 
+			phrase="Organization|Name of organization associated with the creating individual"/>
+		<ForeignField 
+			name="_ThisCreatedByOrganization" foreignTable="org" foreignKey="OrganizationID" foreignField="Name" key="_ThisCreatedByOrganizationID" 
+			phrase="Organization|Name of organization associated with the creating individual"/>		
+		<RecordMetaField 
+			name="_ThisCreationDate"  returnType="date" lookupType="created"  
+			phrase="Created|Record created on date"/>
+		<CombinedField 
+			name="_ThisCreated" 
+			phrase="Created|Created on date by person from organization">
+			<![CDATA[<span style="font-size:90%">]]>
+			<CombinedFieldRef name="_ThisCreationDate"/>_<CombinedFieldRef name="_ThisCreatedByPerson"/>_/_<CombinedFieldRef name="_ThisCreatedByOrganization"/>
+			<![CDATA[</span>]]>
+		</CombinedField>
+		<RecordMetaField  
+			name="_ThisLastChangedByPersonID"  returnType="userID" lookupType="modified" 
+			phrase="Last Changed by|Last changed by person"/>
+		<ForeignField 
+			name="_ThisLastChangedByPerson" foreignTable="ppl" foreignKey="PersonID" foreignField="DisplayName" key="_ThisLastChangedByPersonID" 
+			phrase="Last Changed By|Last changed by person"/>
+		<ForeignField 
+			name="_ThisLastChangedByOrganizationID" foreignTable="ppl" foreignKey="PersonID" foreignField="OrganizationID" key="_ThisLastChangedByPersonID" 
+			phrase="Organization|Name of organization associated with the last changing individual"/>
+		<ForeignField 
+			name="_ThisLastChangedByOrganization" foreignTable="org" foreignKey="OrganizationID" foreignField="Name" key="_ThisLastChangedByOrganizationID" 
+			phrase="Organization|Name of organization associated with the last changing individual"/>		
+		<RecordMetaField 
+			name="_ThisLastChangedDate"  returnType="date" lookupType="modified"  
+			phrase="Last Modified|Record modified last on date"/>
+		<CombinedField 
+			name="_ThisLastChanged" 
+			phrase="Last Modified|Last modified on date by person from organization">
+			<![CDATA[<span style="font-size:90%">]]>
+			<CombinedFieldRef name="_ThisLastChangedDate"/>_<CombinedFieldRef name="_ThisLastChangedByPerson"/>_/_<CombinedFieldRef name="_ThisLastChangedByOrganization"/>
+			<![CDATA[</span>]]>
+		</CombinedField>
+		
+		<TableField 
+			name="Receivers" type="varchar(128)" 
+			phrase="Receivers|Receivers filter for extracting persons from People module" />
+		<TableField 
+			name="SendFlag" type="bool" 
+			phrase="Send flag| Flg signaling internaly the need for sending emails"/>
+		<TableField 
+			name="Receiver" type="int" 
+			phrase="Receiver|Receiver ID for extracting a person from People module"/>		
+		<LinkField 
+			name="RelatedRecordLink" moduleIDField="RelatedModuleID" recordIDField="RelatedRecordID" 
+			phrase="Related Record Link|An internal link to the related record."/>
+		<CombinedField 
+			name="RelatedModuleRecord" 
+			phrase="Related Record|A combined field used to display the related module name and record ID">
+			<CombinedFieldRef name="RelatedModule"/>_(ID:_<CombinedFieldRef name="RelatedRecordID"/>)</CombinedField>
+		<!-- Process state -->
+		<StaticField 
+			name="ruler2" type="text" content="" phrase=" "/>
+		<TableField 
+			name="ProcessStateID" type="int" validate="RequireSelection"
+			phrase="Do action|Change the state of the case by doing an action"/>
+		<TableField 
+			name="OldProcessStateID" type="int" 
+			phrase="Do action|Change the state of the case by doing an action"/>
+		<CodeField 
+			name="ProcessState" key="ProcessStateID"  codeTypeID="307" 
+			phrase="Do action|Change the state of the case by doing an action"/>
+		<CodeField 
+			name="ProcessState1" key="ProcessStateID"  codeTypeID="312" 
+			phrase="Case state|State of the business process for this case"/>
+		<CombinedField 
+			name="RecordLabel" 
+			phrase="Record Label|The short, concise, label of the record for display purposes">
+			<CombinedFieldRef name="RelatedModule"/>_;_ID:<CombinedFieldRef name="RelatedRecordID"/>_;_<CombinedFieldRef name="SentDate"/>
+		</CombinedField>
+		<CombinedField 
+			name="Notification" 
+			phrase="Notification|A combined field used to describe this notification when associating it with other records">
+			<CombinedFieldRef name="RelatedModule"/>_;_ID:<CombinedFieldRef name="RelatedRecordID"/>_;_<CombinedFieldRef name="SentDate"/>
+		</CombinedField>
+		<StaticField 
+			name="ruler3" type="text" content="" phrase=" "/>
+		<StaticField 
+			name="ruler4" type="text" content="" phrase=" "/>
+	</ModuleFields>
+	<ModuleInfo>
+		<PrimaryKey>
+			<FieldRef name="NotificationID"/>
+		</PrimaryKey>
+		<Index name="RelatedModuleIDRecordID">
+			<FieldRef name="RelatedModuleID"/>
+			<FieldRef name="RelatedRecordID"/>
+			<FieldRef name="_Deleted"/>
+		</Index>
+		<OwnerField name="OwnerOrganizationID"/>
+		<RecordDescriptionField name="Notification"/>
+		<RecordLabelField name="RecordLabel"/>
+	</ModuleInfo>
+	<Screens>
+		<ListScreen name="List" allowDelete="no">
+			<ListField name="NotificationID" phrase="ID"/>			
+            <ListField name="DisplayRelatedModule" align="center"/>
+            <ListField name="RelatedRecordDescription" link="DisplayRelatedRecordLink"/>
+            <InvisibleField name="DisplayRelatedRecordLink"/>
+			<ListField name="ProcessState1"/>
+			<ListField name="Remark" align="center"/>
+		</ListScreen>
+		<SearchScreen name="Search" >
+			<EditField name="NotificationID" FromTo="no" size="50" maxLength="250"/>		
+            <ComboField name="DisplayRelatedModuleID" listField="RelatedModule" findMode="text"/>
+			<InvisibleField name="RelatedRecordID"/>
+			<EditField name="RelatedRecordDescription" size="75" maxLength="128"/>
+			<EditField name="Remark" size="50" maxLength="50"/>
+			<EditField name="Error" size="50" maxLength="50"/>			
+			<DateField name="SentDate"/>
+			<PersonComboField name="SenderID" findMode="alpha"/>		
+			<CodeComboField name="ProcessStateID" listField="ProcessState1" suppressItemAdd="yes"/>	
+		</SearchScreen>
+		<ViewScreen name="View">
+			<ViewField name="NotificationID"/>
+			<ViewField name="ruler1"/>
+            <ViewField name="DisplayRelatedModuleRecord" link="DisplayRelatedRecordLink"/>
+			<ViewField name="RelatedRecordDescription"/>
+			<ViewField name="ruler2"/>
+			<ViewField name="ProcessState1"/>
+			<ViewField name="SenderAndOrganization" link="SenderLink"/>			
+			<ViewField name="Remark"/>
+			<ViewField name="ruler3"/>
+			<ViewField name="SentDate"/>
+			<ViewField name="HandOver"/>
+			<ViewField name="Error"/>						
+			<ViewField name="ruler4"/>
+			<ViewField name="_ThisCreated"/>
+			<ViewField name="_ThisLastChanged"/>
+		</ViewScreen>		
+	</Screens>
+	<Exports>
+		<ViewGrid 
+			moduleID="ntf" phrase="Actions" 
+			rowIDon="RelatedRecordID" moduleOn="DisplayRelatedModuleID">
+			<InvisibleField name="NotificationID"/>			
+			<ViewField name="SentDate" phrase="State changed on"/>
+			<ViewField name="ProcessState1"/>
+			<ViewField name="SenderAndOrganization" link="SenderLink"/>
+			<ViewField name="Remark"/>			
+			<OrderByField name="NotificationID" direction="desc"/>
+		</ViewGrid>
+		<EditGrid 
+			moduleID="ntf" phrase="Actions" 
+			addRecordOnly="yes" rowIDon="RelatedRecordID" moduleOn="DisplayRelatedModuleID">
+			<InvisibleField name="NotificationID"/>
+			<ViewField name="SentDate" phrase="State changed on"/>
+			<ViewField name="ProcessState1"/>
+			<ViewField name="SenderAndOrganization"/>
+			<ViewField name="Remark"/>			
+			<OrderByField name="NotificationID" direction="desc"/>
+			<GridForm>
+				<InvisibleField name="NotificationID"/>
+				<CodeComboField name="ProcessStateID" suppressItemAdd="yes"/>	
+				<EditField name="Remark" size="50" maxLength="50"/>
+			</GridForm>			
+		</EditGrid>
+	</Exports>	
+	<Documentation>
+		<DocumentationSection sectionID="Introduction" title="Wprowadzenie">		
+<![CDATA[
+<br/>	
+<p>Wprowadzenie do obsługi systemu jest dostępne po naciśnięciu przycisku „Tutorial”, który znajduje się na Listwie Głównej u góry ekranu przeglądarki. Tutorial zawiera prezentację:</p>
+<ul>
+<li>Koncepcji systemu:</li>
+<ul>
+<li>związku lista-wiersz jako podstawy modułu,</li>
+<li>pojęcia działań w kontekście listy,</li>
+<li>pojęcia działań w kontekście wiersza,</li>
+<li>powiązania wiersza z innymi modułami,</li>
+</ul>
+<li>Logowania i nawigacji po systemie;</li>
+<li>Funkcjonalności dostępnych na ekranie Listy;</li>
+<li>Funkcjonalności dostępnych na ekranie Wiersza;</li>
+<li>Funkcjonalności związanych z edycją zawartości danych wiersza;</li>
+<li>Funkcjonalności raportów;</li>
+<li>Funkcjonalności wykresów.</li>
+</ul>
+<p>Powyższe możliwości systemu mogą być wypróbowane na modułach demonstracyjnych:</p>
+<ul>
+<li>Państwa;</li>
+<li>Województwa;</li>
+<li>Powiaty.</li>
+</ul>
+<p>Moduły demonstracyjne dostępne są po najechaniu myszą na "Menu Główne" w Listwie Głównej i wybranie ścieżki menu: "Menu Główne/Pomocnicze/Piaskownica/*". Zmiany wprowadzone w modułach demonstracyjnych nie mają wpływu na funkcje biznesowe aplikacji i mogą być wycofane przez administratora systemu.</p>
+]]>
+		</DocumentationSection>		
+	</Documentation>
+	<Revision author="$Author: jwach $" id="1.1" date="$Date: 2011-09-25 $"/>
+</Module>

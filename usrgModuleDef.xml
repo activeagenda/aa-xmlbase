@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Module 
+	name="User Groups" moduleID="usrg" 
+	allowAddRecord="yes" isMasterData="yes" 
+	singularRecordName="User Group" pluralRecordName="User Groups"	
+	defaultMenuPath="Main Menu / Administration / User Groups">
+	
+    <ModuleFields>
+		<TableField
+			name="UserGroupID" type="int" validate="notEmpty" dbFlags="unsigned not null auto_increment"
+			deleteKeys="usrgm.UserGroupID usrgp.UserGroupID"
+			phrase="Group ID|An ID value for primary key purpose." />
+		<TableField
+			name="SQLGroupHandle" type="varchar(5)" validate="notEmpty"
+			phrase="Handle|The group handle for internal SQL queries"/>
+		<TableField
+			name="Name" type="varchar(50)" dbFlags="not null" validate="notEmpty"
+			phrase="Name|The group's name."/>
+		<TableField
+			name="Description" type="text" 
+			phrase="Description|A description of the purpose of the group."/>
+		<SummaryField 
+			name="MembersCount" localKey="UserGroupID" 
+			summaryModuleID="usrgm" summaryKey="UserGroupID" summaryFunction="count" summaryField="MembershipID" 
+			phrase="Total group members|Total of registered memebers in group"/>
+		<SummaryField 
+			name="ModulesCount" localKey="UserGroupID" 
+			summaryModuleID="usrgp" summaryKey="UserGroupID" summaryFunction="count" summaryField="PermissionID" 
+			phrase="Total modules|Total of registered modules in the group"/>
+		<!-- Depraceted in the php code -->
+		<TableField
+			name="SessionTimeout" type="int" validate="notZero"
+			phrase="Session Timeout|If the application settings allow it, a session timeout can be specified here (in minutes). Members of this group will get the smallest timeout of all groups they are a member of, unless an explicit timeout is set in the Users module."/>
+		
+		<CombinedField
+			name="RecordLabel"
+			phrase="Record Label|The short, concise, label of the record for display purposes">
+			<CombinedFieldRef name="Name"/>
+		</CombinedField>
+		<CombinedField name="UserGroup"
+			phrase="Record Label|The short, concise, label of the record for display purposes">
+			<CombinedFieldRef name="Name"/>
+		</CombinedField>
+		
+		<StaticField 
+			name="ruler1" type="text" content="" phrase=" "/>
+		<StaticField 
+			name="ruler2" type="text" content="" phrase=" "/>
+		<StaticField 
+			name="ruler3" type="text" content="" phrase=" "/>
+			
+	</ModuleFields>
+    <ModuleInfo>
+        <PrimaryKey>
+          <FieldRef name="UserGroupID"/>
+        </PrimaryKey>
+        <!-- <OwnerField name="OrganizationID"/>-->
+		<Index name="SQLGroupHandle_Deleted" unique="yes" >
+			<FieldRef name="SQLGroupHandle"/>
+			<FieldRef name="_Deleted"/>
+		</Index>
+        <RecordDescriptionField name="UserGroup"/>
+        <RecordLabelField name="RecordLabel"/>
+    </ModuleInfo>
+    <SubModules>
+        <SubModule 
+			name="User Group Permissions" parentKey="UserGroupID"
+			moduleID="usrgp" localKey="UserGroupID"/>
+        <SubModule 
+			name="User Group Members" parentKey="UserGroupID"
+			moduleID="usrgm" localKey="UserGroupID"/>
+    </SubModules>
+	<RecordSummaryFields>
+        <ViewField name="UserGroupID"/>
+		<ViewField name="ruler1"/>
+        <ViewField name="Name"/>
+		<ViewField name="SQLGroupHandle"/>
+    </RecordSummaryFields>
+    <Screens>
+        <ListScreen name="List">
+          <ListField name="UserGroupID" phrase="ID"/>
+          <ListField name="Name"/>
+		  <ListField name="ModulesCount" align="center"/>
+		  <ListField name="MembersCount" align="center"/>
+		  <ListField name="SQLGroupHandle" align="center"/>
+		  <OrderByField name="Name"/>
+        </ListScreen>
+        <SearchScreen name="Search">
+			<EditField name="UserGroupID" FromTo="no" size="50" maxLength="250"/>
+			<ViewField name="ruler1"/>
+            <EditField name="Name" size="50" maxLength="50"/>
+			<EditField name="SQLGroupHandle" size="5" maxLength="5"/>
+        </SearchScreen>
+        <ViewScreen name="View">
+            <ViewField name="UserGroupID"/>
+			<ViewField name="ruler1"/>
+            <ViewField name="Name"/>
+			<ViewField name="SQLGroupHandle"/>
+            <ViewField name="Description"/>
+			<ViewScreenSection name="Associations">	
+				<ViewGrid moduleID="usrgm" rowIDon="UserGroupID" goEditScreen="Members"/>
+				<ViewGrid moduleID="usrgp" rowIDon="UserGroupID" goEditScreen="Permissions"/>
+			</ViewScreenSection>
+        </ViewScreen>
+        <EditScreen 
+			name="Form" cloneAsNew="no" 
+			phrase="Form|Edit a user group">
+            <ViewField name="UserGroupID"/>
+			<ViewField name="ruler1"/>
+            <EditField name="Name" size="50" maxLength="50"/>			
+			<EditField name="SQLGroupHandle" size="5" maxLength="5"/>
+            <MemoField name="Description" rows="5" cols="60"/>
+        </EditScreen>
+		 <EditScreen name="Members"
+		  phrase="Members|Define which users that should be members of this group">
+            <RecordSummaryFieldsRef/>
+            <SearchSelectGrid moduleID="usrgm" rowIDon="UserGroupID" goViewAnchor="top"/>
+        </EditScreen>		 
+        <EditScreen name="PermissionsList"
+		 phrase="Group permissions list|Edit permissions for the group to view or edit records of a module">
+            <RecordSummaryFieldsRef/>
+            <CustomCode location="init">
+                <![CDATA[ $jsIncludes = '<script type="text/javascript" src="js/usrPermissionsUI.js"></script>'; ]]>
+            </CustomCode>
+            <CustomCode location="classdef">
+                <![CDATA[ include_once(INCLUDE_PATH . '/usrpPermissionGrid.php'); ]]>
+            </CustomCode>
+            <!-- the permission grid has hard-coded fields so it doesn't need any fields defined here -->
+            <PermissionGrid moduleID="usrgp"/>
+        </EditScreen>
+		<EditScreen name="Permissions"
+		  phrase="Group permissions|Edit permissions  for the group to view or edit records of a module">
+			<RecordSummaryFieldsRef/>
+			<EditGrid moduleID="usrgp" rowIDon="UserGroupID" goViewAnchor="top"/>
+		 </EditScreen>  		
+    </Screens>    
+    <Documentation>
+		<DocumentationSection sectionID="Introduction" title="Wprowadzenie">		
+<![CDATA[
+<br/>	
+<p>Wprowadzenie do obsługi systemu jest dostępne po naciśnięciu przycisku „Tutorial”, który znajduje się na Listwie Głównej u góry ekranu przeglądarki. Tutorial zawiera prezentację:</p>
+<ul>
+<li>Koncepcji systemu:</li>
+<ul>
+<li>związku lista-wiersz jako podstawy modułu,</li>
+<li>pojęcia działań w kontekście listy,</li>
+<li>pojęcia działań w kontekście wiersza,</li>
+<li>powiązania wiersza z innymi modułami,</li>
+</ul>
+<li>Logowania i nawigacji po systemie;</li>
+<li>Funkcjonalności dostępnych na ekranie Listy;</li>
+<li>Funkcjonalności dostępnych na ekranie Wiersza;</li>
+<li>Funkcjonalności związanych z edycją zawartości danych wiersza;</li>
+<li>Funkcjonalności raportów;</li>
+<li>Funkcjonalności wykresów.</li>
+</ul>
+<p>Powyższe możliwości systemu mogą być wypróbowane na modułach demonstracyjnych:</p>
+<ul>
+<li>Państwa;</li>
+<li>Województwa;</li>
+<li>Powiaty.</li>
+</ul>
+<p>Moduły demonstracyjne dostępne są po najechaniu myszą na "Menu Główne" w Listwie Głównej i wybranie ścieżki menu: "Menu Główne/Pomocnicze/Piaskownica/*". Zmiany wprowadzone w modułach demonstracyjnych nie mają wpływu na funkcje biznesowe aplikacji i mogą być wycofane przez administratora systemu.</p>
+]]>
+		</DocumentationSection>		
+	</Documentation>
+    <Revision author="$Author: mattias $" id="$Revision: 979 $" date="$Date: 2007-08-21 14:19:56 -0700 (Tue, 21 Aug 2007) $"/>
+</Module>

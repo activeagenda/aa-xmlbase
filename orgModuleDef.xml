@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Module 
+	name="Organizations" moduleID="org" 
+	allowAddRecord="yes" isImplementationPlanningModule="yes" isMasterData="yes" 
+	singularRecordName="Organization" pluralRecordName="Organizations"
+	defaultMenuPath="Main Menu / Organizational structure / Organizations">
+	
+    <ModuleFields>
+        <TableField 
+			name="OrganizationID" type="int" dbFlags="unsigned auto_increment not null" 
+			phrase="Record ID|Numerical ID to identify the organization within this application"/>        
+		<TableField 
+			name="ParentOrganizationID" type="int"  defaultValue="defaultorgID" dbFlags="unsigned null" 
+			phrase="Parent Organization|The next higher level of an organization on a heirachy"/>
+        <ForeignField 
+			name="ParentOrganization" key="ParentOrganizationID"
+			foreignTable="org" foreignKey="OrganizationID" foreignField="Name" joinType="left" 
+			phrase="Parent Organization|The next higher level of an organization on a heirachy"/>
+        <TableField 
+			name="DirectionOrganizationID" type="int"  defaultValue="defaultorgID" dbFlags="unsigned null" 
+			phrase="Direction Organization|The organization providing direction to the organization. The organization selected will automatically filter module specific direction provided throughout the application"/>
+        <ForeignField 
+			name="DirectionOrganization"  key="DirectionOrganizationID" 
+			foreignTable="org" foreignKey="OrganizationID" foreignField="Name" joinType="left"
+			phrase="Direction Organization|The organization providing direction to the organization. The organization selected will automatically filter module specific direction provided throughout the application"/>
+        <TableField 
+			name="PolicyOrganizationID" type="int" defaultValue="defaultorgID" dbFlags="unsigned null" 
+			phrase="Policy Organization|The organization responsible for issuing policy expectations to the organization. The organization selected will automatically populate the Policy Organization field within modules which rely on the sharing of policy expectations"/>
+        <ForeignField 
+			name="PolicyOrganization" key="PolicyOrganizationID" 
+			foreignTable="org" foreignKey="OrganizationID" foreignField="Name" joinType="left" 
+			phrase="Policy Organization|The organization responsible for issuing policy expectations to the organization. The organization selected will automatically populate the Policy Organization field within modules which rely on the sharing of policy expectations"/>
+        <TableField 
+			name="Name" type="varchar(128)" validate="notEmpty" 
+			phrase="Name|Name used to identify the organization"/>
+        <TableField 
+			name="DBA" type="varchar(128)" 
+			phrase="DBA|An alternative name the organization is 'doing business as' if different from the primary name listed"/>
+        <TableField 
+			name="ShortName" type="varchar(20)" validate="notEmpty" 
+			phrase="Short Name|A short name used to identify the organization"/>
+        <TableField 
+			name="Description" type="text" 
+			phrase="Description|Text description of the organization"/>
+        <TableField 
+			name="URL" type="varchar(255)"
+			phrase="URL|Uniform resource locator of the organization which is usually the organization's home page"/>
+        <TableField 
+			name="Address1" type="varchar(128)"  
+			phrase="Address|Physical street address of the organization"/>
+        <TableField 
+			name="CountryID" type="int" dbFlags="unsigned" defaultValue="#165" 
+			phrase="Country|The internationally recognized name of the country"/>
+        <ForeignField 
+			name="Country" key="CountryID" 
+			foreignTable="ctr" foreignKey="CountryID" foreignField="Country" joinType="left"
+			phrase="Country|A combined field used to associate this country with another record"/>
+        <TableField 
+			name="StateID" type="int" dbFlags="unsigned" 
+			phrase="State|A combined field used to associate this state with another record"/>
+        <ForeignField 
+			name="State" key="StateID"
+			foreignTable="sta" foreignTableAlias="sta1a" foreignKey="StateID" foreignField="State"  joinType="left"
+			phrase="State|A combined field used to associate this state with another record"/>
+        <ForeignField 
+			name="StateAbbreviation" key="StateID" 
+			foreignTable="sta" foreignTableAlias="sta1a" foreignKey="StateID" foreignField="StateAbbreviation"
+			joinType="left" 
+			phrase="State|A combined field used to associate this state with another record"/>
+        <ForeignField 
+			name="County" key="CountyID" 
+			foreignTable="cti" foreignKey="CountyID" foreignField="CountyName" joinType="left" 
+			phrase="County|A combined field used to associate this county with another record"/>
+        <TableField 
+			name="CountyID" type="int" dbFlags="unsigned" 
+			phrase="County|A combined field used to associate this county with another record"/>
+        <TableField 
+			name="City" type="varchar(50)" 
+			phrase="City|The name of the city where this organization is located"/>
+        <TableField 
+			name="PostalCode" type="varchar(50)" 
+			phrase="Postal Code|Numerical postal code used to direct physical mail"/>
+        <TableField 
+			name="Phone" type="varchar(50)" validate="regexr: /^[ ]*([+](?:[0-9] ?){6,14}[0-9])[ ]*$/$1/"
+			phrase="Phone|Main telephone number of the organization"/>
+		<CombinedField
+			name="PhoneLinkIcon"  
+			phrase="Phone|Telephone number of the location">
+			<![CDATA[<!--[if IE]><a  target="_blank"  href="tel:]]>
+			<CombinedFieldRef name="Phone"/><![CDATA[">]]>
+			<CombinedFieldRef name="Phone"/><![CDATA[</a><![endif]-->]]>
+			<![CDATA[<![if !IE]><a href="tel:]]>
+			<CombinedFieldRef name="Phone"/><![CDATA[">]]>
+			<CombinedFieldRef name="Phone"/><![CDATA[</a><![endif]>]]>
+		</CombinedField>	
+			
+        <TableField 
+			name="Fax" type="varchar(50)"
+			phrase="Fax|Main fax telephone number of the organization"/>
+        <TableField 
+			name="Email" type="varchar(128)"
+			phrase="Email|Main organizational Email address used by the organization to correspond with those outside the organization"/>
+        <StaticField 
+			name="ruler2" type="text" content="" phrase=" "/>
+		<TableField 
+			name="Participant" type="bool"  
+			phrase="Participant|Whether this organization is a participant in this installation of Active Agenda"/>
+        <CalculatedField 
+			name="ParticipantSign" calcFunction="flipflop" params="Participant #&#9679; #&#9675;"  
+			phrase="Participant|Whether this organization is a participant in this installation of Active Agenda"/>
+		<CombinedField 
+			name="ParticipantGraph" 
+			phrase="Participant|Whether this organization is a participant in this installation of Active Agenda">
+			<![CDATA[<div style="font-size:24px\;color:#9ABEEA\;\padding-left:20px">]]>
+			<CombinedFieldRef name="ParticipantSign"/><![CDATA[</div>]]>
+		</CombinedField>
+		<TableField 
+			name="Internal" type="bool" dbFlags="default 0" 
+			phrase="Internal|Whether this organization is internal to the main organization of this installation of Active Agenda."/>
+       	<CalculatedField 
+			name="InternalSign" calcFunction="flipflop" params="Internal #&#9679; #&#9675;"  
+			phrase="Internal|Whether this organization is internal to the main organization of this installation of Active Agenda."/>
+		<CombinedField 
+			name="InternalGraph" 
+			phrase="Internal|Whether this organization is internal to the main organization of this installation of Active Agenda.">
+			<![CDATA[<div style="font-size:24px\;color:#9ABEEA\;\padding-left:20px">]]>
+			<CombinedFieldRef name="InternalSign"/><![CDATA[</div>]]>
+		</CombinedField>
+		
+		<CombinedField 
+			name="RecordLabel" 
+			phrase="Record Label|The short, concise, label of the record for display purposes">
+            <CombinedFieldRef name="Name"/>
+        </CombinedField>
+        <CombinedField 
+			name="Address" 
+			phrase="Address|A combined field used to describe the organization address when associating it with other records">
+			<CombinedFieldRef name="Address1"/><br/><CombinedFieldRef name="PostalCode"/>_<CombinedFieldRef name="City"/><br/><CombinedFieldRef name="Country"/>
+		</CombinedField>
+        <CombinedField 
+			name="AddressLink" 
+			phrase="Address|Postal adres of the location">
+			http://maps.google.com/maps?q=<CombinedFieldRef name="Address1"/>,_<CombinedFieldRef name="PostalCode"/>_<CombinedFieldRef name="City"/>,_<CombinedFieldRef name="Country"/>
+		</CombinedField>
+		
+		<TableField 
+			name="SupervisorID" type="int" dbFlags="unsigned default 0" orgListOptions="intpar"
+			validate="RequireSelection" 
+			phrase="Supervisor|Person supervising the organization"/>			
+		<ForeignField 
+			name="Supervisor" foreignTable="ppl" foreignKey="PersonID" foreignField="DisplayName" 
+			key="SupervisorID"			
+			phrase="Supervisor|Person supervising the organization">
+			<ListCondition fieldName="PersonStatusID" mode="equals"><StaticValue value="1"/></ListCondition>
+		</ForeignField>
+		<LinkField 
+			name="SupervisorLink" foreignModuleID="ppl" recordIDField="SupervisorID" 
+			phrase="Supervisor|Person supervising the organization"/>
+		<ForeignField 
+			name="SupervisorOrganizationID" foreignTable="ppl" 
+			foreignKey="PersonID" foreignField="OrganizationID" key="SupervisorID" 
+			phrase="Supervisor|Person supervising the organization"/>
+		<ForeignField 
+			name="SupervisorOrganization" key="SupervisorOrganizationID" 
+			foreignTable="org" foreignKey="OrganizationID" foreignField="Name"
+			phrase="Supervisor|Person supervising the organization"/>
+		<CombinedField name="SupervisorNameOrganization"  
+			phrase="Supervisor|Person supervising the organization">
+			<CombinedFieldRef name="Supervisor"/>_/_<CombinedFieldRef name="SupervisorOrganization"/>
+		</CombinedField>
+		
+		<CombinedField 
+			name="RecordLabel" 
+			phrase="Record Label|The short, concise, label of the record for display purposes">
+            <CombinedFieldRef name="Name"/>
+        </CombinedField>
+		<CombinedField 
+			name="RecordDescription" 
+			phrase="Record Description|A combined field used to describe this record when associating it with other records">
+            <CombinedFieldRef name="Name"/>		
+        </CombinedField>
+		
+		<StaticField 
+			name="ruler1" type="text" content="" phrase=" "/>
+		<StaticField 
+			name="ruler2" type="text" content="" phrase=" "/>
+			
+	</ModuleFields>
+    <ModuleInfo>
+        <PrimaryKey>
+            <FieldRef name="OrganizationID"/>
+        </PrimaryKey>
+        <UniquenessIndex name="Name">
+            <FieldRef name="Name"/>
+        </UniquenessIndex>
+        <OwnerField name="OrganizationID"/>
+        <RecordDescriptionField name="RecordDescription"/>
+        <RecordLabelField name="RecordLabel"/>
+    </ModuleInfo>
+    <SubModules>
+        <SubModule 
+			name="People" parentKey="OrganizationID" 
+			moduleID="ppl" localKey="OrganizationID">
+			<SubModuleCondition field="PersonStatusID" value="1"/>
+		</SubModule>			
+    </SubModules>
+	<RecordSummaryFields>
+        <ViewField name="OrganizationID"/>
+		<ViewField name="ruler1"/>
+        <ViewField name="Name"/>
+		<ViewField name="DBA"/>
+        <ViewField name="Description"/>
+		<ViewField name="SupervisorNameOrganization" link="SupervisorLink"/>
+        <ViewField name="URL" link="URL"/>
+        <ViewField name="ParentOrganization"/>
+    </RecordSummaryFields>  
+    <Screens>
+        <ListScreen name="List">
+            <ListField name="OrganizationID" phrase="ID"/>
+            <ListField name="Name"/>
+			<ListField name="DBA" align="center"/>
+            <ListField name="InternalGraph" align="center"/>
+            <ListField name="ParticipantGraph" align="center"/>
+			<InvisibleField name="Internal"/>
+            <OrderByField name="Internal" direction="desc"/>					
+        </ListScreen>
+        <SearchScreen name="Search">
+			<EditField name="OrganizationID" FromTo="no" size="50" maxLength="250"/>
+			<ViewField name="ruler1"/>
+            <EditField name="Name" size="75" maxLength="128"/>
+            <EditField name="DBA" size="75" maxLength="128"/>
+            <EditField name="ShortName" size="20" maxLength="20"/>
+            <PersonComboField name="SupervisorID" findMode="text" suppressItemAdd="yes"/>
+			<ViewField name="ruler2"/>			
+            <EditField name="Address1" size="50" maxLength="128"/>
+            <EditField name="PostalCode" size="20" maxLength="50"/>
+			<EditField name="City" size="30" maxLength="128"/>
+            <ComboField name="CountryID" findMode="text" suppressItemAdd="yes"/> 
+			<EditField name="URL" size="75" maxLength="255"/>  
+            <EditField name="Email" size="50" maxLength="128"/>
+            <EditField name="Phone" size="50" maxLength="50"/>
+            <EditField name="Fax" size="50" maxLength="50"/>      
+            <CheckBoxField name="Internal"/>
+			<OrgComboField name="ParentOrganizationID" findMode="text" suppressItemAdd="yes"/>
+			<CheckBoxField name="Participant"/>
+        </SearchScreen>
+        <ViewScreen name="View">
+            <ViewField name="OrganizationID"/>
+			<ViewField name="ruler1"/>
+            <ViewField name="Name"/>
+            <ViewField name="DBA"/>
+            <ViewField name="ShortName"/>			
+            <ViewField name="Description"/>
+			<ViewField name="SupervisorNameOrganization" link="SupervisorLink"/>
+			<ViewField name="ruler2"/>			
+            <ViewField name="Address" link="AddressLink" icon="mapmarker.png"/>
+            <ViewField name="PhoneLinkIcon"/>
+            <ViewField name="Fax"/>
+            <ViewField name="Email" link="Email"/>
+			<ViewField name="URL" link="URL"/>
+			<ViewField name="ruler2"/>
+            <ViewField name="Participant"/>
+            <ViewField name="Internal"/>
+			<ViewField name="ParentOrganization" goEditScreen="Form"/>
+            <ViewScreenSection name="Associations" phrase="Persons connected with the organization">
+                <ViewGrid moduleID="ppl" rowIDon="OrganizationID" phrase="Organization employees"/>
+            </ViewScreenSection>            
+        </ViewScreen>
+        <EditScreen name="Form" phrase="Form|Edit summary information about an organization">
+            <ViewField name="OrganizationID"/>
+			<ViewField name="ruler1"/>
+            <EditField name="Name" size="75" maxLength="128"/>
+            <EditField name="DBA" size="75" maxLength="128"/>
+            <EditField name="ShortName" size="20" maxLength="20"/>			
+            <MemoField name="Description" rows="5" cols="60"/>
+			<PersonComboField name="SupervisorID" findMode="text" suppressItemAdd="yes"/>
+			<ViewField name="ruler2"/>
+            <EditField name="Address1" size="50" maxLength="128"/>
+			<EditField name="PostalCode" size="20" maxLength="50"/>
+			<EditField name="City" size="30" maxLength="128"/>
+            <ComboField name="CountryID" findMode="text" suppressItemAdd="yes"/> 
+            <EditField name="Phone" size="30" maxLength="50"/>
+            <EditField name="Fax" size="30" maxLength="50"/>
+			<EditField name="Email" size="30" maxLength="128"/>
+			<EditField name="URL" size="75" maxLength="255"/>
+			<ViewField name="ruler2"/>            
+            <CheckBoxField name="Internal"/>
+			<OrgComboField name="ParentOrganizationID" findMode="text"/>
+			<CheckBoxField name="Participant"/>
+        </EditScreen>
+    </Screens>      
+    <Documentation>
+		<DocumentationSection sectionID="Introduction" title="Wprowadzenie">		
+<![CDATA[
+<br/>	
+<p>Wprowadzenie do obsługi systemu jest dostępne po naciśnięciu przycisku „Tutorial”, który znajduje się na Listwie Głównej u góry ekranu przeglądarki. Tutorial zawiera prezentację:</p>
+<ul>
+<li>Koncepcji systemu:</li>
+<ul>
+<li>związku lista-wiersz jako podstawy modułu,</li>
+<li>pojęcia działań w kontekście listy,</li>
+<li>pojęcia działań w kontekście wiersza,</li>
+<li>powiązania wiersza z innymi modułami,</li>
+</ul>
+<li>Logowania i nawigacji po systemie;</li>
+<li>Funkcjonalności dostępnych na ekranie Listy;</li>
+<li>Funkcjonalności dostępnych na ekranie Wiersza;</li>
+<li>Funkcjonalności związanych z edycją zawartości danych wiersza;</li>
+<li>Funkcjonalności raportów;</li>
+<li>Funkcjonalności wykresów.</li>
+</ul>
+<p>Powyższe możliwości systemu mogą być wypróbowane na modułach demonstracyjnych:</p>
+<ul>
+<li>Państwa;</li>
+<li>Województwa;</li>
+<li>Powiaty.</li>
+</ul>
+<p>Moduły demonstracyjne dostępne są po najechaniu myszą na "Menu Główne" w Listwie Głównej i wybranie ścieżki menu: "Menu Główne/Pomocnicze/Piaskownica/*". Zmiany wprowadzone w modułach demonstracyjnych nie mają wpływu na funkcje biznesowe aplikacji i mogą być wycofane przez administratora systemu.</p>
+]]>
+		</DocumentationSection>		
+	</Documentation>
+    <Revision author="$Author: mattias $" id="$Revision: 1583 $" date="$Date: 2009-04-28 07:11:50 +0200 (Wt, 28 kwi 2009) $"/>
+</Module>

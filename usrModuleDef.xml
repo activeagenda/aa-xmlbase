@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Module 
+	name="Users" moduleID="usr" 
+	allowAddRecord="yes" isMasterData="yes" 
+	singularRecordName="User" pluralRecordName="Users" 	
+	defaultMenuPath="Main Menu / Administration / Users">
+	
+	<ModuleFields>
+		<TableField 
+			name="PersonID" type="int" validate="notEmpty" dbFlags="unsigned not null" 
+			deleteOnIdGlobals="rmd att nts cos lnk ntf" deleteKeys="usrgm.PersonID" 
+			phrase="Person ID|A unique, automatically assigned, number used to track people associated with the organization"/>
+		<ForeignField 
+			name="Person" key="PersonID"
+			foreignTable="ppl" foreignKey="PersonID" foreignField="DisplayName" joinType="left" 
+			phrase="Person|The person who is this user."/>
+		<LinkField 
+			name="PersonLink" foreignModuleID="ppl" recordIDField="PersonID" 
+			phrase="Person|The person who is this user."/>
+		<TableField 
+			name="Username" type="varchar(25)" validate="notEmpty" 
+			phrase="Username|The user's login name."/>
+		<TableField 
+			name="Password" type="varchar(50)" validate="notEmpty" defaultValue="#Start123"
+			phrase="Password|The user's password."/>
+		<CalculatedField 
+			name="Password1" 
+			calcFunction="flipflop_onnull" params="Password #&#9679;&#9679;&#9679; #&#160;"  
+			phrase="Password|The user's password."/>
+		
+		<TableField 
+			name="IsAdmin" type="bool" dbFlags="default 0" validate="RequireSelection" 
+			phrase="Is Site Administrator|Site Administrators have access to all records in all modules, plus administration features."/>
+        <CalculatedField 
+			name="IsAdminSign" calcFunction="flipflop" params="IsAdmin #&#9679; #&#9675;"  
+			phrase="Is Site Administrator|Site Administrators have access to all records in all modules, plus administration features."/>
+		<CombinedField 
+			name="IsAdminGraph" 
+			phrase="Is Site Administrator|Site Administrators have access to all records in all modules, plus administration features.">
+			<![CDATA[<div class="gsblt">]]>
+			<CombinedFieldRef name="IsAdminSign"/><![CDATA[</div>]]>
+		</CombinedField>
+		
+		<TableField 
+			name="LoginLocked" type="bool" dbFlags="default 0" validate="RequireSelection" 
+			phrase="User login locked|User is locked from logging to the system"/>
+        <CalculatedField 
+			name="LoginLockedSign" calcFunction="flipflop" params="LoginLocked #&#9679; #&#9675;"  
+			phrase="User login locked|User is locked from logging to the system"/>
+		<CombinedField 
+			name="LoginLockedGraph" 
+			phrase="User login locked|User is locked from logging to the system">
+			<![CDATA[<div class="gsblt">]]>
+			<CombinedFieldRef name="LoginLockedSign"/><![CDATA[</div>]]>
+		</CombinedField>
+		<TableField 
+			name="AccountValidFrom" type="date" 
+			phrase="Account valid from|User account is valid from the date on"/>
+		<TableField 
+			name="AccountValidTo" type="date" 
+			phrase="Account valid to|User account is valid to the date"/>
+		<CalculatedField 
+			name="AccountActive" 
+			calcFunction="account_not_valid" params="LoginLocked AccountValidFrom AccountValidTo"  
+			phrase="Account not valid|User account is not valid"/>		
+		<CalculatedField 
+			name="AccountActiveSign" 
+			calcFunction="flipflop" params="AccountActive #&#9679; #&#9675;"  
+			phrase="Account not valid|User account is not valid"/>
+		<CalculatedField 
+			name="AccountActiveCode" 
+			calcFunction="flipflop" params="AccountActive #2 #1"  
+			phrase="Account not valid|User account is not valid"/>
+		<CodeField 
+			name="AccountActiveColor" key="AccountActiveCode"  codeTypeID="298" 
+			phrase="Account not valid|User account is not valid"/>
+		<CombinedField 
+			name="AccountActiveGraph" 
+			phrase="Account not valid|User account is not valid">
+			<CombinedFieldRef name="AccountActiveColor"/>
+			<CombinedFieldRef name="AccountActiveSign"/>
+			<![CDATA[</div>]]>
+		</CombinedField>
+		
+		<TableField 
+			name="RequireNewPassword" type="bool" dbFlags="default 1" validate="RequireSelection" defaultValue="#1"
+			phrase="Require New Password|If set to 'yes', the user will be asked to enter a new password when logging in."/>
+		<CodeField 
+			name="LangShort" key="LangID" codeTypeID="139" 
+			phrase="Language|The user's preferred language"/>
+		<TableField 
+			name="LangID" type="int" validate="RequireSelection" dbFlags="default 5" defaultValue="#5"
+			phrase="Language|The user's preferred language" />
+		<CodeField 
+			name="Lang" key="LangID" codeTypeID="138" 
+			phrase="Language|The user's preferred language"/>
+		<CodeField 
+			name="LangShort" key="LangID" codeTypeID="139" 
+			phrase="Language|The user's preferred language"/>
+		
+		<TableField 
+			name="SessionTimeout" type="int" validate="notZero" 
+			phrase="User Session Timeout|If the application settings allow it, the user's session timeout can be specified here (in minutes)."/>
+		<SummaryField 
+			name="GroupSessionTimeout" type="int" localKey="PersonID" 
+			summaryFunction="min"  summaryModuleID="usrgm"	summaryField="SessionTimeout" summaryKey="PersonID"		
+			phrase="Group Session Timeout|If any groups that the user is a member of have an assigned session timeout, the shortest timeout will be displayed here."/>
+		<CalculatedField 
+			name="ResultingSessionTimeout" type="int" 
+			calcFunction="ifnull" params="SessionTimeout GroupSessionTimeout" 
+			phrase="Resulting Session Timeout|If the application settings allow it, this is the effective session timeout for the user. Any timeout assigned explicitly to the user will override any timeout value due to group membership."/>
+		
+		<ForeignField 
+			name="OrganizationID" key="PersonID" 
+			foreignTable="ppl" foreignKey="PersonID" foreignField="OrganizationID" joinType="left" 
+			phrase="Organization|Name of organization associated with the individual"/>
+		<LinkField 
+			name="OrganizationLink" foreignModuleID="org" recordIDField="OrganizationID" 
+			phrase="Organization|Name of organization associated with the individual"/>
+		<ForeignField 
+			name="Organization" key="OrganizationID"
+			foreignTable="org" foreignKey="OrganizationID" foreignField="Name" joinType="left" 
+			phrase="Organization|Name of organization associated with the individual"/>
+		<CombinedField 
+			name="PersonOrganization" 
+			phrase="Person|The person who is this user.">
+			<CombinedFieldRef name="Person"/>_/_<CombinedFieldRef name="Organization"/>
+		</CombinedField>
+		
+		<ForeignField 
+			name="PersonStatusID" key="PersonID" 
+			foreignTable="ppl" foreignKey="PersonID" foreignField="PersonStatusID" joinType="left" 
+			phrase="Status|Current status of the person in the organization"/>				
+		<CodeField 
+			name="PersonStatus" key="PersonStatusID"  codeTypeID="303" 
+			phrase="Status|Current status of the person in the organization"/>
+		<CodeField 
+			name="PersonStatus1" key="PersonStatusID"  codeTypeID="301" 
+			phrase="Status|Current status of the person in the organization"/>
+		<CodeField 
+			name="PersonStatus2" key="PersonStatusID"  codeTypeID="299" 
+			phrase="Status|Current status of the person in the organization"/>
+		<CodeField 
+			name="PersonStatus3" key="PersonStatusID"  codeTypeID="298" 
+			phrase="Status|Current status of the person in the organization"/>
+		 <CombinedField 
+			name="PersonStatusGraph" 
+			phrase="Status|Current status of the person in the organization">
+			<CombinedFieldRef name="PersonStatus3"/><CombinedFieldRef name="PersonStatus1"/><![CDATA[</div>]]>
+		</CombinedField>
+			
+		<CombinedField 
+			name="RecordLabel" 
+			phrase="Record Label|The short, concise, label of the record for display purposes">
+			<CombinedFieldRef name="PersonStatus2"/>
+			<CombinedFieldRef name="Username"/>_;_<CombinedFieldRef name="LangShort"/>
+			<![CDATA[</span>]]>
+		</CombinedField>
+		<CombinedField 
+			name="RecordDescription" 
+			phrase="Record Label|The short, concise, label of the record for display purposes">
+			<CombinedFieldRef name="Username"/>_;_<CombinedFieldRef name="LangShort"/>
+		</CombinedField>
+		
+		<ForeignField 
+			name="_Tag" key="PersonID" 
+			foreignTable="cos" foreignKey="RelatedRecordID" foreignField="Tag" 
+			listCondition="RelatedModuleID='usr'" 			
+			phrase="Tag|A tag that classifies the record"/>
+		
+		<StaticField 
+			name="ruler1" type="text" content="" phrase=" "/>
+		<StaticField 
+			name="ruler2" type="text" content="" phrase=" "/>
+		<StaticField 
+			name="ruler3" type="text" content="" phrase=" "/>
+		<StaticField 
+			name="ruler4" type="text" content="" phrase=" "/>
+			
+	</ModuleFields>
+    <ModuleInfo>
+        <PrimaryKey>
+            <FieldRef name="PersonID"/>
+        </PrimaryKey>
+		<UniquenessIndex name="Username">
+            <FieldRef name="Username"/>
+        </UniquenessIndex>
+        <OwnerField name="OrganizationID"/>
+        <RecordDescriptionField name="RecordDescription"/>
+        <RecordLabelField name="RecordLabel"/>
+    </ModuleInfo>
+    <SubModules>
+        <SubModule 
+			name="User Permissions" parentKey="PersonID" 
+			moduleID="usrp" localKey="PersonID"/>
+        <SubModule 
+			name="Permitted Organizations" parentKey="PersonID"
+			moduleID="usrpo"  localKey="PersonID"/>
+        <SubModule 
+			name="User Group Membership" parentKey="PersonID" 
+			moduleID="usrgm" localKey="PersonID"/>
+    </SubModules>
+	<RecordSummaryFields>
+		<ViewField name="PersonID"/>
+		<ViewField name="ruler1"/>
+		<ViewField name="PersonOrganization" link="PersonLink"/>
+		<ViewField name="PersonStatus"/>
+		<ViewField name="ruler2"/>
+		<ViewField name="Username"/>
+		<ViewField name="LoginLocked"/>
+		<ViewField name="IsAdmin"/>
+		<ViewField name="Lang"/>
+	</RecordSummaryFields>
+	<Screens>
+		<ListScreen name="List">
+			<ListField name="PersonID" phrase="ID"/>	
+			<ListField name="AccountActiveGraph" phrase="Account not valid" align="center" />
+			<ListField name="PersonStatusGraph" align="center"/>			
+			<ListField name="Username" align="center" />			
+			<ListField name="PersonOrganization"/>
+			<ListField name="LangShort" phrase="Language" align="center"/>			
+			<ListField name="IsAdminGraph" align="center" phrase="Admin"/>
+			<HiddenField name="Person"/>
+			<OrderByField name="Person"/>	 
+		</ListScreen>
+		<SearchScreen name="Search">			
+			<PersonComboField name="PersonID" findMode="alpha"/>
+			<OrgComboField name="OrganizationID" findMode="text"  suppressItemAdd="yes"/>
+			<CodeComboField name="PersonStatusID" suppressItemAdd="yes"/>
+			<ViewField name="ruler1"/>			
+			<EditField name="Username" size="15" maxLength="25"/>
+			<CheckBoxField name="IsAdmin"/>            
+			<CodeComboField name="LangID"  suppressItemAdd="yes"/> 				
+			<ViewField name="ruler2"/>
+			<CheckBoxField name="AccountActive"/>			
+			<CheckBoxField name="LoginLocked"/>
+			<DateField name="AccountValidFrom"/>
+			<DateField name="AccountValidTo"/>				
+			<ViewField name="ruler3"/>
+			<EditField name="_Tag" size="50" maxLength="50"/>
+		</SearchScreen>
+		<ViewScreen name="View">
+			<ViewField name="PersonID"/>
+			<ViewField name="ruler1"/>
+			<ViewField name="PersonOrganization" link="PersonLink"/>
+			<ViewField name="PersonStatus"/>							
+			<ViewScreenSection name="Associations1">	
+				<ViewField name="Username"/>
+				<ViewField name="Password1"/>
+				<ViewField name="RequireNewPassword" goEditScreen="Form"/>
+			</ViewScreenSection>
+			<ViewScreenSection name="Associations2">
+				<ViewField name="IsAdmin"/>				
+				<ViewField name="Lang" />
+				<ViewField name="ruler2"/>
+				<ViewField name="AccountActiveGraph"/>
+				<ViewField name="LoginLocked"/>
+				<ViewField name="AccountValidFrom"/>
+				<ViewField name="AccountValidTo" goEditScreen="Settings"/>				
+			</ViewScreenSection>
+			<ViewScreenSection name="Associations">
+				<ViewGrid moduleID="usrp" rowIDon="PersonID" goEditScreen="Permissions"/>
+				<ViewGrid moduleID="usrpo" rowIDon="PersonID" goEditScreen="PermittedOrgs"/>
+				<ViewGrid moduleID="usrgm" rowIDon="PersonID" goEditScreen="Groups" phrase="User Group Membership" >
+				  <InvisibleField name="MembershipID"/>
+				  <ViewField name="UserGroup"/>
+				</ViewGrid>
+			</ViewScreenSection>
+		</ViewScreen>
+		<!-- control access to this screen: only site admins can edit other user's info, but users can access their own-->
+		<EditScreen name="Form" phrase="Credentials|Edit a user's user name and password">
+			<CustomCode location="init">
+				<![CDATA[ include_once(INCLUDE_PATH . '/usrFunctions.php'); ]]>
+			</CustomCode>
+			<CustomCode location="save">
+				<![CDATA[ verifyPassword('Password', false);]]>
+			</CustomCode>
+			<CustomCode location="check_deleted_row_exists">
+				<![CDATA[ checkForDeletedRow(); ]]>
+			</CustomCode>
+			<!-- hide this field unless setting up a new user -->
+			<ViewField name="PersonID"/>
+			<ViewField name="ruler1"/>
+			<PersonComboField 
+				name="PersonID" findMode="alpha" 
+				conditionField="*recordID*" conditionValue="empty"  suppressItemAdd="yes"/>
+			<EditField name="Username" size="15" maxLength="25"/>
+			<!-- display password fields as"password" type fields -->
+			<PasswordField name="Password" size="15" maxLength="25" openText="yes"/>
+			<CheckBoxField name="RequireNewPassword"/>
+     </EditScreen>
+     <EditScreen name="Settings" phrase="Settings|Edit a user's settings">
+			<!-- disply only if the current user is a site admin -->
+			<ViewField name="PersonID"/>
+			<ViewField name="ruler1"/>
+			<ViewField name="PersonOrganization" link="PersonLink"/>
+			<ViewField name="PersonStatus"/>
+			<ViewField name="Username"/>			
+			<ViewField name="ruler2"/>
+			<CheckBoxField name="IsAdmin"/>            
+			<CodeComboField name="LangID"  suppressItemAdd="yes"/>
+			<ViewField name="ruler3"/>
+			<CheckBoxField name="LoginLocked"/>
+			<DateField name="AccountValidFrom"/>
+			<DateField name="AccountValidTo"/>			 		        
+		</EditScreen>
+		<!-- add screens for user preferences-->		
+		<EditScreen name="PermissionsList"
+   		 phrase="Permissions list|Edit permissions to view or edit records of a module">
+			<RecordSummaryFieldsRef/>
+			<CustomCode location="init">
+				<![CDATA[ $jsIncludes = '<script type="text/javascript" src="js/usrPermissionsUI.js"></script>'; ]]>
+			</CustomCode>
+			<CustomCode location="classdef">
+				<![CDATA[ include_once(INCLUDE_PATH . '/usrpPermissionGrid.php'); ]]>
+			</CustomCode>
+			<!-- the permission grid has hard-coded fields so it doesn't need any fields defined here -->
+			<PermissionGrid moduleID="usrp" phrase="Permissions"/>
+		</EditScreen>
+		<EditScreen name="Permissions" phrase="Permissions|Edit permissions to view or edit records of a module">
+			<RecordSummaryFieldsRef/>			
+			<EditGrid moduleID="usrp" phrase="Permissions" rowIDon="PersonID" goViewAnchor="top"/>
+		</EditScreen>		
+		<EditScreen name="PermittedOrgs" phrase="Permitted Organizations|Edit the assigned organizations">
+			<RecordSummaryFieldsRef/>
+			<SelectGrid moduleID="usrpo" rowIDon="PersonID" goViewAnchor="Associations"/>
+		</EditScreen>
+        <EditScreen name="Groups" phrase="Group Membership|Define which groups this user should be a memebr of">
+          <RecordSummaryFieldsRef/>
+          <SelectGrid moduleID="usrgm" phrase="User Groups" primaryListField="UserGroup" rowIDon="PersonID"
+ 		   goViewAnchor="Associations"/>
+        </EditScreen>
+	</Screens>	
+	<Documentation>
+		<DocumentationSection sectionID="Introduction" title="Wprowadzenie">		
+			  <div id='introduction' align="center"/><script type='text/javascript'>play_tutorial( 'introduction', 'tut_intro.flv')</script>
+		</DocumentationSection>		
+	</Documentation>
+	<Revision author="$Author: mattias $" id="$Revision: 1515 $" date="$Date: 2009-02-11 18:59:24 +0100 (Śr, 11 lut 2009) $"/>
+</Module>

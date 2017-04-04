@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Module 
+	name="User Permissions" moduleID="usrp"
+	parentModule="usr" allowAddRecord="no" isMasterData="yes"
+	singularRecordName="User Permission" pluralRecordName="User Permissions" 
+	defaultMenuPath="Main Menu / Administration / Users [usr] / Permissions">
+ 
+	<ModuleFields>
+		<TableField 
+			name="PermissionID" type="int" dbFlags="unsigned auto_increment not null"
+			phrase="Record ID|An automatically assigned number used to track permissions"/>
+		<TableField
+			name="PersonID" type="int" dbFlags="unsigned not null"
+			phrase="User|The user to whom a permission is assigned"/>
+        <ForeignField
+			name="Person" key="PersonID" 
+			foreignTable="ppl" foreignKey="PersonID" foreignField="DisplayName" joinType="left"
+			phrase="Person|The person who is this user."/>
+		<TableField 
+			name="ModuleID" type="varchar(5)" dbFlags="not null"
+			phrase="Module ID|The module ID of the associated module"/>
+		<ForeignField
+			name="Module" key="ModuleID" 
+			foreignTable="mod" foreignKey="ModuleID" foreignField="Name" joinType="left"
+			phrase="Module|The associated module"/>
+        <TableField
+			name="EditPermission" type="tinyint" dbFlags="unsigned not null"
+			phrase="Edit Permission|The type of permission the user has to edit a record of the associated module"/>
+		<CodeField
+			name="EditPermissionLabel" key="EditPermission" codeTypeID="2" 
+			phrase="Edit Permission|The type of permission the user has to edit a record of the associated module"/>
+		<CodeField
+			name="EditPermissionIcon" key="EditPermission" codeTypeID="4" 
+			phrase="Edit Permission|The type of permission the user has to edit a record of the associated module"/>
+
+			<TableField
+			name="ViewPermission" type="tinyint" dbFlags="unsigned not null"
+			phrase="View Permission|The type of permission the user has to view a record of the associated module"/>
+		<CodeField
+			name="ViewPermissionLabel" key="ViewPermission" codeTypeID="1"
+			phrase="View Permission|The type of permission the user has to view a record of the associated module"/>
+		<CodeField
+			name="ViewPermissionIcon" key="ViewPermission" codeTypeID="3"
+			phrase="View Permission|The type of permission the user has to view a record of the associated module"/>
+			
+		<CombinedField
+			name="Permission"
+			phrase="Permission|A description of the permission a user has to records in the associated module">
+			<CombinedFieldRef name="EditPermissionLabel"/>,_<CombinedFieldRef name="ViewPermissionLabel"/>
+		</CombinedField>
+		<TableField
+			name="GroupAccess" type="bool" dbFlags="default 0"
+			phrase="Group Access|Access permission to the users`s record data for all the user`s group members"/>
+		<CalculatedField 
+			name="GroupAccessSign" calcFunction="flipflop" params="GroupAccess #&#9679; #&#9675;"  
+			phrase="Group Access|Access permission to the users`s record data for all the user`s group members"/>
+		<CombinedField 
+			name="GroupAccessGraph" 
+			phrase="Group Access|Access permission to the users`s record data for all the user`s group members">
+			<![CDATA[<div class="gsblt">]]>
+			<CombinedFieldRef name="GroupAccessSign"/><![CDATA[</div>]]>
+		</CombinedField>
+		<TableField
+			name="AllAccess" type="bool" dbFlags="default 0"
+			phrase="All Access|Access permission to the record data for everybody"/>
+		<CalculatedField 
+			name="AllAccessSign" calcFunction="flipflop" params="AllAccess #&#9679; #&#9675;"  
+			phrase="All Access|Access permission to the record data for everybody"/>
+		<CombinedField 
+			name="AllAccessGraph" 
+			phrase="All Access|Access permission to the record data for everybody">
+			<![CDATA[<div class="gsblt">]]>
+			<CombinedFieldRef name="AllAccessSign"/><![CDATA[</div>]]>
+		</CombinedField>
+		
+		<StaticField 
+			name="ruler1" type="text" content="" phrase=" "/>
+		<StaticField 
+			name="ruler2" type="text" content="" phrase=" "/>		
+			
+	</ModuleFields>
+	<ModuleInfo>
+		<PrimaryKey>
+			<FieldRef name="PermissionID"/>
+		</PrimaryKey>
+        <Index name="PersonID">
+            <FieldRef name="PersonID"/>
+        </Index>
+	</ModuleInfo>
+    <Screens>
+      <ListScreen name="List">
+        <ListField name="PermissionID" phrase="ID"/>
+        <ListField name="Person"/>
+		<ListField name="ModuleID" align="center"/>
+        <ListField name="Module"/>
+		<ListField name="GroupAccessGraph" align="center"/>	
+        <ListField name="AllAccessGraph" align="center"/>			
+		<ListField name="ViewPermissionLabel" align="center"/>		
+        <ListField name="EditPermissionLabel" align="center"/>				
+      </ListScreen>
+      <SearchScreen name="Search">
+	  	<EditField name="PermissionID" FromTo="no" size="50" maxLength="250"/>
+		<ViewField name="ruler1"/>
+        <PersonComboField name="PersonID" findMode="alpha"/>
+        <ComboField name="ModuleID" findMode="text" />        
+		<CheckBoxField  name="GroupAccess"/>
+        <CheckBoxField  name="AllAccess"/>
+		<CodeComboField name="ViewPermission" listField="ViewPermissionLabel"/>
+        <CodeComboField name="EditPermission" listField="EditPermissionLabel"/>
+      </SearchScreen>
+	  <ViewScreen name="View">
+		<ViewField name="PermissionID" />
+		<ViewField name="ruler1"/>
+        <ViewField name="Person"/>
+        <ViewField name="Module"/>
+		<ViewField name="GroupAccess"/>
+        <ViewField name="AllAccess"/>
+        <ViewField name="ViewPermissionLabel"/>
+        <ViewField name="EditPermissionLabel"/>		
+	  </ViewScreen>
+	  <EditScreen name="Form" phrase="Form|edit summary information about a permission record">
+		<ViewField name="PermissionID"/>
+		<ViewField name="ruler1"/>
+		<ViewField name="Person"/>
+        <ViewField name="Module"/>
+		<ViewField name="ruler2"/>		
+		<CheckBoxField  name="GroupAccess"/>
+        <CheckBoxField  name="AllAccess"/>
+		<CodeComboField name="ViewPermission" listField="ViewPermissionLabel" suppressItemAdd="yes"/>
+        <CodeComboField name="EditPermission" listField="EditPermissionLabel" suppressItemAdd="yes"/>
+	  </EditScreen>
+    </Screens>	
+	<Exports>
+		<ViewGrid moduleID="usrp" perPage="20" phrase="User Permissions">
+			<InvisibleField name="PermissionID"/>
+			<ViewField name="ModuleID" phrase="ID"/>
+			<ViewField name="Module"/>
+			<ViewField name="GroupAccessGraph" align="center" phrase="Group Access"/>
+			<ViewField name="AllAccessGraph" align="center" phrase="All Access"/>
+			<ViewField name="EditPermissionIcon" align="center" phrase="Edit permission"/>
+			<ViewField name="ViewPermissionIcon" align="center" phrase="View permission"/>
+			<OrderByField name="ModuleID" direction="desc"/>	
+		</ViewGrid>
+		<PermissionGrid moduleID="usrp" phrase="User Permissions"/>
+		<EditGrid moduleID="usrp" perPage="20" allowAddRecord="no" phrase="Permissions">
+			<InvisibleField name="PermissionID"/>
+			<ViewField name="ModuleID" phrase="ID"/>
+			<ViewField name="Module"/>
+			<ViewField name="GroupAccessGraph" align="center" phrase="Group Access"/>
+			<ViewField name="AllAccessGraph" align="center" phrase="All Access"/>
+			<ViewField name="EditPermissionIcon" align="center" phrase="Edit permission"/>
+			<ViewField name="ViewPermissionIcon" align="center" phrase="View permission"/>
+			<OrderByField name="ModuleID"  direction="desc"/>			
+			<GridForm>
+				<InvisibleField name="PermissionID"/>
+				<ViewField name="ModuleID" phrase="ID"/>
+				<ViewField name="Module"/>
+				<ViewField name="ruler1"/>
+				<CheckBoxField  name="GroupAccess"/>
+				<CheckBoxField  name="AllAccess"/>
+				<CodeComboField name="EditPermission" listField="EditPermissionLabel" suppressItemAdd="yes"/>
+				<CodeComboField name="ViewPermission" listField="ViewPermissionLabel" suppressItemAdd="yes"/>
+			</GridForm>
+		</EditGrid>
+	</Exports>
+	<Revision author="$Author: mattias $" id="$Revision: 1515 $" date="$Date: 2009-02-11 18:59:24 +0100 (Śr, 11 lut 2009) $"/>
+</Module>

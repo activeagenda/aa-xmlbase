@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module name="Release Versions" moduleID="ver" singularRecordName="Release Version" pluralRecordName="Release Versions" allowAddRecord="No" isSystemModule="yes">
+    <ModuleFields>
+        <TableField name="RecordID" type="int" dbFlags="unsigned auto_increment not null" phrase="Record ID|An automatically assigned ID for internal purposes (primary key)" sample="1"/>
+        <TableField name="ReleaseVersion" type="varchar(10)" phrase="Release Version|A unique version number assigned to each version" sample="0.8.2"/>
+	</ModuleFields>
+    <ModuleInfo>
+        <PrimaryKey>
+            <FieldRef name="RecordID"/>
+        </PrimaryKey>
+        <Index name="ReleaseVersion" unique="yes">
+            <FieldRef name="ReleaseVersion"/>
+        </Index>
+    </ModuleInfo>
+    <Screens>
+        <ListScreen name="List" phrase="List|List patches">
+            <ListField name="RecordID" phrase="ID"/>
+            <ListField name="ReleaseVersion"/>
+        </ListScreen>
+    </Screens>
+    <Revision author="$Author: dan $" id="$Revision: 949 $" date="$Date: 2007-08-07 12:41:58 -0700 (Tue, 07 Aug 2007) $"/>
+</Module>

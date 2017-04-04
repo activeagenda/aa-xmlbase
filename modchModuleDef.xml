@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Module name="Module Charts" moduleID="modch" singularRecordName="Module Chart" pluralRecordName="Module Charts" allowAddRecord="No" isSystemModule="yes">
+    <ModuleFields>
+        <TableField name="ModuleChartID" type="int" dbFlags="unsigned auto_increment not null" phrase="Chart ID|An automatically assigned number used to associate module charts with modules" sample="1"/>
+        <TableField name="ModuleID" type="varchar(5)" dbFlags="" phrase="Module|The name of the module" sample="2"/>
+        <ForeignField name="Module" foreignTable="mod" foreignKey="ModuleID" foreignField="Name" key="ModuleID" joinType="left" phrase="Module|The name of the module" sample="Corrective Actions"/>
+        <TableField name="Name" type="varchar(10)" dbFlags="" phrase="Name|A unique name or code that identifies the chart" sample="2"/>
+        <TableField name="Title" type="varchar(128)" dbFlags="" phrase="Title|A descriptive title" sample="2"/>
+        <TableField name="Type" type="varchar(10)" dbFlags="" phrase="Type|Describes the type of chart" sample="2"/>
+	</ModuleFields>
+    <ModuleInfo>
+        <PrimaryKey>
+            <FieldRef name="ModuleChartID"/>
+        </PrimaryKey>
+    </ModuleInfo>
+    <Revision author="$Author: mattias $" id="$Revision: 1585 $" date="$Date: 2009-04-28 16:47:09 +0200 (Wt, 28 kwi 2009) $"/>
+</Module>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module name="States" moduleID="sta" singularRecordName="State" pluralRecordName="States" updateImports="yes" isMasterData="yes">
+	<ModuleFields>
+		<TableField name="StateID" type="int" dbFlags="unsigned auto_increment not null" phrase="State ID|A unique id to identify states internally" sample="1"/>
+		<TableField name="CountryID" type="int" validate="RequireSelection" dbFlags="unsigned" phrase="Country|The internationally recognized name of the country" sample="1"/>
+		<ForeignField name="Country" foreignTable="ctr" foreignKey="CountryID" foreignField="Country" key="CountryID" joinType="left" phrase="Country|A combined field used to associate this country with another record" sample="United States of America (USA)"/>
+		<TableField name="StateName" type="varchar(50)" validate="notEmpty" dbFlags="" phrase="State|The name of the state or similar geographic zone" sample="California"/>
+		<TableField name="StateAbbreviation" type="varchar(5)" validate="" dbFlags="" phrase="State Abbreviation|The common abbreviation of a state, as used in a mailing address" sample="CA"/>
+		<CombinedField name="RecordLabel" phrase="Record Label|The short, concise, label of the record for display purposes" sample="Mattias Thorslund | 01-01-2006 | Ongoing"><CombinedFieldRef name="StateName"/>_(<CombinedFieldRef name="StateAbbreviation"/>)</CombinedField>
+		<CombinedField name="State" phrase="State|A combined field used to associate this state with another record" sample="California (CA)"><CombinedFieldRef name="StateName"/></CombinedField>
+	</ModuleFields>
+	<ModuleInfo>
+		<PrimaryKey>
+			<FieldRef name="StateID"/>
+		</PrimaryKey>
+		<!--<OwnerField name="OrganizationID"/> Not required-->
+		<RecordDescriptionField name="State"/>
+		<RecordLabelField name="RecordLabel"/>
+	</ModuleInfo>
+	<Screens>
+		<ListScreen name="List" phrase="List|List states">
+			<ListField name="StateID" phrase="ID"/>
+			<ListField name="StateName" phrase="State"/>
+			<ListField name="StateAbbreviation" phrase="Abbreviation"/>
+			<ListField name="Country" phrase="Country"/>
+		</ListScreen>
+		<SearchScreen name="Search" phrase="Search|Search states">
+			<ComboField name="CountryID" findMode="text">
+				<SampleItem ID="1" name="United States of America (USA)"/>
+				<SampleItem ID="2" name="Sweden (SWE)"/>
+				<SampleItem ID="3" name="Latvia (LAT)"/>
+				<SampleItem ID="4" name="Chile (CHI)"/>
+				<SampleItem ID="5" name="Denmark (DEN)"/>
+				<SampleItem ID="6" name="Equador (EQU)"/>
+			</ComboField>
+			<EditField name="StateName" size="75" maxLength="128"/>
+			<EditField name="StateAbbreviation" size="10" maxLength="5"/>
+		</SearchScreen>
+		<ViewScreen name="View" phrase="View|View summary information about a state">
+			<ViewField name="StateID"/>
+			<ViewField name="Country"/>
+			<ViewField name="State"/>
+			<ViewField name="StateAbbreviation"/>
+		</ViewScreen>
+		<EditScreen name="Form" phrase="Form|Edit summary information about a state">
+			<ViewField name="StateID"/>
+			<ComboField name="CountryID" findMode="text">
+				<SampleItem ID="1" name="United States of America (USA)"/>
+				<SampleItem ID="2" name="Sweden (SWE)"/>
+				<SampleItem ID="3" name="Latvia (LAT)"/>
+				<SampleItem ID="4" name="Chile (CHI)"/>
+				<SampleItem ID="5" name="Denmark (DEN)"/>
+				<SampleItem ID="6" name="Equador (EQU)"/>
+			</ComboField>
+			<EditField name="StateName" size="75" maxLength="128"/>
+			<EditField name="StateAbbreviation" size="10" maxLength="5"/>
+		</EditScreen>
+	</Screens>
+	<Documentation>
+		<DocumentationSection sectionID="Introduction" title="Wprowadzenie">		
+			  <div id='introduction' align="center"/><script type='text/javascript'>play_tutorial( 'introduction', 'tut_intro.flv')</script>
+		</DocumentationSection>		
+	</Documentation>
+	<Revision author="$Author: mattias $" id="$Revision: 1513 $" date="$Date: 2009-02-10 21:20:45 +0100 (Wt, 10 lut 2009) $"/>
+</Module>

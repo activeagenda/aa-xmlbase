@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module name="Transactions" moduleID="trx" singularRecordName="Transaction" pluralRecordName="Transactions" allowAddRecord="No" isSystemModule="yes">
+    <ModuleFields>
+        <TableField name="TransactionID" type="bigint" dbFlags="unsigned auto_increment not null" phrase="Transaction ID|An automatically assigned ID for internal purposes (primary key)" sample="1"/>
+        <TableField name="TransactionDate" type="datetime" dbFlags="not null" phrase="Transaction Date|The date and time when the transaction occurred" sample="2007-10-19 18:01"/>
+        <TableField name="UserID" type="int" dbFlags="" phrase="User ID|The PersonID of the user who committed the transaction" sample="2"/>
+        <!--<TableField name="TestCol" type="int" dbFlags="" phrase="Test|The PersonID of the user who committed the transaction" sample="2"/>-->
+        <ForeignField name="User" foreignTable="ppl" foreignKey="PersonID" foreignField="DisplayName" key="UserID" joinType="left" phrase="Person|The user who committed the transaction." sample="Mattias Thorslund"/>
+	</ModuleFields>
+    <ModuleInfo>
+        <PrimaryKey>
+            <FieldRef name="TransactionID"/>
+        </PrimaryKey>
+        <Index name="TransactionDate">
+            <FieldRef name="TransactionDate"/>
+        </Index>
+        <Index name="UserID_TransactionDate">
+            <FieldRef name="UserID"/>
+            <FieldRef name="TransactionDate"/>
+        </Index>
+    </ModuleInfo>
+    <SubModules>
+      <SubModule moduleID="trxr" name="Transaction Records" parentKey="TransactionID" localKey="TransactionID"/>
+    </SubModules>
+    <Screens>
+        <ListScreen name="List" phrase="List|List transactions">
+            <ListField name="TransactionID" phrase="ID"/>
+            <ListField name="TransactionDate" phrase="Date"/>
+            <ListField name="User" phrase="User"/>
+        </ListScreen>
+        <ViewScreen name="View" phrase="View|View a transaction">
+          <ViewField name="TransactionID"/>
+          <ViewField name="TransactionDate"/>
+          <ViewField name="User"/>
+          <ViewGrid moduleID="trxr"/>
+        </ViewScreen>
+    </Screens>
+    <Revision author="$Author: dan $" id="$Revision: 949 $" date="$Date: 2007-08-07 12:41:58 -0700 (Tue, 07 Aug 2007) $"/>
+</Module>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Module 
+	name="Record Description Cache" moduleID="rdc" 
+	isCacheModule="yes" isSystemModule="yes" allowAddRecord="no"
+	singularRecordName="Cache Record" pluralRecordName="Cache Records">
+	
+	<ModuleFields>
+		<TableField 
+			name="ModuleID" type="varchar(5)" dbFlags="not null" 
+			phrase="Module ID|The module ID of the cached item"/>
+		<TableField 
+			name="RecordID" type="int" dbFlags="not null" 
+			phrase="Record ID|The record ID of the cached item"/>
+		<TableField 
+			name="OrganizationID" type="int" validate="notEmpty" 
+			phrase="OrganizationID|The Owner Organization ID of the referenced record."/>
+		<TableField 
+			name="Value" type="text" validate="notEmpty" 
+			phrase="Value|The cached value." sample="1"/>
+        <ForeignField 
+			name="Module" key="ModuleID"
+			foreignTable="mod" foreignKey="ModuleID" foreignField="Name" joinType="left" 
+			phrase="Module|The name of the module that the record belongs to"/>
+        <ForeignField 
+			name="Organization"  key="OrganizationID" 
+			foreignTable="org" foreignKey="OrganizationID" foreignField="Name" joinType="left" 
+			phrase="Organization|The organization assigned to this record for permissions"/>
+        <LinkField 
+			name="RecordLink" moduleIDField="ModuleID" recordIDField="RecordID" 
+			phrase="Record Link|An internal link to the related record."/>
+		<TableField 
+			name="OwnedBy" type="int" dbFlags="unsigned not null"  
+			phrase="Record Owner|ID of the record owner" />
+		<TableField 
+			name="WorkGroupID" type="int" dbFlags="unsigned not null"  
+			phrase="Workgroup ID|The ID of the workgroup owning the record"/>
+	</ModuleFields>
+	<ModuleInfo>
+		<PrimaryKey>
+			<FieldRef name="ModuleID"/>
+			<FieldRef name="RecordID"/>
+		</PrimaryKey>
+      <!--<Index name="RecordID_ModuleID">
+            <FieldRef name="RecordID"/>
+            <FieldRef name="ModuleID"/>
+		</Index>-->
+        <Index name="RecordID">
+            <FieldRef name="RecordID"/>
+        </Index>
+        <Index name="Valueix">
+            <FieldRef name="Value" length="30"/>
+        </Index>
+		<OwnerField name="OrganizationID"/>
+	</ModuleInfo>
+    <Screens>
+        <ListScreen name="List">
+            <ListField name="ModuleID" align="center"/>
+            <ListField name="RecordID" phrase="Record ID"/>
+            <ListField name="Value" link="RecordLink" phrase="Record Description"/>
+            <InvisibleField name="RecordLink"/>
+			<ListField name="OwnedBy" align="center" phrase="Owner ID"/>
+            <ListField name="OrganizationID" align="center" phrase="ID owner organization"/>
+        </ListScreen>
+        <SearchScreen name="Search">
+            <ComboField name="ModuleID" findMode="text"/>
+            <OrgComboField name="OrganizationID" findMode="text"/>
+            <EditField name="Value" phrase="Record Description"/>
+        </SearchScreen>
+    </Screens>
+	<Revision author="$Author: mattias $" id="$Revision: 1512 $" date="$Date: 2009-02-10 19:44:34 +0100 (Wt, 10 lut 2009) $"/>
+</Module>

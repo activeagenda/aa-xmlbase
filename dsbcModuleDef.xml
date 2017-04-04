@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Module 
+	name="Dashboard Charts" moduleID="dsbc" 
+	allowAdd="No"
+	singularRecordName="Dashboard Chart" pluralRecordName="Dashboard Charts">
+	
+	<ModuleFields>
+		<TableField 
+			name="DashboardChartID" type="int" dbFlags="auto_increment not null" 
+			phrase="Dashboard Chart ID|Record ID for dashboard charts"/>
+		<TableField 
+			name="UserID" type="int" dbFlags="not null" 
+			phrase="User ID|Person ID number of an associated user (special: 0 means installation default, -1 means app default)"/>
+		<TableField 
+			name="ModuleID" type="varchar(5)" dbFlags="not null" 
+			phrase="ModuleID|The Module ID of the module the chart belongs to."/>
+		<TableField 
+			name="ChartName" type="varchar(10)" dbFlags="not null" 
+			phrase="Chart Name|The name of the associated chart"/>
+		<TableField 
+			name="SortOrder" type="int" 
+			phrase="Sort Order|Relative sort order value."/>
+		<TableField 
+			name="ConditionPhrases" type="text" 
+			phrase="Condition Phrases|User-readable description of the conditions."/>
+	</ModuleFields>
+	<ModuleInfo>
+		<PrimaryKey>
+			<FieldRef name="DashboardChartID"/>
+		</PrimaryKey>
+	</ModuleInfo>
+	<Revision author="$Author: mattias $" id="$Revision: 1517 $" date="$Date: 2009-02-12 16:58:12 +0100 (Cz, 12 lut 2009) $"/>
+</Module>

@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Module 
+	name="Modules" moduleID="mod" 
+	allowAddRecord="No"
+	singularRecordName="Module" pluralRecordName="Modules">
+	
+	<ModuleFields>
+        <TableField 
+			name="RecordID" type="int" dbFlags="unsigned not null auto_increment" 
+			phrase="Record ID|A unique ID for internal database purposes (primary key)"/>
+		<TableField 
+			name="ModuleID" type="varchar(5)" dbFlags="not null" 
+			phrase="Module ID|A unique character ID assigned to each module of the application. Character ID's consist of between three and five characters. Main module ID's typically contain three characters and sub-modules contain four to five characters" sample="cor"/>
+		<TableField 
+			name="Name" type="varchar(128)" 
+			phrase="Module Name|The name of the module"/>
+		<TableField 
+			name="ModuleDesc" type="text"  
+			phrase="Module Description|A detailed description of the purpose of the module" />
+		<TableField 
+			name="StandAlone" type="bool" validate="noValidation" dbFlags="default 0" 
+			phrase="Stand Alone|Whether this module is a stand alone module" />
+		<TableField 
+			name="SubModule" type="bool" validate="noValidation" dbFlags="default 0" 
+			phrase="Sub Module|Whether this module is a sub module of another module" />
+		<TableField 
+			name="Association" type="bool" validate="noValidation" dbFlags="default 0" 
+			phrase="Association|Whether this module is an association module which is used to associate many modules of different types" />
+		<TableField 
+			name="Global" type="bool" validate="noValidation" dbFlags="default 0" 
+			phrase="Global|Whether this module is a global module which is available from within all other modules" />
+		<TableField 
+			name="Remote" type="bool" validate="noValidation" dbFlags="default 0" 
+			phrase="Remote|Whether this module is a remote module, i.e. pointed to by RemoteFields from other modules" />
+		<TableField 
+			name="ModuleStatusID" type="int" dbFlags="unsigned" validate="RequireSelection" 
+			phrase="Module Status|A short description of the technical implementation status of the module" />
+		<CodeField 
+			name="ModuleStatus" key="ModuleStatusID" 
+			phrase="Module Status|A short description of the technical implementation status of the module"  codeTypeID="272"/>
+		<TableField 
+			name="GlobalDiscussionAddress" type="varchar(50)"  
+			phrase="Global Discussion ID|The ID assigned to the global discussion forum most relevant to this module" />
+		<TableField 
+			name="LocalDiscussionAddress" type="varchar(50)"  
+			phrase="Local Discussion ID|The ID assigned to the local discussion forum most relevant to this module" />
+		<TableField 
+			name="DefaultMenuPath" type="text"  
+			phrase="Default Menu Path|Unix style formated path to access the module from Main Menu" />
+		<TableField 
+			name="LastParsed" type="datetime" validate="noValidation"  
+			phrase="Last Parsed|Most recent date and time when the module was parsed" />
+		<TableField 
+			name="ParentModuleID" type="varchar(5)" dbFlags="not null default ''" 
+			phrase="Parent Module ID|The Module ID of the parent module. This module will inherit the permissions of the parent module" />
+		<ForeignField 
+			name="ParentModule" key="ParentModuleID" 
+			foreignTable="mod" foreignKey="ModuleID" foreignField="Name" joinType="left" 
+			phrase="Parent Module|The name of the parent module. This module will inherit the permissions of the parent module" />
+		<TableField 
+			name="OwnerField" type="varchar(50)"  
+			phrase="Owner Organization Field|The field in this module to which Organization permissions are matched" />
+		<TableField 
+			name="RecordDescriptionField" type="varchar(50)"  
+			phrase="Record Description Field|The field in this module that is used as a RecordDescription" />
+		<TableField 
+			name="RevisionAuthor" type="varchar(30)"  
+			phrase="Revision Author|The author of the XML specification file used to generate the module" />
+		<TableField 
+			name="RevisionNumber" type="int" dbFlags="unsigned"  
+			phrase="Revision Number|A number that was automatically assigned by the software versioning system when the revision was made" />
+		<TableField 
+			name="RevisionDate" type="varchar(50)"   
+			phrase="Revision Date|The revision date of the XML specification file used to generate the module" />
+		<TableField 
+			name="AllowAdd" type="bool" validate="noValidation" dbFlags="default 0" 
+			phrase="Allow Add|Whether this module allows users to add new records directly. If the module does not allow records to be added directly, the data must be added indirectly through a related module edit grid" />
+		<TableField 
+			name="DataForm" type="bool" validate="noValidation" dbFlags="default 0" 
+			phrase="Data Form|Whether this module includes a blank data form" />
+		<TableField 
+			name="MasterData" type="bool" validate="noValidation" dbFlags="default 0" 
+			phrase="Master Data|Whether the default data entered into the related table should be included during module distribution" />
+		<TableField 
+			name="ModuleListType" type="bool" validate="noValidation" dbFlags="default 0" 
+			phrase="Type List|Whether this module is used to populate 'type' lists used by other modules to define a record" />
+		<TableField 
+			name="GuidanceType" type="bool" validate="noValidation" dbFlags="default 0" 
+			phrase="Guidance Type|Whether this 'type' module is used to enable the provision of guidance" />
+		<TableField 
+			name="ImpPlan" type="bool" validate="noValidation" dbFlags="default 0" 
+			phrase="Implementation Planning|Whether this module should be included within the list of modules for implementation planning purposes." />
+		<TableField 
+			name="AddNew" type="bool" validate="noValidation" dbFlags="default 0" 
+			phrase="Add New|Whether this module includes a short name to be used on the Add New tab" />
+		<TableField 
+			name="ExtendsModule" type="bool" validate="noValidation" dbFlags="default 0" 
+			phrase="Extending Module|Whether this module extends the functionality of another module" />
+        <TableField 
+			name="HasGlobalModules" type="bool" validate="noValidation" dbFlags="default 0" 
+			phrase="Has Global Modules|Whether this module uses the global modules" />
+		<TableField 
+			name="RecordLabelField" type="varchar(50)"  
+			phrase="Record Label Field|The field in this module that is used as a Record Label" />
+		<SummaryField 
+			name="ModuleDependencies" type="int"  localKey="ModuleID" 
+			summaryFunction="count" summaryField="DependencyID" summaryKey="ModuleID" summaryModuleID="modd"
+			phrase="Module Dependencies|A calculated field representing the total number of modules dependent upon this module" />
+		<SummaryField 
+			name="CodeDependencies" type="int"  localKey="ModuleID" 
+			summaryFunction="count" summaryField="CodeTypeID" summaryKey="DependencyID" summaryModuleID="codtd"
+			phrase="Code Dependencies|A calculated field representing the total number of codes the module is dependent upon" />
+		<CombinedField 
+			name="InternalLink" 
+			phrase="Internal Link|A link to the List screen of that module">internal:list.php?mdl=
+			<CombinedFieldRef name="ModuleID"/>
+		</CombinedField>
+		<CombinedField 
+			name="Revision" 
+			phrase="Revision|A combined field used to display information about the last revision to a modules's XML specification file" >Rewizja:_<CombinedFieldRef name="RevisionNumber"/>,_Wykonana:_<CombinedFieldRef name="RevisionDate"/>_Przez_<CombinedFieldRef name="RevisionAuthor"/></CombinedField>
+		<CombinedField 
+			name="RecordLabel" 
+			phrase="Record Label|The short, concise, label of the record for display purposes" ><CombinedFieldRef name="Name"/>;_<CombinedFieldRef name="ModuleStatus"/>;_Ostatnio_przetworzony:_<CombinedFieldRef name="LastParsed"/></CombinedField>
+		<CombinedField 
+			name="Module" 
+			phrase="Module|A combined field used to describe this module when associating it with other records" >
+			<CombinedFieldRef name="Name"/>
+		</CombinedField>
+	</ModuleFields>
+	<ModuleInfo>
+        <PrimaryKey>
+            <FieldRef name="RecordID"/>
+        </PrimaryKey>
+        <Index name="ModuleID" unique="yes">
+			<FieldRef name="ModuleID"/>
+		</Index>
+		<!--<OwnerField name="OrganizationID"/> Not required-->
+		<RecordDescriptionField name="Module"/>
+		<RecordLabelField name="RecordLabel"/>
+	</ModuleInfo>
+	<SubModules>
+		<SubModule moduleID="modd" name="Module Dependencies" parentKey="ModuleID" localKey="ModuleID"/>
+        <SubModule moduleID="codtd" name="Code Dependencies" parentKey="ModuleID" localKey="DependencyID"/>
+	</SubModules>
+	<Screens>
+		<ListScreen name="List">
+            <ListField name="RecordID" phrase="ID"/>
+            <ListField name="ModuleID" phrase="Module ID"/>
+            <InvisibleField name="InternalLink"/>
+            <ListField name="Name" link="InternalLink" phrase="Module Name"/>
+			<ListField name="GlobalDiscussionAddress" phrase="Forum" align="center"/>
+			<ListField name="ModuleDependencies" phrase="Modules" align="center"/>
+			<ListField name="CodeDependencies" phrase="Codes" align="center"/>
+			<ListField name="SubModule" phrase="Sub Module" align="center"/>
+			<ListField name="Global" phrase="Global" align="center"/>
+			<ListField name="Remote" phrase="Remote" align="center"/>
+            <OrderByField name="Name"/>
+        </ListScreen>
+		<SearchScreen name="Search">
+			<EditField name="RecordID" FromTo="no" size="50" maxLength="250"/>
+			<EditField name="Name" size="75" maxLength="128"/>
+			<CheckBoxField name="StandAlone"/>
+			<CheckBoxField name="SubModule"/>
+			<CheckBoxField name="Association"/>
+			<CheckBoxField name="Global"/>
+			<CheckBoxField name="Remote"/>
+            <CheckBoxField name="AllowAdd"/>
+            <CheckBoxField name="DataForm"/>
+            <CheckBoxField name="MasterData"/>
+			<CheckBoxField name="ModuleListType"/>
+			<CheckBoxField name="GuidanceType"/>
+			<CheckBoxField name="ImpPlan"/>
+            <CheckBoxField name="AddNew"/>
+            <CheckBoxField name="ExtendsModule"/>
+            <CheckBoxField name="HasGlobalModules"/>
+			<CodeComboField name="ModuleStatusID" findMode="text"/>
+			<EditField name="RevisionAuthor" size="30" maxLength="30"/>
+			<EditField name="RevisionNumber" size="10" maxLength="10"/>
+			<DateField name="RevisionDate"/>
+		  </SearchScreen>
+        <ViewScreen name="View">
+            <CustomCode location="init">
+                <![CDATA[
+                    if(0 == $recordID && strlen($_GET['rid']) > 2){
+                        $str_recordID = substr($_GET['rid'], 0, 5);
+                        $str_recordID = dbQuote($str_recordID);
+                        $recordID = $dbh->getOne("SELECT RecordID FROM `mod` WHERE ModuleID = $str_recordID AND _Deleted = 0");
+                        dbErrorCheck($recordID);
+                        $qsArgs['rid'] = $recordID;
+                        $qs = MakeQS($qsArgs);
+                    }
+                ]]>
+            </CustomCode>
+         <ViewField name="RecordID"/>
+			<ViewField name="ModuleID"/>
+			<ViewField name="Name" link="InternalLink"/>
+			<InvisibleField name="InternalLink"/>
+			<ViewField name="ModuleDesc"/>
+			<ViewField name="GlobalDiscussionAddress"/>
+			<ViewField name="LocalDiscussionAddress"/>
+			<ViewField name="StandAlone"/>
+			<ViewField name="SubModule"/>
+			<ViewField name="Association"/>
+			<ViewField name="Global"/>
+			<ViewField name="Remote"/>
+			<ViewField name="ModuleStatus"/>
+			<ViewField name="DefaultMenuPath"/>
+			<ViewField name="LastParsed"/>
+			<ViewField name="RevisionAuthor"/>
+			<ViewField name="RevisionNumber"/>
+			<ViewField name="RevisionDate"/>
+			<ViewField name="ModuleDependencies"/>
+			<ViewField name="CodeDependencies"/>
+			<ViewScreenSection name="Attributes" phrase="Module Attributes">
+                <ViewField name="AllowAdd"/>
+                <ViewField name="DataForm"/>
+                <ViewField name="MasterData"/>
+                <ViewField name="ModuleListType"/>
+                <ViewField name="GuidanceType"/>
+                <ViewField name="ImpPlan"/>
+                <ViewField name="AddNew"/>
+                <ViewField name="ExtendsModule"/>
+                <ViewField name="HasGlobalModules"/>
+			</ViewScreenSection>
+			<ViewScreenSection name="Associations" phrase="Associations">
+				<ViewGrid moduleID="modd"/>
+				<ViewGrid moduleID="codtd" phrase="Code Dependencies">
+					<InvisibleField name="CodeTypeDependencyID"/>
+					<ViewField name="CodeTypeID"/>
+					<ViewField name="CodeType"/>
+				</ViewGrid>
+			</ViewScreenSection>
+		</ViewScreen>		
+		<EditScreen name="Form" phrase="Form|The screen used to edit summary information about modules">
+			<ViewField name="ModuleID"/>
+			<EditField name="Name" size="75" maxLength="128"/>
+			<MemoField name="ModuleDesc" cols="60" rows="5"/>
+			<EditField name="GlobalDiscussionAddress" size="5" maxLength="50"/>
+			<EditField name="LocalDiscussionAddress" size="5" maxLength="50"/>
+			<EditField name="DefaultMenuPath" size="75" maxLength="255"/>
+			<CheckBoxField name="StandAlone"/>
+			<CodeComboField name="ModuleStatusID" findMode="text">
+				<SampleItem ID="1" name="Not Parsed"/>
+				<SampleItem ID="2" name="Completed"/>
+				<SampleItem ID="3" name="Tables and Files"/>
+				<SampleItem ID="4" name="Tables Only"/>
+				<SampleItem ID="5" name="Under Development"/>
+			</CodeComboField>
+		</EditScreen>
+	</Screens>
+	<RecordSummaryFields>
+		<ViewField name="ModuleID"/>
+		<ViewField name="Name"/>
+		<ViewField name="ModuleDesc"/>
+		<ViewField name="GlobalDiscussionAddress"/>
+		<ViewField name="LocalDiscussionAddress"/>
+		<ViewField name="StandAlone"/>
+		<ViewField name="SubModule"/>
+		<ViewField name="Association"/>
+		<ViewField name="Global"/>
+		<ViewField name="Remote"/>
+		<ViewField name="ModuleStatus"/>
+		<ViewField name="ModuleDependencies"/>
+		<ViewField name="CodeDependencies"/>
+        <ViewField name="ModuleListType"/>
+        <ViewField name="GuidanceType"/>
+        <ViewField name="ImpPlan"/>
+	</RecordSummaryFields>
+	<Charts>
+		<PieChart name="Pie01" title="Stand Alone Modules">
+			<GroupByField name="StandAlone"/>
+			<SummaryField name="ModuleID" type="count"/>
+		</PieChart>
+		<ParetoChart name="Pareto01" title="Stand Alone Modules">
+			<GroupByField name="StandAlone"/>
+			<SummaryField name="ModuleID" type="count"/>
+		</ParetoChart>
+		<PieChart name="Pie02" title="Sub-Modules">
+			<GroupByField name="SubModule"/>
+			<SummaryField name="ModuleID" type="count"/>
+		</PieChart>
+		<ParetoChart name="Pareto02" title="Sub-Modules">
+			<GroupByField name="SubModule"/>
+			<SummaryField name="ModuleID" type="count"/>
+		</ParetoChart>
+		<PieChart name="Pie03" title="Association Modules">
+			<GroupByField name="Association"/>
+			<SummaryField name="ModuleID" type="count"/>
+		</PieChart>
+		<ParetoChart name="Pareto03" title="Association Modules">
+			<GroupByField name="Association"/>
+			<SummaryField name="ModuleID" type="count"/>
+		</ParetoChart>
+		<PieChart name="Pie04" title="Global Modules">
+			<GroupByField name="Global"/>
+			<SummaryField name="ModuleID" type="count"/>
+		</PieChart>
+		<ParetoChart name="Pareto04" title="Global Modules">
+			<GroupByField name="Global"/>
+			<SummaryField name="ModuleID" type="count"/>
+		</ParetoChart>
+		<PieChart name="Pie05" title="Remote Modules">
+			<GroupByField name="Remote"/>
+			<SummaryField name="ModuleID" type="count"/>
+		</PieChart>
+		<ParetoChart name="Pareto05" title="Remote Modules">
+			<GroupByField name="Remote"/>
+			<SummaryField name="ModuleID" type="count"/>
+		</ParetoChart>
+	</Charts>
+	<Documentation>
+		<DocumentationSection sectionID="Introduction" title="Wprowadzenie">		
+<![CDATA[
+<br/>	
+<p>Wprowadzenie do obsługi systemu jest dostępne po naciśnięciu przycisku „Tutorial”, który znajduje się na Listwie Głównej u góry ekranu przeglądarki. Tutorial zawiera prezentację:</p>
+<ul>
+<li>Koncepcji systemu:</li>
+<ul>
+<li>związku lista-wiersz jako podstawy modułu,</li>
+<li>pojęcia działań w kontekście listy,</li>
+<li>pojęcia działań w kontekście wiersza,</li>
+<li>powiązania wiersza z innymi modułami,</li>
+</ul>
+<li>Logowania i nawigacji po systemie;</li>
+<li>Funkcjonalności dostępnych na ekranie Listy;</li>
+<li>Funkcjonalności dostępnych na ekranie Wiersza;</li>
+<li>Funkcjonalności związanych z edycją zawartości danych wiersza;</li>
+<li>Funkcjonalności raportów;</li>
+<li>Funkcjonalności wykresów.</li>
+</ul>
+<p>Powyższe możliwości systemu mogą być wypróbowane na modułach demonstracyjnych:</p>
+<ul>
+<li>Państwa;</li>
+<li>Województwa;</li>
+<li>Powiaty.</li>
+</ul>
+<p>Moduły demonstracyjne dostępne są po najechaniu myszą na "Menu Główne" w Listwie Głównej i wybranie ścieżki menu: "Menu Główne/Pomocnicze/Piaskownica/*". Zmiany wprowadzone w modułach demonstracyjnych nie mają wpływu na funkcje biznesowe aplikacji i mogą być wycofane przez administratora systemu.</p>
+]]>
+		</DocumentationSection>		
+	</Documentation>
+	<Revision author="$Author: mattias $" id="$Revision: 1583 $" date="$Date: 2009-04-28 07:11:50 +0200 (Wt, 28 kwi 2009) $"/>
+</Module>

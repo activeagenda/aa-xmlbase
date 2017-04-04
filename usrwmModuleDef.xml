@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--- Row Acces development-->
+<Module name="Workgroup Membership" moduleID="usrwm" parentModule="usrw" singularRecordName="Member" pluralRecordName="Members" allowAddRecord="no" isMasterData="yes" defaultMenuPath="Main Menu / Administration / Workgroups [usrw] / Workgroup Membership">
+    <ModuleFields>
+        <TableField name="MembershipID" type="int" dbFlags="unsigned not null auto_increment" phrase="Record ID|An automatically assigned number used to track group memberships" sample="1"/>
+        <TableField name="WorkGroupID" type="int" validate="notEmpty" dbFlags="unsigned not null" phrase="Workgroup ID|The ID of the workgroup to which a member is assigned" sample="1"/>
+        <ForeignField name="WorkGroup" foreignTable="usrw" foreignKey="WorkGroupID" foreignField="Name" key="WorkGroupID" joinType="left" phrase="Workgroup|The  workgroup that this membership is assigned to." sample="Supervisors"/>
+        <TableField name="PersonID" type="int" validate="notEmpty" dbFlags="unsigned not null" phrase="Person ID|The Person ID of the associated person (users must have a matching record in the People module)." sample="1"/>
+        <ForeignField name="Person" foreignTable="ppl" foreignKey="PersonID" foreignField="DisplayName" key="PersonID" joinType="left" phrase="Person|The person who is this user." sample="Mattias Thorslund"/>
+        <ForeignField name="OrganizationID" foreignTable="ppl" foreignKey="PersonID" foreignField="OrganizationID" key="PersonID" joinType="left" phrase="Organization|The user's organization" sample="1"/>
+        <ForeignField name="Organization" foreignTable="org" foreignKey="OrganizationID" foreignField="Name" key="OrganizationID" joinType="left" phrase="Organization|The user's organization" sample="Active Agenda, Sweden"/>
+		<TableField name="_OwnedBy" type="int" dbFlags="unsigned default 0"  phrase="Record Owner|ID of the record owner" />
+        <TableField name="_WorkGroupID" type="int" dbFlags="unsigned default 0" phrase="Workgroup ID|The ID of the workgroup owning the record" sample="1"/>
+	</ModuleFields>
+    <ModuleInfo>
+        <PrimaryKey>
+            <FieldRef name="MembershipID"/>
+        </PrimaryKey>
+        <Index name="PersonID_WorkGroupID">
+            <FieldRef name="PersonID"/>
+        </Index>
+    </ModuleInfo>
+    <Screens>
+      <ListScreen name="List">
+        <ListField name="MembershipID" phrase="ID"/>
+        <ListField name="WorkGroup" phrase="Workgroup"/>
+        <ListField name="Person" phrase="Person"/>
+      </ListScreen>
+      <SearchScreen name="Search">
+	  	<EditField name="MembershipID" FromTo="no" size="50" maxLength="250"/>
+        <ComboField name="WorkGroupID" findMode="text"/>
+        <PersonComboField name="PersonID" findMode="text" />
+      </SearchScreen>
+	  <ViewScreen name="View">
+		<ViewField name="MembershipID"/>
+        <ViewField name="WorkGroup"/>
+        <ViewField name="Person"/>
+		</ViewScreen>
+    </Screens>
+    <Exports>
+        <ViewGrid moduleID="usrwm" phrase="Workgroup Members" isInfo="yes">
+            <InvisibleField name="MembershipID"/>
+            <ViewField name="Person" sample="Micky McGillicuty"/>
+            <ViewField name="Organization" sample="Supervisors"/>
+        </ViewGrid>
+        <SearchSelectGrid moduleID="usrwm" phrase="Workgroup Members" primaryListField="Person">
+          <SearchForm>
+            <OrgComboField name="OrganizationID" findMode="text"/> 
+          </SearchForm>
+        </SearchSelectGrid>
+        <SelectGrid moduleID="usrwm" phrase="Workgroups" primaryListField="WorkGroup"/>
+    </Exports>
+    <Revision author="$Author: mattias $" id="$Revision: 1056 $" date="$Date: 2007-11-07 14:25:18 -0800 (Wed, 07 Nov 2007) $"/>
+</Module>

@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Module 
+	name="Reminders" moduleID="rmd" 
+	allowAddRecord="no" isGlobal="yes"
+	singularRecordName="Reminder" pluralRecordName="Reminders">
+	
+	<ModuleFields>
+		<TableField 
+			name="ReminderID" type="int" dbFlags="unsigned auto_increment not null" 
+			phrase="Reminder ID|An automatically assigned number used to track notification associated with records throughout the application"/>
+		<StaticField 
+			name="ruler1" type="text" content="" phrase=" "/>
+		<TableField 
+			name="RelatedModuleID" type="varchar(5)" validate="noValidation" 
+			phrase="Related Module|The name or title of the module which is associated with the reminder"/>
+		<ForeignField 
+			name="RelatedModule" foreignTable="mod" foreignKey="ModuleID" foreignField="Name" key="RelatedModuleID" joinType="left" 
+			phrase="Related Module|The name or title of the module which is associated with the reminder"/>
+		
+        <!-- Module Level Related Module section -->
+        <CalculatedField 
+			name="IsModuleLevel" type="boolean" calcFunction="is_equal" params="RelatedModuleID +mod" 
+			phrase="Module Level|Displays 1 if the action is a module level action"/>
+        <CalculatedField 
+			name="DisplayRelatedRecordID" type="varchar(5)" calcFunction="if" params="IsModuleLevel +list RelatedRecordID" 
+			phrase="Related Record"/>
+        <ForeignField 
+			name="ModuleLevelRelatedModuleID" foreignTable="mod" foreignKey="RecordID" foreignField="ModuleID" key="RelatedRecordID" joinType="left" 
+			phrase="Module Level Related Module|The name or title of the module which is associated with the record"/>
+        <CalculatedField 
+			name="DisplayRelatedModuleID" type="varchar(5)" calcFunction="if" params="IsModuleLevel ModuleLevelRelatedModuleID RelatedModuleID" 
+			phrase="Related Module"/>
+        <ForeignField 
+			name="ModuleLevelRelatedModule" foreignTable="mod" foreignKey="RecordID" foreignField="Name" key="RelatedRecordID" joinType="left" 
+			phrase="Module Level Related Module|The name or title of the module which is associated with the record"/>
+        <CalculatedField 
+			name="DisplayRelatedModule" type="text" calcFunction="if" params="IsModuleLevel ModuleLevelRelatedModule RelatedModule" 
+			phrase="Related Module|The name or title of the module which is associated with the record"/>
+
+        <CombinedField 
+			name="ModuleLevelRelatedModuleRecord" 
+			phrase="Module Level Related Record|A combined field used to display the related module name and that is is a module level item">
+			<CombinedFieldRef name="ModuleLevelRelatedModule"/>_(general)</CombinedField>
+        <LinkField 
+			name="RelatedRecordLink" moduleIDField="RelatedModuleID" recordIDField="RelatedRecordID" 
+			phrase="Related Record Link|An internal link to the related record."/>
+		<CombinedField 
+			name="RelatedModuleRecord" 
+			phrase="Related Record|A combined field used to display the related module name and record ID">
+			<CombinedFieldRef name="RelatedModule"/>_(ID:_<CombinedFieldRef name="RelatedRecordID"/>)
+		</CombinedField>
+		<CalculatedField 
+			name="DisplayRelatedModuleRecord" type="text" calcFunction="if" params="IsModuleLevel ModuleLevelRelatedModuleRecord RelatedModuleRecord" 
+			phrase="Related Record|A combined field used to display the related module name and what record, if any, it is related to"/>
+        <CombinedField 
+			name="ModuleLevelRelatedRecordLink" 
+			phrase="Related Record Link|An internal link to the related record.">
+			internal:global.php?mdl=<CombinedFieldRef name="DisplayRelatedModuleID"/>&amp;rid=list&amp;gmd=rmd
+		</CombinedField>
+        <CalculatedField 
+			name="DisplayRelatedRecordLink" type="text" calcFunction="if" params="IsModuleLevel ModuleLevelRelatedRecordLink RelatedRecordLink" 
+			phrase="Related Record Link|An internal link to the related record."/>   
+		
+		<TableField 
+			name="RelatedRecordID" type="int" validate="noValidation" 
+			phrase="Related Record ID|The unique ID of the related record within the related module"/>
+		<DynamicForeignField 
+			name="RelatedRecordDescription" key="RelatedRecordID" moduleIDField="RelatedModuleID" foreignField="RecordDescription" joinType="left" 
+			phrase="Record Description|A description of the related record based on a combination of field values assigned from within the related module"/>
+		<DynamicForeignField 
+			name="OwnerOrganizationID" key="RelatedRecordID" moduleIDField="RelatedModuleID" foreignField="OwnerOrganizationID" joinType="left" 
+			phrase="Organization|The name of the organization associated with the reminder"/>
+		<ForeignField 
+			name="OwnerOrganization" foreignTable="org" foreignKey="OrganizationID" foreignField="Name" key="OwnerOrganizationID" joinType="left" 
+			phrase="Organization|The name of the organization associated with the reminder"/>
+		
+		<!-- Communication feedback -->	
+		<TableField 
+			name="Error" type="varchar(128)" 
+			phrase="Last error|Error encountered while sending last the reminder"/>
+		<TableField 
+			name="HandOver" type="datetime" dbFlags="default 0000-01-01"
+			phrase="Last hand over|The date and time the reminder was last handed over to the internal mail server"/>
+		
+		<!-- Record manipulation and ownership-->
+		<StaticField 
+			name="ruler2" type="text" content="" phrase=" "/>		
+		<RecordMetaField  
+			name="_ThisCreatedByPersonID"  returnType="userID" lookupType="created" 
+			phrase="Created By|Record created by person"/>
+		<ForeignField 
+			name="_ThisCreatedByPerson" foreignTable="ppl" foreignKey="PersonID" foreignField="DisplayName" key="_ThisCreatedByPersonID" 
+			phrase="Created By|Record created by person"/>
+		<ForeignField 
+			name="_ThisCreatedByOrganizationID" foreignTable="ppl" foreignKey="PersonID" foreignField="OrganizationID" key="_ThisCreatedByPersonID" 
+			phrase="Organization|Name of organization associated with the creating individual"/>
+		<ForeignField 
+			name="_ThisCreatedByOrganization" foreignTable="org" foreignKey="OrganizationID" foreignField="Name" key="_ThisCreatedByOrganizationID" 
+			phrase="Organization|Name of organization associated with the creating individual"/>		
+		<RecordMetaField 
+			name="_ThisCreationDate"  returnType="date" lookupType="created"  
+			phrase="Created|Record created on date"/>
+		<CombinedField 
+			name="_ThisCreated" 
+			phrase="Created|Created on date by person from organization">
+			<CombinedFieldRef name="_ThisCreationDate"/>_<CombinedFieldRef name="_ThisCreatedByPerson"/>_/_<CombinedFieldRef name="_ThisCreatedByOrganization"/>
+		</CombinedField>
+		<RecordMetaField  
+			name="_ThisLastChangedByPersonID"  returnType="userID" lookupType="modified" 
+			phrase="Last Changed by|Last changed by person"/>
+		<ForeignField 
+			name="_ThisLastChangedByPerson" foreignTable="ppl" foreignKey="PersonID" foreignField="DisplayName" key="_ThisLastChangedByPersonID" 
+			phrase="Last Changed By|Last changed by person"/>
+		<ForeignField 
+			name="_ThisLastChangedByOrganizationID" foreignTable="ppl" foreignKey="PersonID" foreignField="OrganizationID" key="_ThisLastChangedByPersonID" 
+			phrase="Organization|Name of organization associated with the last changing individual"/>
+		<ForeignField 
+			name="_ThisLastChangedByOrganization" foreignTable="org" foreignKey="OrganizationID" foreignField="Name" key="_ThisLastChangedByOrganizationID" 
+			phrase="Organization|Name of organization associated with the last changing individual"/>		
+		<RecordMetaField 
+			name="_ThisLastChangedDate"  returnType="date" lookupType="modified"  
+			phrase="Last Modified|Record modified last on date"/>
+		<CombinedField 
+			name="_ThisLastChanged" 
+			phrase="Last Modified|Last modified on date by person from organization">
+			<CombinedFieldRef name="_ThisLastChangedDate"/>_<CombinedFieldRef name="_ThisLastChangedByPerson"/>_/_<CombinedFieldRef name="_ThisLastChangedByOrganization"/>
+		</CombinedField>
+		<TableField 
+			name="_OwnedBy" type="int" dbFlags="unsigned default 0" validate="eval: userID_is( $_OwnedBy )" defaultValue="userID" orgListOptions="intpar" 
+			phrase="Receiver|Displays receivers name"/>
+		<ForeignField 
+			name="_Owned" foreignTable="ppl" foreignKey="PersonID" foreignField="DisplayName" key="_OwnedBy" 
+			phrase="Receiver|Displays receivers name"/>
+		<LinkField 
+			name="_OwnedLink" foreignModuleID="ppl" recordIDField="_OwnedBy" 
+			phrase="Receiver|Displays receivers name"/>
+		<ForeignField 
+			name="_OrganizationID" foreignTable="ppl" foreignKey="PersonID" foreignField="OrganizationID" key="_OwnedBy" 
+			phrase="Organization|Name of organization associated with the receiver"/>
+		<ForeignField 
+			name="_Organization" foreignTable="org" foreignKey="OrganizationID" foreignField="Name" key="_OrganizationID" 
+			phrase="Organization|Name of organization associated with the receiver"/>
+		<CombinedField name="_OwnedOrganization"  
+			phrase="Receiver|Displays receivers name and his organisation name">
+			<CombinedFieldRef name="_Owned"/>_/_<CombinedFieldRef name="_Organization"/>
+		</CombinedField>      	
+		
+		<!-- Reminders management -->
+		<StaticField 
+			name="ruler3" type="text" content="" phrase=" "/>
+		<TableField 
+			name="Message" type="varchar(128)"  validate="notEmpty"
+			phrase="Message|Message which has to be send with each reminder"/>
+		<CombinedField name="Message1"  
+			phrase="Message|Message which has to be send with each reminder">
+			<![CDATA[<div style="max-width:400px">]]><CombinedFieldRef name="Message"/><![CDATA[</div>]]>
+		</CombinedField>
+		<TableField 
+			name="StartDate" type="date" validate="notEmpty"
+			phrase="First time on|Date for the first sending reminders"/>
+		<TableField 
+			name="PeriodID" type="int" validate="RequireSelection"
+			phrase="Period|Period for sending reminders from start date on"/>
+		<CodeField 
+			name="Period" key="PeriodID"  codeTypeID="309" 
+			phrase="Period|Period for sending reminders from start date on"/>
+		<CombinedField name="PeriodStartDate"  
+			phrase="Period|Period for sending reminders from start date on">
+			<CombinedFieldRef name="Period"/><![CDATA[<br/>]]><CombinedFieldRef name="StartDate"/>
+		</CombinedField>  
+		
+		<CombinedField 
+			name="RecordLabel" 
+			phrase="Record Label|The short, concise, label of the record for display purposes">
+			<CombinedFieldRef name="RelatedModule"/>;_<CombinedFieldRef name="Period"/>;_<CombinedFieldRef name="StartDate"/>
+		</CombinedField>
+		<CombinedField 
+			name="RecordDescription" 
+			phrase="Record Description|A combined field used to describe this record when associating it with other records">
+			<CombinedFieldRef name="RelatedModule"/>;_<CombinedFieldRef name="Period"/>;_<CombinedFieldRef name="StartDate"/>
+		</CombinedField>
+	</ModuleFields>
+	<ModuleInfo>
+		<PrimaryKey>
+			<FieldRef name="ReminderID"/>
+		</PrimaryKey>
+		<Index name="RelatedModuleIDRecordID">
+			<FieldRef name="RelatedModuleID"/>
+			<FieldRef name="RelatedRecordID"/>
+			<FieldRef name="_Deleted"/>
+		</Index>
+		<OwnerField name="OwnerOrganizationID"/>
+		<RecordDescriptionField name="RecordDescription"/>
+		<RecordLabelField name="RecordLabel"/>
+	</ModuleInfo>
+	<Screens>
+		<ListScreen name="List">
+			<ListField name="ReminderID" phrase="ID"/>			
+            <ListField name="DisplayRelatedModule" align="center"/>
+            <ListField name="RelatedRecordDescription" link="DisplayRelatedRecordLink"/>
+            <InvisibleField name="DisplayRelatedRecordLink"/>
+			<ListField name="PeriodStartDate"/>
+			<ListField name="Message" align="center"/>						
+		</ListScreen>
+		<SearchScreen name="Search">
+			<EditField name="ReminderID" FromTo="no" size="50" maxLength="250"/>		
+            <ComboField 
+				name="DisplayRelatedModuleID" listField="RelatedModule" findMode="text" suppressItemAdd="yes"/>
+			<InvisibleField name="RelatedRecordID"/>
+			<EditField name="RelatedRecordDescription" size="75" maxLength="128"/>
+			<EditField name="Message" size="50" maxLength="50"/>
+			<EditField name="Error" size="50" maxLength="50"/>			
+			<CodeRadioField name="PeriodID" orientation="vertical"/>
+			<DateField name="StartDate"/>
+			<PersonComboField name="_OwnedBy" findMode="text" suppressItemAdd="yes"/>
+			<PersonComboField name="_ThisCreatedByPersonID" findMode="text" suppressItemAdd="yes"/>
+			<DateField name="_ThisCreationDate"/>	
+			<PersonComboField name="_ThisLastChangedByPersonID" findMode="text" suppressItemAdd="yes"/>
+			<DateField name="_ThisLastChangedDate"/>			
+		</SearchScreen>
+		<ViewScreen name="View">
+			<ViewField name="ReminderID"/>
+			<ViewField name="ruler1"/>
+            <ViewField name="DisplayRelatedModuleRecord" link="DisplayRelatedRecordLink"/>
+			<ViewField name="RelatedRecordDescription"/>
+			<ViewField name="_OwnedOrganization" link="_OwnedLink"/>
+			<ViewField name="PeriodStartDate"/>
+			<ViewField name="Message1"/>		
+			<ViewField name="ruler2"/>
+			<ViewField name="HandOver"/>
+			<ViewField name="Error"/>
+			<ViewField name="ruler3"/>			
+			<ViewField name="_ThisCreated"/>
+			<ViewField name="_ThisLastChanged"/>	
+		</ViewScreen>
+		<EditScreen name="Form" phrase="Form|Edit summary information about a reminder">
+			<ViewField name="ReminderID"/>
+            <ViewField name="DisplayRelatedModuleRecord" link="DisplayRelatedRecordLink"/>
+			<ViewField name="RelatedRecordDescription"/>
+			<HiddenField name="_OwnedBy"/>
+			<ViewField name="_OwnedOrganization"/>			
+			<CodeRadioField name="PeriodID" orientation="vertical"/>			
+			<DateField name="StartDate"/>
+			<EditField name="Message" size="50" maxLength="128"/>	
+		</EditScreen>		
+	</Screens>
+	<Exports>
+		<ViewGrid moduleID="rmd" phrase="Reminders" rowIDon="RelatedRecordID" moduleOn="DisplayRelatedModuleID">
+			<InvisibleField name="ReminderID"/>			
+			<ViewField name="_OwnedOrganization" link="_OwnedLink"/>			
+			<ViewField name="PeriodStartDate"/>
+			<ViewField name="Message1"/>
+			<InvisibleField name="StartDate"/>
+			<OrderByField name="_OwnedOrganization"/>
+			<OrderByField name="StartDate" direction="desc"/>			
+		</ViewGrid>
+		<EditGrid moduleID="rmd" phrase="Reminders" allowEditOn="_OwnedBy" rowIDon="RelatedRecordID" moduleOn="DisplayRelatedModuleID">
+			<InvisibleField name="_OwnedBy"/>
+			<InvisibleField name="ReminderID"/>
+			<InvisibleField name="StartDate"/>
+			<ViewField name="_OwnedOrganization"/>			
+			<ViewField name="PeriodStartDate"/>
+			<ViewField name="Message1"/>
+			<OrderByField name="_OwnedOrganization"/>
+			<OrderByField name="StartDate" direction="desc"/>				
+			<GridForm>
+				<InvisibleField name="ReminderID"/>				
+				<ViewField name="_OwnedOrganization"/>				
+				<CodeRadioField name="PeriodID" orientation="vertical"/>			
+				<DateField name="StartDate"/>
+				<EditField name="Message" size="50" maxLength="128"/>
+				<HiddenField name="_OwnedBy"/>				
+			</GridForm>
+		</EditGrid>
+	</Exports>	
+	<Documentation>
+		<DocumentationSection sectionID="Introduction" title="Wprowadzenie">		
+<![CDATA[
+<br/>	
+<p>Wprowadzenie do obsługi systemu jest dostępne po naciśnięciu przycisku „Tutorial”, który znajduje się na Listwie Głównej u góry ekranu przeglądarki. Tutorial zawiera prezentację:</p>
+<ul>
+<li>Koncepcji systemu:</li>
+<ul>
+<li>związku lista-wiersz jako podstawy modułu,</li>
+<li>pojęcia działań w kontekście listy,</li>
+<li>pojęcia działań w kontekście wiersza,</li>
+<li>powiązania wiersza z innymi modułami,</li>
+</ul>
+<li>Logowania i nawigacji po systemie;</li>
+<li>Funkcjonalności dostępnych na ekranie Listy;</li>
+<li>Funkcjonalności dostępnych na ekranie Wiersza;</li>
+<li>Funkcjonalności związanych z edycją zawartości danych wiersza;</li>
+<li>Funkcjonalności raportów;</li>
+<li>Funkcjonalności wykresów.</li>
+</ul>
+<p>Powyższe możliwości systemu mogą być wypróbowane na modułach demonstracyjnych:</p>
+<ul>
+<li>Państwa;</li>
+<li>Województwa;</li>
+<li>Powiaty.</li>
+</ul>
+<p>Moduły demonstracyjne dostępne są po najechaniu myszą na "Menu Główne" w Listwie Głównej i wybranie ścieżki menu: "Menu Główne/Pomocnicze/Piaskownica/*". Zmiany wprowadzone w modułach demonstracyjnych nie mają wpływu na funkcje biznesowe aplikacji i mogą być wycofane przez administratora systemu.</p>
+]]>
+		</DocumentationSection>		
+	</Documentation>
+	<Revision author="$Author: jwach $" id="1" date="$Date: 2011-11-12 $"/>
+</Module>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--- Row Acces development-->
+<Module name="User Workgroups" moduleID="usrw" singularRecordName="Workgroup" pluralRecordName="Workgroups" allowAddRecord="yes" isMasterData="yes" defaultMenuPath="Main Menu / Administration / Workgroups">
+    <ModuleFields>
+      <TableField name="WorkGroupID" type="int" validate="notEmpty" dbFlags="unsigned not null auto_increment" phrase="Workgroup ID|An ID value for primary key purpose" sample="1"/>
+        <TableField name="Name" type="varchar(25)" dbFlags="not null" validate="notEmpty" phrase="Name|The workgroup's name" sample="Sales"/>
+        <TableField name="Description" type="text" validate="" phrase="Description|A description of the purpose of the workgroup" sample="Sales"/>
+        <CombinedField name="RecordLabel" phrase="Record Label|The short, concise, label of the record for display purposes" sample="Supervisors"><CombinedFieldRef name="Name"/></CombinedField>
+        <CombinedField name="WorkGroup" phrase="Record Label|The short, concise, label of the record for display purposes" sample="Supervisors"><CombinedFieldRef name="Name"/></CombinedField>
+		<TableField name="_OwnedBy" type="int" dbFlags="unsigned default 0"  phrase="Record Owner|ID of the record owner" />
+        <TableField name="_WorkGroupID" type="int" dbFlags="unsigned default 0" phrase="Workgroup ID|The ID of the workgroup owning the record" sample="1"/>
+	</ModuleFields>
+    <ModuleInfo>
+        <PrimaryKey>
+          <FieldRef name="WorkGroupID"/>
+        </PrimaryKey>
+        <!-- <OwnerField name="OrganizationID"/>-->
+        <RecordDescriptionField name="WorkGroup"/>
+        <RecordLabelField name="RecordLabel"/>
+    </ModuleInfo>
+    <SubModules>
+        <SubModule moduleID="usrwm" name="Workgroup Members" parentKey="WorkGroupID" localKey="WorkGroupID"/>
+    </SubModules>
+    <Screens>
+        <ListScreen name="List">
+          <ListField name="WorkGroupID" phrase="ID"/>
+          <ListField name="Name"/>
+          <ListField name="Description"/>
+        </ListScreen>
+        <SearchScreen name="Search">
+			<EditField name="WorkGroupID" FromTo="no" size="50" maxLength="250"/>
+            <EditField name="Name" size="15" maxLength="25"/>
+        </SearchScreen>
+        <ViewScreen name="View">
+            <ViewField name="WorkGroupID"/>
+            <ViewField name="Name"/>
+            <ViewField name="Description"/>
+            <ViewGrid moduleID="usrwm"/>
+        </ViewScreen>
+        <EditScreen name="Form" phrase="Form|Edit a user group">
+            <ViewField name="WorkGroupID"/>
+            <EditField name="Name" size="15" maxLength="25"/>
+            <MemoField name="Description" rows="5" cols="60"/>
+        </EditScreen>
+        <EditScreen name="Members" phrase="Members|Define which users that should be members of this workgroup">
+            <RecordSummaryFieldsRef/>
+            <SearchSelectGrid moduleID="usrwm"/>
+        </EditScreen>
+    </Screens>
+    <RecordSummaryFields>
+        <ViewField name="WorkGroupID"/>
+        <ViewField name="Name"/>
+        <ViewField name="Description"/>
+    </RecordSummaryFields>
+    <Documentation>
+		<DocumentationSection sectionID="Introduction" title="Wprowadzenie">		
+<![CDATA[
+<br/>	
+<p>Wprowadzenie do obsługi systemu jest dostępne po naciśnięciu przycisku „Tutorial”, który znajduje się na Listwie Głównej u góry ekranu przeglądarki. Tutorial zawiera prezentację:</p>
+<ul>
+<li>Koncepcji systemu:</li>
+<ul>
+<li>związku lista-wiersz jako podstawy modułu,</li>
+<li>pojęcia działań w kontekście listy,</li>
+<li>pojęcia działań w kontekście wiersza,</li>
+<li>powiązania wiersza z innymi modułami,</li>
+</ul>
+<li>Logowania i nawigacji po systemie;</li>
+<li>Funkcjonalności dostępnych na ekranie Listy;</li>
+<li>Funkcjonalności dostępnych na ekranie Wiersza;</li>
+<li>Funkcjonalności związanych z edycją zawartości danych wiersza;</li>
+<li>Funkcjonalności raportów;</li>
+<li>Funkcjonalności wykresów.</li>
+</ul>
+<p>Powyższe możliwości systemu mogą być wypróbowane na modułach demonstracyjnych:</p>
+<ul>
+<li>Państwa;</li>
+<li>Województwa;</li>
+<li>Powiaty.</li>
+</ul>
+<p>Moduły demonstracyjne dostępne są po najechaniu myszą na "Menu Główne" w Listwie Głównej i wybranie ścieżki menu: "Menu Główne/Pomocnicze/Piaskownica/*". Zmiany wprowadzone w modułach demonstracyjnych nie mają wpływu na funkcje biznesowe aplikacji i mogą być wycofane przez administratora systemu.</p>
+]]>
+		</DocumentationSection>		
+	</Documentation>
+    <Revision author="$Author: mattias $" id="$Revision: 979 $" date="$Date: 2007-08-21 14:19:56 -0700 (Tue, 21 Aug 2007) $"/>
+</Module>

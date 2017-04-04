@@ -1,0 +1,59 @@
+#!/bin/bash
+AA_PATH=/var/www/s2a
+
+cp attModuleDef.xml	$AA_PATH/active_agenda/xml/attModuleDef.xml
+cp bctiModuleDef.xml	$AA_PATH/active_agenda/xml/bctiModuleDef.xml
+cp bcti_ReportDef_CountiesHTML.xml $AA_PATH/active_agenda/xml/bcti_ReportDef_CountiesHTML.xml
+cp bctrModuleDef.xml	$AA_PATH/active_agenda/xml/bctrModuleDef.xml
+cp bctr_ReportDef_StatesHTML.xml $AA_PATH/active_agenda/xml/bctr_ReportDef_StatesHTML.xml
+cp bstaModuleDef.xml	$AA_PATH/active_agenda/xml/bstaModuleDef.xml
+cp ccsModuleDef.xml	$AA_PATH/active_agenda/xml/ccsModuleDef.xml
+cp codModuleDef.xml	$AA_PATH/active_agenda/xml/codModuleDef.xml
+cp codtdModuleDef.xml	$AA_PATH/active_agenda/xml/codtdModuleDef.xml
+cp codtModuleDef.xml	$AA_PATH/active_agenda/xml/codtModuleDef.xml
+cp cosModuleDef.xml	$AA_PATH/active_agenda/xml/cosModuleDef.xml
+cp ctiModuleDef.xml	$AA_PATH/active_agenda/xml/ctiModuleDef.xml
+cp ctrModuleDef.xml	$AA_PATH/active_agenda/xml/ctrModuleDef.xml
+cp dsbccModuleDef.xml	$AA_PATH/active_agenda/xml/dsbccModuleDef.xml
+cp dsbcModuleDef.xml	$AA_PATH/active_agenda/xml/dsbcModuleDef.xml
+cp gloModuleDef.xml	$AA_PATH/active_agenda/xml/gloModuleDef.xml
+cp lnkModuleDef.xml	$AA_PATH/active_agenda/xml/lnkModuleDef.xml
+cp modchModuleDef.xml	$AA_PATH/active_agenda/xml/modchModuleDef.xml
+cp moddModuleDef.xml	$AA_PATH/active_agenda/xml/moddModuleDef.xml
+cp modgtModuleDef.xml	$AA_PATH/active_agenda/xml/modgtModuleDef.xml
+cp modModuleDef.xml	$AA_PATH/active_agenda/xml/modModuleDef.xml
+cp modrpModuleDef.xml	$AA_PATH/active_agenda/xml/modrpModuleDef.xml
+cp modfnModuleDef.xml $AA_PATH/active_agenda/xml/modfnModuleDef.xml
+cp ntfModuleDef.xml	$AA_PATH/active_agenda/xml/ntfModuleDef.xml
+cp ntsModuleDef.xml	$AA_PATH/active_agenda/xml/ntsModuleDef.xml
+cp puModuleDef.xml 	$AA_PATH/active_agenda/xml/puModuleDef.xml
+cp rdcModuleDef.xml	$AA_PATH/active_agenda/xml/rdcModuleDef.xml
+cp rmdModuleDef.xml $AA_PATH/active_agenda/xml/rmdModuleDef.xml
+cp smcModuleDef.xml	$AA_PATH/active_agenda/xml/smcModuleDef.xml
+cp sptModuleDef.xml	$AA_PATH/active_agenda/xml/sptModuleDef.xml
+cp sptsModuleDef.xml	$AA_PATH/active_agenda/xml/sptsModuleDef.xml
+cp staModuleDef.xml	$AA_PATH/active_agenda/xml/staModuleDef.xml
+cp trxModuleDef.xml	$AA_PATH/active_agenda/xml/trxModuleDef.xml
+cp trxrModuleDef.xml	$AA_PATH/active_agenda/xml/trxrModuleDef.xml
+cp uppModuleDef.xml	$AA_PATH/active_agenda/xml/uppModuleDef.xml
+cp usrdsModuleDef.xml	$AA_PATH/active_agenda/xml/usrdsModuleDef.xml
+cp usrgmModuleDef.xml	$AA_PATH/active_agenda/xml/usrgmModuleDef.xml
+cp usrgModuleDef.xml	$AA_PATH/active_agenda/xml/usrgModuleDef.xml
+cp usrgpModuleDef.xml	$AA_PATH/active_agenda/xml/usrgpModuleDef.xml
+cp usrlModuleDef.xml	$AA_PATH/active_agenda/xml/usrlModuleDef.xml
+cp usrModuleDef.xml	$AA_PATH/active_agenda/xml/usrModuleDef.xml
+cp usrpModuleDef.xml	$AA_PATH/active_agenda/xml/usrpModuleDef.xml
+cp usrpoModuleDef.xml	$AA_PATH/active_agenda/xml/usrpoModuleDef.xml
+cp usrsdModuleDef.xml	$AA_PATH/active_agenda/xml/usrsdModuleDef.xml
+cp usrshModuleDef.xml	$AA_PATH/active_agenda/xml/usrshModuleDef.xml
+cp usrwmModuleDef.xml	$AA_PATH/active_agenda/xml/usrwmModuleDef.xml
+cp usrwModuleDef.xml	$AA_PATH/active_agenda/xml/usrwModuleDef.xml
+cp verModuleDef.xml		$AA_PATH/active_agenda/xml/verModuleDef.xml
+
+cp bsta_ReportDef_StatesHTML.xml $AA_PATH/active_agenda/xml/bsta_ReportDef_StatesHTML.xml
+cp bsta_ReportDef_StatesXLS.xml $AA_PATH/active_agenda/xml/bsta_ReportDef_StatesXLS.xml
+mkdir $AA_PATH/active_agenda/msxml/StatesXLS
+cp StatesXLS/header.xml $AA_PATH/active_agenda/msxml/StatesXLS/header.xml
+cp StatesXLS/bsta.xml $AA_PATH/active_agenda/msxml/StatesXLS/bsta.xml
+cp StatesXLS/bsta_bcti.xml $AA_PATH/active_agenda/msxml/StatesXLS/bsta_bcti.xml
+cp StatesXLS/footer.xml $AA_PATH/active_agenda/msxml/StatesXLS/footer.xml

@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+
+-->
+<Module name="Footnotes" moduleID="modfn" singularRecordName="Footnote" pluralRecordName="Footnotes">
+	<ModuleFields>
+		<TableField 
+			name="FootnoteID" type="int" dbFlags="unsigned auto_increment not null" 
+			phrase="Footnote ID|An automatically assigned number used to identify a record"/>
+		<StaticField 
+			name="ruler1" type="text" content="" 
+			phrase=" "/>
+		<TableField 
+			name="RelatedModuleID" type="varchar(5)" validate="notEmpty"
+			phrase="Related Module ID|A character ID assigned to each module of the application"/>
+		<ForeignField 
+			name="RelatedModule" foreignTable="mod" foreignKey="ModuleID" foreignField="Name" key="RelatedModuleID" joinType="left" 
+			phrase="Related Module|The name or title of the module which is associated with the power user"/>
+		<TableField 
+			name="Footnote" type="varchar(255)" validate="notEmpty"
+			phrase="Footnote|Text to display on the module list page"/>
+		<TableField 
+			name="FootnoteVisibility" type="bool" validate="notEmpty"
+			phrase="Visible|Is the footnote visible on the module list page"/>	
+		<CalculatedField 
+			name="FootnoteVisibilitySign" calcFunction="flipflop" params="FootnoteVisibility #&#9679; #&#9675;"  
+			phrase="Visible|Is the footnote visible on the module list page"/>
+		<CombinedField 
+			name="FootnoteVisibilityGraph" 
+			phrase="Visible|Is the footnote visible on the module list page">
+			<![CDATA[<div class="gsblt">]]>
+			<CombinedFieldRef name="FootnoteVisibilitySign"/><![CDATA[</div>]]>
+		</CombinedField>
+		
+		<TableField 
+			name="FootnoteDisplayorder" type="int" 
+			phrase="Display order|Display order of footnotes on the module list page"/>
+			<StaticField 
+			name="ruler2" type="text" content="" 
+			phrase=" "/>
+		<RecordMetaField  
+			name="_ThisCreatedByPersonID"  returnType="userID" lookupType="created" 
+			phrase="Created By|Record created by person"/>
+		<ForeignField 
+			name="_ThisCreatedByPerson" foreignTable="ppl" foreignKey="PersonID" foreignField="DisplayName" key="_ThisCreatedByPersonID" 
+			phrase="Created By|Record created by person"/>
+		<ForeignField 
+			name="_ThisCreatedByOrganizationID" foreignTable="ppl" foreignKey="PersonID" foreignField="OrganizationID" key="_ThisCreatedByPersonID" 
+			phrase="Organization|Name of organization associated with the creating individual"/>
+		<ForeignField 
+			name="_ThisCreatedByOrganization" foreignTable="org" foreignKey="OrganizationID" foreignField="Name" key="_ThisCreatedByOrganizationID" 
+			phrase="Organization|Name of organization associated with the creating individual"/>		
+		<RecordMetaField 
+			name="_ThisCreationDate"  returnType="date" lookupType="created"  
+			phrase="Created|Record created on date"/>
+		<CombinedField 
+			name="_ThisCreated" 
+			phrase="Created|Created on date by person from organization">
+			<CombinedFieldRef name="_ThisCreationDate"/>_<CombinedFieldRef name="_ThisCreatedByPerson"/>_/_<CombinedFieldRef name="_ThisCreatedByOrganization"/>
+		</CombinedField>
+		<RecordMetaField  
+			name="_ThisLastChangedByPersonID"  returnType="userID" lookupType="modified" 
+			phrase="Last Changed by|Last changed by person"/>
+		<ForeignField 
+			name="_ThisLastChangedByPerson" foreignTable="ppl" foreignKey="PersonID" foreignField="DisplayName" key="_ThisLastChangedByPersonID" 
+			phrase="Last Changed By|Last changed by person"/>
+		<ForeignField 
+			name="_ThisLastChangedByOrganizationID" foreignTable="ppl" foreignKey="PersonID" foreignField="OrganizationID" key="_ThisLastChangedByPersonID" 
+			phrase="Organization|Name of organization associated with the last changing individual"/>
+		<ForeignField 
+			name="_ThisLastChangedByOrganization" foreignTable="org" foreignKey="OrganizationID" foreignField="Name" key="_ThisLastChangedByOrganizationID" 
+			phrase="Organization|Name of organization associated with the last changing individual"/>		
+		<RecordMetaField 
+			name="_ThisLastChangedDate"  returnType="date" lookupType="modified"  
+			phrase="Last Modified|Record modified last on date"/>
+		<CombinedField 
+			name="_ThisLastChanged" 
+			phrase="Last Modified|Last modified on date by person from organization">
+			<CombinedFieldRef name="_ThisLastChangedDate"/>_<CombinedFieldRef name="_ThisLastChangedByPerson"/>_/_<CombinedFieldRef name="_ThisLastChangedByOrganization"/>
+		</CombinedField>
+		<CombinedField 
+			name="RecordLabel" 
+			phrase="Record Label|The short, concise, label of the record for display purposes">
+			<CombinedFieldRef name="RelatedModule"/>_;_<CombinedFieldRef name="FootnoteID"/>
+		</CombinedField>
+	</ModuleFields>
+	<ModuleInfo>
+		<PrimaryKey>
+			<FieldRef name="FootnoteID"/>
+		</PrimaryKey>
+		<Index name="RelatedModuleID1">
+			<FieldRef name="RelatedModuleID"/>
+		</Index>
+		<RecordDescriptionField name="RecordLabel"/>
+		<RecordLabelField name="RecordLabel"/>
+	</ModuleInfo>
+	<Screens>
+		<ListScreen name="List">
+			<ListField name="FootnoteID" phrase="ID"/>
+			<InvisibleField name= "RelatedModuleID"/>
+            <ListField name="RelatedModule"/>
+			<ListField name="Footnote"/>		
+			<ListField name="FootnoteVisibilityGraph" align="center"/>			
+			<ListField name="FootnoteDisplayorder" align="center" phrase="Display order"/>	
+			<OrderByField name="FootnoteVisibility" direction="desc"/>
+			<OrderByField name="FootnoteDisplayorder"/>			
+		</ListScreen>
+		<SearchScreen name="Search">
+			<EditField name="FootnoteID" FromTo="no" size="50" maxLength="250"/>
+            <ComboField name="RelatedModuleID" listField="RelatedModule" suppressItemAdd="yes"/>
+			<EditField name="Footnote" size="50" maxLength="255"/>			
+			<EditField name="FootnoteDisplayorder" size="5" maxLength="5"/>
+			<CheckBoxField name="FootnoteVisibility"/>
+		</SearchScreen>
+		<ViewScreen name="View">
+			<ViewField name="FootnoteID"/>
+			<ViewField name="ruler1"/>
+			<ViewField name="RelatedModule"/>
+			<ViewField name="Footnote"/>
+			<ViewField name="FootnoteDisplayorder"/>
+			<ViewField name="FootnoteVisibility"/>
+			<ViewField name="ruler2"/>			
+			<ViewField name="_ThisCreated"/>
+			<ViewField name="_ThisLastChanged" goEditScreen="Form"/>
+		</ViewScreen>
+		<EditScreen name="Form" phrase="Form|Edit summary information about a footnote">
+			<ViewField name="FootnoteID"/>
+			<ComboField name="RelatedModuleID" listField="RelatedModule" suppressItemAdd="yes"/>
+			<EditField name="Footnote" size="50" maxLength="255"/>
+			<EditField name="FootnoteDisplayorder" size="5" maxLength="5"/>
+			<CheckBoxField name="FootnoteVisibility"/>			
+		</EditScreen>
+	</Screens>	
+	<Documentation>
+		<DocumentationSection sectionID="Introduction" title="Wprowadzenie">		
+<![CDATA[
+<br/>	
+<p>Wprowadzenie do obsługi systemu jest dostępne po naciśnięciu przycisku „Tutorial”, który znajduje się na Listwie Głównej u góry ekranu przeglądarki. Tutorial zawiera prezentację:</p>
+<ul>
+<li>Koncepcji systemu:</li>
+<ul>
+<li>związku lista-wiersz jako podstawy modułu,</li>
+<li>pojęcia działań w kontekście listy,</li>
+<li>pojęcia działań w kontekście wiersza,</li>
+<li>powiązania wiersza z innymi modułami,</li>
+</ul>
+<li>Logowania i nawigacji po systemie;</li>
+<li>Funkcjonalności dostępnych na ekranie Listy;</li>
+<li>Funkcjonalności dostępnych na ekranie Wiersza;</li>
+<li>Funkcjonalności związanych z edycją zawartości danych wiersza;</li>
+<li>Funkcjonalności raportów;</li>
+<li>Funkcjonalności wykresów.</li>
+</ul>
+<p>Powyższe możliwości systemu mogą być wypróbowane na modułach demonstracyjnych:</p>
+<ul>
+<li>Państwa;</li>
+<li>Województwa;</li>
+<li>Powiaty.</li>
+</ul>
+<p>Moduły demonstracyjne dostępne są po najechaniu myszą na "Menu Główne" w Listwie Głównej i wybranie ścieżki menu: "Menu Główne/Pomocnicze/Piaskownica/*". Zmiany wprowadzone w modułach demonstracyjnych nie mają wpływu na funkcje biznesowe aplikacji i mogą być wycofane przez administratora systemu.</p>
+]]>
+		</DocumentationSection>		
+	</Documentation>
+	<Revision author="jwach" id="$Revision: 1515 $" date="2011-11-09"/>
+</Module>

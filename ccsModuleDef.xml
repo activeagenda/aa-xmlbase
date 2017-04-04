@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Module 
+	name="Consistency Condition States" moduleID="ccs"
+	isSystemModule="yes"
+	singularRecordName="Consistency State" pluralRecordName="Consistency States">
+	
+   <ModuleFields>
+      <TableField 
+		  name="StateID" type="int" dbFlags="unsigned auto_increment not null" 
+		  phrase="State ID|An automatically assigned number used to track consistency states"/>
+      <TableField 
+		  name="ModuleID" type="varchar(5)" dbFlags="not null" 
+		  phrase="Module ID|The module ID of the referenced record"/>
+      <TableField 
+		  name="RecordID" type="int" dbFlags="not null" 
+		  phrase="Record ID|The record ID of the referenced record"/>
+      <TableField 
+		  name="Inconsistent" type="bool" dbFlags="default null" 
+		  phrase="Inconsistent|Whether the referenced record is consistent with conditions"/>
+      <TableField 
+		  name="Triggers" type="varchar(128)" dbFlags="not null" 
+		  phrase="Triggers|A character string that describes what conditions and triggers that were triggered"/>
+      <TableField 
+		  name="Targets" type="varchar(128)" dbFlags="not null" 
+		  phrase="Triggers|A character string that describes what targets were unmet"/>
+	</ModuleFields>
+   <ModuleInfo>
+      <PrimaryKey>
+         <FieldRef name="StateID"/>
+      </PrimaryKey>
+      <Index name="Related">
+         <FieldRef name="ModuleID"/>
+         <FieldRef name="RecordID"/>
+      </Index>
+   </ModuleInfo>
+   <Revision author="$Author: mattias $" id="$Revision: 1023 $" date="$Date: 2007-10-18 23:53:21 -0700 (Thu, 18 Oct 2007) $"/>
+</Module>

@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Module 
+	name="States in sandbox" moduleID="bsta" 
+	updateImports="yes" isMasterData="yes"
+	singularRecordName="State" pluralRecordName="States"
+	defaultMenuPath="Main Menu / Sandbox / States">
+	
+	<ModuleFields>
+		<TableField 
+			name="StateID" type="int" dbFlags="unsigned auto_increment not null" 
+			phrase="State ID|A unique id to identify states internally" 
+				deleteKeys="bcti.StateID" deleteOnIdGlobals="att nts cos lnk"/>
+		<TableField 
+			name="CountryID" type="int" validate="RequireSelection" dbFlags="unsigned" 
+			phrase="Country|The internationally recognized name of the country"/>
+		<ForeignField 
+			name="Country"  key="CountryID"
+			foreignTable="bctr" foreignKey="CountryID" foreignField="Country" joinType="left" 
+			phrase="Country|A combined field used to associate this country with another record"/>
+		<TableField 
+			name="StateName" type="varchar(50)" validate="notEmpty"
+			phrase="State|The name of the state or similar geographic zone"/>
+		<TableField 
+			name="StateAbbreviation" type="varchar(5)" validate="" dbFlags="" 
+			phrase="State Abbreviation|The common abbreviation of a state, as used in a mailing address"/>
+		<CombinedField 
+			name="RecordLabel" 
+			phrase="Record Label|The short, concise, label of the record for display purposes">
+			<CombinedFieldRef name="StateName"/>_(<CombinedFieldRef name="StateAbbreviation"/>)
+		</CombinedField>
+		<CombinedField 
+			name="State" 
+			phrase="State|A combined field used to associate this state with another record">
+			<CombinedFieldRef name="StateName"/>_(<CombinedFieldRef name="StateAbbreviation"/>)
+		</CombinedField>
+		<SummaryField 
+			name="CountiesNumber" localKey="StateID"
+			summaryFunction="count"  summaryModuleID="bcti" summaryKey="StateID" summaryField="CountyID"
+			phrase="Number of Counties|Number of Counties in the state"/>
+	</ModuleFields>
+	<ModuleInfo>
+		<PrimaryKey>
+			<FieldRef name="StateID"/>
+		</PrimaryKey>
+		<!--<OwnerField name="OrganizationID"/> Not required-->
+		<RecordDescriptionField name="State"/>
+		<RecordLabelField name="RecordLabel"/>
+	</ModuleInfo>
+	<SubModules>
+		<SubModule name="Counties" moduleID="bcti"  parentKey="StateID" localKey="StateID"/>
+	</SubModules>
+	<Screens>
+		<ListScreen name="List">
+			<ListField name="StateID" phrase="ID"/>
+			<ListField name="StateName" phrase="State"/>
+			<ListField name="StateAbbreviation" phrase="Abbreviation"/>
+			<ListField name="Country" phrase="Country"/>
+		</ListScreen>
+		<SearchScreen name="Search">
+			<EditField name="StateID" FromTo="no" size="50" maxLength="250"/>
+			<ComboField name="CountryID" findMode="text"/>
+			<EditField name="StateName" size="75" maxLength="128"/>
+			<EditField name="StateAbbreviation" size="10" maxLength="5"/>
+		</SearchScreen>
+		<ViewScreen name="View">
+			<ViewField name="StateID"/>
+			<ViewField name="Country"/>
+			<ViewField name="State"/>
+			<ViewField name="StateAbbreviation" goEditScreen="Form"/>
+			<ViewScreenSection name="Associations" phrase="Associations">
+				<ViewGrid moduleID="bcti" rowIDon="StateID" goEditScreen="CountyName"/>
+			</ViewScreenSection>
+		</ViewScreen>
+		<EditScreen name="Form" phrase="Form|Edit summary information about a state">
+			<ViewField name="StateID"/>
+			<ComboField name="CountryID" findMode="text"/>
+			<EditField name="StateName" size="75" maxLength="128"/>
+			<EditField name="StateAbbreviation" size="10" maxLength="5"/>
+		</EditScreen>
+		<EditScreen name="CountyName" phrase="Counties|Counties or equivalent geographic zones being part of a state">
+			<RecordSummaryFieldsRef/>
+			<EditGrid moduleID="bcti" rowIDon="StateID" goViewAnchor="Associations"/>
+		</EditScreen>
+	</Screens>
+	<RecordSummaryFields>
+		<ViewField name="StateID"/>
+		<ViewField name="Country"/>
+		<ViewField name="State"/>			
+	</RecordSummaryFields>
+	<Exports>
+        <ViewGrid moduleID="bsta" phrase="States in sandbox">
+			<InvisibleField name="StateID"/>
+			<ViewField name="State"/>
+			<ViewField name="StateAbbreviation"/>			
+        </ViewGrid>
+        <EditGrid moduleID="bsta" phrase="States in sandbox">
+			<GridForm>
+				<InvisibleField name="StateID"/>				
+				<EditField name="StateName" size="75" maxLength="128"/>
+				<EditField name="StateAbbreviation" size="10" maxLength="5"/>
+			</GridForm>
+			<InvisibleField name="StateID"/>
+			<ViewField name="State"/>
+			<ViewField name="StateAbbreviation"/>
+		</EditGrid>		
+    </Exports>
+	<Charts>
+		<PieChart  name="Pie01" title="Counties By States">
+            <GroupByField name="State"/>
+            <SummaryField name="CountiesNumber" type="sum"/>
+        </PieChart>		
+	</Charts>
+	<Documentation>
+		<DocumentationSection sectionID="Introduction" title="Wprowadzenie">		
+<![CDATA[
+<br/>	
+<p>Wprowadzenie do obsługi systemu jest dostępne po naciśnięciu przycisku „Tutorial”, który znajduje się na Listwie Głównej u góry ekranu przeglądarki. Tutorial zawiera prezentację:</p>
+<ul>
+<li>Koncepcji systemu:</li>
+<ul>
+<li>związku lista-wiersz jako podstawy modułu,</li>
+<li>pojęcia działań w kontekście listy,</li>
+<li>pojęcia działań w kontekście wiersza,</li>
+<li>powiązania wiersza z innymi modułami,</li>
+</ul>
+<li>Logowania i nawigacji po systemie;</li>
+<li>Funkcjonalności dostępnych na ekranie Listy;</li>
+<li>Funkcjonalności dostępnych na ekranie Wiersza;</li>
+<li>Funkcjonalności związanych z edycją zawartości danych wiersza;</li>
+<li>Funkcjonalności raportów;</li>
+<li>Funkcjonalności wykresów.</li>
+</ul>
+<p>Powyższe możliwości systemu mogą być wypróbowane na modułach demonstracyjnych:</p>
+<ul>
+<li>Państwa;</li>
+<li>Województwa;</li>
+<li>Powiaty.</li>
+</ul>
+<p>Moduły demonstracyjne dostępne są po najechaniu myszą na "Menu Główne" w Listwie Głównej i wybranie ścieżki menu: "Menu Główne/Pomocnicze/Piaskownica/*". Zmiany wprowadzone w modułach demonstracyjnych nie mają wpływu na funkcje biznesowe aplikacji i mogą być wycofane przez administratora systemu.</p>
+]]>
+		</DocumentationSection>		
+	</Documentation>
+	<Revision author="$Author: mattias $" id="$Revision: 1513 $" date="$Date: 2009-02-10 21:20:45 +0100 (Wt, 10 lut 2009) $"/>
+</Module>

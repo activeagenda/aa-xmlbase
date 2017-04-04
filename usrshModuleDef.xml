@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Module 
+	name="User Search History" moduleID="usrsh"  allowAdd="No"
+	singularRecordName="Search history entry" pluralRecordName="Search history entries">
+	
+	<ModuleFields>
+		<TableField 
+			name="SearchhistoryID" type="int" dbFlags="auto_increment not null" 
+			phrase="History ID|An automatically assigned number used to identify a record"/>
+		<TableField 
+			name="ModuleID" type="varchar(5)" dbFlags="not null" 
+			phrase="Module ID|A unique character combination identifying a module or sub-module"/>
+		<TableField 
+			name="UserID" type="int" dbFlags="not null" 
+			phrase="User ID|Person ID number of an associated user (special: 0 means installation default, -1 means app default)"/>
+		<TableField 
+			name="SearchPhrases" type="text" 
+			phrase="Search phrases|Serialized search pharses displayed on the panel in list view"/>
+		<TableField 
+			name="SearchPostData" type="text"
+			phrase="Post data|Serialized post data send from the form by POST"/>
+	</ModuleFields>
+	<ModuleInfo>
+		<PrimaryKey>
+			<FieldRef name="SearchhistoryID"/>
+		</PrimaryKey>
+		<Index name="UserID_ModuleID">
+			<FieldRef name="UserID"/>
+			<FieldRef name="ModuleID"/>
+		</Index>
+	</ModuleInfo>
+	<Revision author="JWach" id="1" date="2012-11-26"/>
+</Module>

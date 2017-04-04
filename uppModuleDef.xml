@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Module 
+	name="Upgrade Patches" moduleID="upp"  
+	allowAddRecord="No" isSystemModule="yes"
+	singularRecordName="Upgrade Patch" pluralRecordName="Upgrade Patches">
+	
+    <ModuleFields>
+        <TableField 
+			name="RecordID" type="int" dbFlags="unsigned auto_increment not null" 
+			phrase="Record ID|An automatically assigned ID for internal purposes (primary key)"/>
+        <TableField 
+			name="PatchName" type="varchar(25)" 
+			phrase="Patch Name|A unique name assigned to each patch" />
+        <TableField 
+			name="Description" type="text" 
+			phrase="Description|A description of the patch"/>
+        <TableField 
+			name="ReleaseVersion" type="varchar(10)" 
+			phrase="Release Version|The release version that this patch applies to"/>
+        <TableField 
+			name="AppliedStatusID" type="int" dbFlags="default 0" 
+			phrase="Applied Status|The status of this patch: Not Applied, Applied, Not Required"/>
+	</ModuleFields>
+    <ModuleInfo>
+        <PrimaryKey>
+          <FieldRef name="RecordID"/>
+        </PrimaryKey>
+        <Index name="PatchName" unique="yes">
+          <FieldRef name="PatchName"/>
+        </Index>
+    </ModuleInfo>
+    <Screens>
+        <ListScreen name="List" phrase="List|List patches">
+            <ListField name="RecordID" phrase="ID"/>
+            <ListField name="PatchName"/>
+            <ListField name="Description"/>
+            <ListField name="ReleaseVersion"/>
+            <ListField name="AppliedStatusID"/>
+        </ListScreen>
+    </Screens>
+    <Revision author="$Author: dan $" id="$Revision: 949 $" date="$Date: 2007-08-07 12:41:58 -0700 (Tue, 07 Aug 2007) $"/>
+</Module>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module name="Module Generating Times" moduleID="modgt" singularRecordName="Generating Time" pluralRecordName="Generating Times" allowAddRecord="no">
+    <ModuleFields>
+        <TableField name="RecordID" type="int" dbFlags="unsigned auto_increment not null" phrase="Record ID|An automatically assigned number used to track generating times" sample="1"/>
+        <TableField name="ModuleID" type="varchar(5)" dbFlags="not null" phrase="Module|The name of the module associated with the notification recipient" sample="2"/>
+        <TableField name="Duration" type="float" dbFlags="not null" phrase="Duration|The amount of time that it took to generate the module, in seconds." sample="1"/>
+	</ModuleFields>
+    <ModuleInfo>
+        <PrimaryKey>
+            <FieldRef name="RecordID"/>
+        </PrimaryKey>
+        <Index name="ModuleID">
+            <FieldRef name="ModuleID"/>
+            <FieldRef name="Duration"/>
+        </Index>
+    </ModuleInfo>
+    <Revision author="$Author: mattias $" id="$Revision: 1512 $" date="$Date: 2009-02-10 19:44:34 +0100 (Wt, 10 lut 2009) $"/>
+</Module>

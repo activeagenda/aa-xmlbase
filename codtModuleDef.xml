@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Module 
+	name="Code Types" moduleID="codt" 
+	allowAddRecord="Yes" updateImports="yes" isImplementationPlanningModule="yes" isMasterData="yes" 
+	singularRecordName="Code Type" pluralRecordName="Code Types">
+
+	<ModuleFields>
+		<TableField
+			name="CodeTypeID" type="int" dbFlags="not null auto_increment"
+			phrase="Record ID|A number used to track code records."/>
+		<TableField
+			name="Name" type="varchar(128)"
+			phrase="Name|The name of this code type"/>
+		<TableField
+			name="Description" type="varchar(255)"
+			phrase="Description|A clarifying descrition of the code type"/>
+		<TableField 
+			name="UseValue" type="bool" dbFlags="default 0 not null"
+			phrase="Use Value For IDs|When true, any combo box that uses this code type will have IDs reflected as in the Value field of the 'cod' table. This allows for duplicate values as well as using the value 0"/>
+		<SummaryField 
+			name="Dependencies" type="int" localKey="CodeTypeID" 
+			summaryFunction="count" summaryField="DependencyID" summaryKey="CodeTypeID" summaryModuleID="codtd" 
+			phrase="Dependencies|A calculated field representing the number of module dependent upon the code type"/>
+		<SummaryField 
+			name="Items" type="int" localKey="CodeTypeID"
+			summaryFunction="count" summaryField="CodeID" summaryKey="CodeTypeID" summaryModuleID="cod"  
+			phrase="Items|A calculated field representing the number of items associated with the code type"/>
+		<CombinedField 
+			name="RecordLabel" 
+			phrase="Record Label|The short, concise, label of the record for display purposes">
+			<CombinedFieldRef name="Name"/>;_<CombinedFieldRef name="CodeTypeID"/>
+		</CombinedField>
+		<CombinedField 
+			name="CodeType" 
+			phrase="CodeType|A combined field used to describe this code type when associating it with other records">
+			<CombinedFieldRef name="Name"/>_ID:_<CombinedFieldRef name="CodeTypeID"/>
+		</CombinedField>
+	</ModuleFields>
+	<SubModules>
+		<SubModule 
+			 name="Code Items" parentKey="CodeTypeID"
+			 moduleID="cod" localKey="CodeTypeID"/>
+		<SubModule 
+			name="Dependencies" parentKey="CodeTypeID"
+			moduleID="codtd" localKey="CodeTypeID"/>
+	</SubModules>
+	<ModuleInfo>
+		<PrimaryKey>
+			<FieldRef name="CodeTypeID"/>
+		</PrimaryKey>
+		<UniquenessIndex name="Name">
+            <FieldRef name="Name"/>
+        </UniquenessIndex>
+		<RecordDescriptionField name="CodeType"/>
+		<RecordLabelField name="RecordLabel"/>
+	</ModuleInfo>
+	<Screens>
+		<ListScreen name="List">
+			<ListField name="CodeTypeID" phrase="ID"/>
+			<ListField name="Name" phrase="Code Type"/>
+			<ListField name="Dependencies" phrase="Dependencies"/>
+			<ListField name="Items" phrase="Items"/>
+		</ListScreen>
+		<SearchScreen name="Search">
+			<EditField name="CodeTypeID" size="10" maxLength="10"/>
+			<EditField name="Name" size="50" maxLength="75"/>
+			<EditField name="Description" size="50" maxLength="128"/>
+		</SearchScreen>
+		<ViewScreen name="View">
+			<ViewField name="CodeTypeID"/>
+			<ViewField name="Name"/>
+			<ViewField name="Description"/>
+			<ViewField name="Dependencies"/>
+			<ViewField name="Items"/>
+			<ViewScreenSection name="Associations" phrase="Associations">
+				<ViewGrid moduleID="codtd"/>
+				<ViewGrid moduleID="cod"/>
+			</ViewScreenSection>
+		</ViewScreen>
+		<EditScreen name="Form" phrase="Form|Edit code types">
+			<ViewField name="CodeTypeID"/>
+			<EditField name="Name" size="50" maxLength="75"/>
+			<EditField name="Description" size="50" maxLength="128"/>
+		</EditScreen>
+		<!-- Don't change the screen name "Items" below! It is hard-coded in the frames popup, which is what you see when clicking on the "plus" next to a CodeComboField. -->
+		<EditScreen name="Items" phrase="Items">
+			<RecordSummaryFieldsRef/>
+			<EditGrid moduleID="cod"/>
+		</EditScreen>
+	</Screens>
+	<RecordSummaryFields>
+		<ViewField name="CodeTypeID"/>
+		<ViewField name="Name"/>
+	</RecordSummaryFields>
+	<Documentation>
+		<DocumentationSection sectionID="Introduction" title="Wprowadzenie">		
+<![CDATA[
+<br/>	
+<p>Wprowadzenie do obsługi systemu jest dostępne po naciśnięciu przycisku „Tutorial”, który znajduje się na Listwie Głównej u góry ekranu przeglądarki. Tutorial zawiera prezentację:</p>
+<ul>
+<li>Koncepcji systemu:</li>
+<ul>
+<li>związku lista-wiersz jako podstawy modułu,</li>
+<li>pojęcia działań w kontekście listy,</li>
+<li>pojęcia działań w kontekście wiersza,</li>
+<li>powiązania wiersza z innymi modułami,</li>
+</ul>
+<li>Logowania i nawigacji po systemie;</li>
+<li>Funkcjonalności dostępnych na ekranie Listy;</li>
+<li>Funkcjonalności dostępnych na ekranie Wiersza;</li>
+<li>Funkcjonalności związanych z edycją zawartości danych wiersza;</li>
+<li>Funkcjonalności raportów;</li>
+<li>Funkcjonalności wykresów.</li>
+</ul>
+<p>Powyższe możliwości systemu mogą być wypróbowane na modułach demonstracyjnych:</p>
+<ul>
+<li>Państwa;</li>
+<li>Województwa;</li>
+<li>Powiaty.</li>
+</ul>
+<p>Moduły demonstracyjne dostępne są po najechaniu myszą na "Menu Główne" w Listwie Głównej i wybranie ścieżki menu: "Menu Główne/Pomocnicze/Piaskownica/*". Zmiany wprowadzone w modułach demonstracyjnych nie mają wpływu na funkcje biznesowe aplikacji i mogą być wycofane przez administratora systemu.</p>
+]]>
+		</DocumentationSection>		
+	</Documentation>
+	<Revision author="$Author: dan $" id="$Revision: 1512 $" date="$Date: 2009-02-10 19:44:34 +0100 (Wt, 10 lut 2009) $"/>
+</Module>

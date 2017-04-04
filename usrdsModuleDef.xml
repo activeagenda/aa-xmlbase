@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Module 
+	name="User Desktop Shortcuts" 
+	moduleID="usrds" allowAddRecord="no"
+	singularRecordName="Desktop Shortcut" pluralRecordName="Desktop Shortcuts"
+	defaultMenuPath="Main Menu / Miscellaneous / User Desktop Shortcuts">
+ 
+    <ModuleFields>
+        <TableField
+			name="RecordID" type="int" dbFlags="unsigned auto_increment not null"
+			phrase="Shortcut ID|The Record ID."/>
+		
+		<TableField
+			name="PersonID" type="int" dbFlags="not null"
+			phrase="Owner|Displays desktop shortcut owners name" /> 
+       
+		<TableField 
+			name="_OwnedBy" type="int" dbFlags="unsigned default 0" validate="RequireSelection"
+			defaultValue="userID" orgListOptions="intpar" 
+			phrase="Owner|Displays desktop shortcut owners name"/>
+		<ForeignField 
+			name="_Owned" foreignTable="ppl" foreignKey="PersonID" foreignField="DisplayName" key="_OwnedBy" 
+			phrase="Owner|Displays desktop shortcut owners name"/>
+		<LinkField 
+			name="_OwnedLink" foreignModuleID="ppl" recordIDField="_OwnedBy" 
+			phrase="Owner|Displays desktop shortcut owners name"/>
+		<ForeignField 
+			name="_OrganizationID" foreignTable="ppl" foreignKey="PersonID" foreignField="OrganizationID"
+			key="_OwnedBy" 
+			phrase="Organization|Name of organization associated with the owner"/>
+		<ForeignField 
+			name="_Organization" foreignTable="org" foreignKey="OrganizationID" foreignField="Name"
+			key="_OrganizationID" 
+			phrase="Organization|Name of organization associated with the owner"/>
+		<CombinedField name="_OwnedOrganization"  
+			phrase="Owner|Displays desktop shortcut owners name">
+			<CombinedFieldRef name="_Owned"/>_/_<CombinedFieldRef name="_Organization"/>
+		</CombinedField>
+			
+        <TableField
+			name="Title" type="varchar(128)" dbFlags="not null"
+			phrase="Title|The title of the link"/>
+        <TableField
+			name="Link" type="varchar(128)" dbFlags="not null"
+			phrase="Link|The link"/>
+        <TableField
+			name="Type" type="varchar(50)" dbFlags="not null"
+			phrase="Type|The type of link"/>
+        <TableField
+			name="ModuleID" type="varchar(5)"
+			phrase="Module|The module name of the linked module"/>
+		<ForeignField 
+			name="Module" foreignTable="mod" foreignKey="ModuleID" foreignField="Name" key="ModuleID" joinType="left" 
+			phrase="Module|The module name of the linked module"/>
+		
+        <CombinedField
+			name="InternalLink"
+			phrase="Desktop shortcut|A properly formatted link">
+			internal:<CombinedFieldRef name="Link"/>
+        </CombinedField>
+		<CombinedField 
+			name="DesktopShortcut" 
+			phrase="Desktop Shortcut|The link as displayed in User Desktop Shortcuts">
+			<CombinedFieldRef name="Title"/>_(_<CombinedFieldRef name="Type"/>_)
+		</CombinedField>		
+		
+		<CombinedField 
+			name="_RecordLabel" 
+			phrase="Record Label|The short, concise, label of the record for display purposes">
+			<CombinedFieldRef name="Title"/>_(<CombinedFieldRef name="Type"/>)
+		</CombinedField>		
+		<CombinedField 
+			name="_RecordDescription" 
+			phrase="Record Description|A combined field used to describe this record when associating it with other records">
+			<CombinedFieldRef name="Title"/>_(<CombinedFieldRef name="Type"/>)
+		</CombinedField>
+		<ForeignField 
+			name="_Tag" key="RecordID" foreignTable="cos" foreignKey="RelatedRecordID" foreignField="Tag"
+			listCondition="RelatedModuleID='usrds'" 			
+			phrase="Tag|A tag that classifies the record"/>
+
+		<!-- Beautifiers -->		
+		<StaticField 
+			name="ruler1" type="text" content="" phrase=" "/>
+		<StaticField 
+			name="ruler2" type="text" content="" phrase=" "/>
+			
+	</ModuleFields>
+    <ModuleInfo>
+        <PrimaryKey>
+            <FieldRef name="RecordID"/>
+        </PrimaryKey>
+        <Index name="OwnedBy">
+            <FieldRef name="_OwnedBy"/>
+        </Index>
+        <Index name="OwnedByLink">
+            <FieldRef name="_OwnedBy"/>
+            <FieldRef name="Link"/>
+        </Index>
+		<RecordDescriptionField name="_RecordDescription"/>
+        <RecordLabelField name="_RecordLabel"/>
+    </ModuleInfo>
+	<Screens>
+        <ListScreen name="List">
+			<ListField name="RecordID" phrase="ID"/>
+			<ListField name="DesktopShortcut"/>
+			<ListField name="Module"/>
+			<InvisibleField name="Title"/>
+			<OrderByField name="Title"/>
+        </ListScreen>
+        <SearchScreen name="Search">
+			<EditField name="RecordID" FromTo="no" size="50" maxLength="250"/>
+			<ViewField name="ruler1"/>
+			<EditField name="Title" size="50" maxLength="128"/>
+			<EditField name="Type" size="50" maxLength="50"/>
+			<ComboField name="ModuleID" findMode="text" suppressItemAdd="yes"/>
+			<PersonComboField name="_OwnedBy" findMode="text" suppressItemAdd="yes"/>
+			<ViewField name="ruler2"/>
+			<EditField name="_Tag" size="50" maxLength="50"/>
+        </SearchScreen>
+        <ViewScreen name="View">		
+			<ViewField name="RecordID"/>
+			<ViewField name="ruler1"/>
+			<ViewField name="Title"/>
+			<ViewField name="Type"/>
+			<ViewField name="Module"/>
+			<InvisibleField name="InternalLink"/>
+			<ViewField name="DesktopShortcut" link="InternalLink"/>
+			<InvisibleField name="_OwnedLink"/>
+			<ViewField name="_OwnedOrganization" link="_OwnedLink" goEditScreen="Form"/>
+        </ViewScreen>
+        <EditScreen name="Form" phrase="Form|Edit summary information about a user desktop shortcut">
+            <ViewField name="RecordID"/>
+			<ViewField name="ruler1"/>
+			<EditField name="Title" size="50" maxLength="128"/>
+			<ViewField name="Type"/>
+			<ViewField name="Module"/>
+			<InvisibleField name="_OwnedLink"/>
+			<ViewField name="_OwnedOrganization" link="_OwnedLink"/>
+        </EditScreen>	
+    </Screens>    
+    <Documentation>
+		<DocumentationSection sectionID="Introduction" title="Wprowadzenie">		
+<![CDATA[
+<br/>	
+<p>Wprowadzenie do obsługi systemu jest dostępne po naciśnięciu przycisku „Tutorial”, który znajduje się na Listwie Głównej u góry ekranu przeglądarki. Tutorial zawiera prezentację:</p>
+<ul>
+<li>Koncepcji systemu:</li>
+<ul>
+<li>związku lista-wiersz jako podstawy modułu,</li>
+<li>pojęcia działań w kontekście listy,</li>
+<li>pojęcia działań w kontekście wiersza,</li>
+<li>powiązania wiersza z innymi modułami,</li>
+</ul>
+<li>Logowania i nawigacji po systemie;</li>
+<li>Funkcjonalności dostępnych na ekranie Listy;</li>
+<li>Funkcjonalności dostępnych na ekranie Wiersza;</li>
+<li>Funkcjonalności związanych z edycją zawartości danych wiersza;</li>
+<li>Funkcjonalności raportów;</li>
+<li>Funkcjonalności wykresów.</li>
+</ul>
+<p>Powyższe możliwości systemu mogą być wypróbowane na modułach demonstracyjnych:</p>
+<ul>
+<li>Państwa;</li>
+<li>Województwa;</li>
+<li>Powiaty.</li>
+</ul>
+<p>Moduły demonstracyjne dostępne są po najechaniu myszą na "Menu Główne" w Listwie Głównej i wybranie ścieżki menu: "Menu Główne/Pomocnicze/Piaskownica/*". Zmiany wprowadzone w modułach demonstracyjnych nie mają wpływu na funkcje biznesowe aplikacji i mogą być wycofane przez administratora systemu.</p>
+]]>
+		</DocumentationSection>		
+	</Documentation>
+    <Revision author="$Author: mattias $" id="$Revision: 1515 $" date="$Date: 2009-02-11 18:59:24 +0100 (Śr, 11 lut 2009) $"/>
+</Module>

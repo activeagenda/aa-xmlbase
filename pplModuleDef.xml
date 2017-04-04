@@ -1,0 +1,977 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Module
+	name="People" moduleID="ppl"
+	allowAddRecord="yes" isImplementationPlanningModule="yes" isMasterData="yes"
+	singularRecordName="Person" pluralRecordName="People" 
+	defaultMenuPath="Main Menu / Organizational structure / People">
+ 
+	<ModuleFields>
+		<TableField 
+			name="PersonID" type="int" dbFlags="unsigned auto_increment not null" 
+			phrase="Person ID|A unique, automatically assigned, number used to track people associated with the organization"/>
+		<TableField 
+			name="OrganizationID" type="int" dbFlags="unsigned not null" validate="RequireSelection" 
+			phrase="Organization|Name of organization associated with the individual"/>
+		<LinkField 
+			name="OrganizationLink" foreignModuleID="org" recordIDField="OrganizationID" 
+			phrase="Organization|Name of organization associated with the individual"/>
+		<ForeignField 
+			name="Organization"  key="OrganizationID" 
+			foreignTable="org" foreignKey="OrganizationID" foreignField="Name" joinType="left" 
+			phrase="Organization|Name of organization associated with the individual"/>
+		<ForeignField 
+			name="OrganizationShortName"  key="OrganizationID" 
+			foreignTable="org" foreignKey="OrganizationID" foreignField="ShortName" joinType="left" 
+			phrase="Organization Short Name|Short name of the organization associated with the individual"/>
+		<TableField 
+			name="LastName" type="varchar(50)" validate="notEmpty" 
+			phrase="Last Name|Family Name of an individual"/>
+		<TableField 
+			name="FirstName" type="varchar(50)" validate="notEmpty" 
+			phrase="First Name|Given Name of an individual"/>
+		<TableField 
+			name="MiddleName" type="varchar(50)" 
+			phrase="Middle Name|Middle Name or initial of an individual"/>
+		<TableField 
+			name="DisplayName" type="varchar(50)" validate="notEmpty"  
+			phrase="Display Name|Commonly used name of an individual used to identify a person. This name may vary from a person's given name"/>
+		<CombinedField 
+			name="FirstLastName" 
+			phrase="Name|Name of an individual">
+			<CombinedFieldRef name="FirstName"/>_<CombinedFieldRef name="MiddleName"/>_<CombinedFieldRef name="LastName"/>
+			
+		</CombinedField>
+		<TableField 
+			name="MobilePhone" type="varchar(50)" validate="regexr: /^[ ]*([+](?:[0-9] ?){6,14}[0-9])[ ]*$/$1/"
+			phrase="Mobile Phone|Mobile telephone number of the individual"/>		
+		<CombinedField
+			name="MobilePhoneLinkIcon"  
+			phrase="Mobile Phone|Mobile telephone number of the individual">
+			<![CDATA[<!--[if IE]><a  target="_blank"  href="tel:]]>
+			<CombinedFieldRef name="MobilePhone"/><![CDATA[">]]>
+			<CombinedFieldRef name="MobilePhone"/><![CDATA[</a><![endif]-->]]>
+			<![CDATA[<![if !IE]><a href="tel:]]>
+			<CombinedFieldRef name="MobilePhone"/><![CDATA[">]]>
+			<CombinedFieldRef name="MobilePhone"/><![CDATA[</a><![endif]>]]>			
+		</CombinedField>
+		<CombinedField 
+			name="SMSLinkIcon" 
+			phrase="Mobile Phone|Mobile telephone number of the individual">
+			<![CDATA[<!--[if IE]><a  target="_blank"  href="sms:]]><CombinedFieldRef name="MobilePhone"/>
+			<![CDATA["><img src="/themes/aa\_theme/img/sms.png"/></a>&nbsp\;&nbsp\;&nbsp\;<![endif]-->]]>
+			<![CDATA[<![if !IE]><a href="sms:]]><CombinedFieldRef name="MobilePhone"/>
+			<![CDATA["><img src="/themes/aa\_theme/img/sms.png"/></a>&nbsp\;&nbsp\;&nbsp\;<![endif]>]]>
+		</CombinedField>
+		<CombinedField 
+			name="SMSLinkIcon1" 
+			phrase="Mobile Phone|Mobile telephone number of the individual">
+			<![CDATA[<span style="color:white\;font-size:150%">&nbsp\;|&nbsp\;</span>]]>
+			<![CDATA[<!--[if IE]><a  target="_blank"  href="sms:]]><CombinedFieldRef name="MobilePhone"/>
+			<![CDATA["><img src="/themes/aa\_theme/img/sms.png"/></a>&nbsp\;&nbsp\;&nbsp\;<![endif]-->]]>
+			<![CDATA[<![if !IE]><a href="sms:]]><CombinedFieldRef name="MobilePhone"/>
+			<![CDATA["><img src="/themes/aa\_theme/img/sms.png"/></a>&nbsp\;&nbsp\;&nbsp\;<![endif]>]]>
+		</CombinedField>
+		
+        <TableField 
+			name="SkypeName" type="varchar(50)" 
+			phrase="Skype Name|The name used by the person to participate in free worldwide telephone services offered by skype at www.skype.com"/>       
+        <CombinedField 
+			name="SkypeLink" 
+			phrase="Skype Name|The name used by the person to participate in free worldwide telephone services offered by skype at www.skype.com. If you have the client software, you can click on the link to start a conversation.">
+			<![CDATA[<!--[if IE]><a  target="_blank"  href="skype:]]><CombinedFieldRef name="SkypeName"/>
+			<![CDATA["><img src="/themes/aa\_theme/img/skype.ico"/> ]]>
+			<CombinedFieldRef name="SkypeName"/><![CDATA[</a><![endif]-->]]>
+			<![CDATA[<![if !IE]><a href="skype:]]><CombinedFieldRef name="SkypeName"/>
+			<![CDATA["><img src="/themes/aa\_theme/img/skype.ico"/> ]]>
+			<CombinedFieldRef name="SkypeName"/><![CDATA[</a><![endif]>]]>	
+		</CombinedField>
+		 <CombinedField 
+			name="SkypeLinkIcon" 
+			phrase="Skype Name|The name used by the person to participate in free worldwide telephone services offered by skype at www.skype.com. If you have the client software, you can click on the link to start a conversation.">			
+			<![CDATA[<!--[if IE]><a  target="_blank"  href="skype:]]><CombinedFieldRef name="SkypeName"/>
+			<![CDATA["><img src="/themes/aa\_theme/img/skype.ico"/></a>&nbsp\;&nbsp\;&nbsp\;<![endif]-->]]>
+			<![CDATA[<![if !IE]><a href="skype:]]><CombinedFieldRef name="SkypeName"/>
+			<![CDATA["><img src="/themes/aa\_theme/img/skype.ico"/></a>&nbsp\;&nbsp\;&nbsp\;<![endif]>]]>
+		</CombinedField>
+		
+		<TableField 
+			name="GaduGaduName" type="varchar(50)" validate="regexr: /^[ ]*([0-9]+)[ ]*$/$1/"
+			phrase="Gadu Gadu Name|The name used by the person to participate in Gadu Gadu services"/>       
+        <CombinedField 
+			name="GaduGaduLink" 
+			phrase="Gadu Gadu Name|The name used by the person to participate in Gadu Gadu services">
+			<![CDATA[<!--[if IE]><a  target="_blank"  href="gg:]]><CombinedFieldRef name="GaduGaduName"/>
+			<![CDATA["><img src="/themes/aa\_theme/img/gadugadu.ico"/> ]]>
+			<CombinedFieldRef name="GaduGaduName"/><![CDATA[</a><![endif]-->]]>
+			<![CDATA[<![if !IE]><a href="gg:]]><CombinedFieldRef name="GaduGaduName"/>
+			<![CDATA["><img src="/themes/aa\_theme/img/gadugadu.ico"/> ]]>
+			<CombinedFieldRef name="GaduGaduName"/><![CDATA[</a><![endif]>]]>
+		</CombinedField>
+		<CombinedField 
+			name="GaduGaduLinkIcon" 
+			phrase="Gadu Gadu Name|The name used by the person to participate in Gadu Gadu services">
+			<![CDATA[<!--[if IE]><a  target="_blank"  href="gg:]]><CombinedFieldRef name="GaduGaduName"/>
+			<![CDATA["><img src="/themes/aa\_theme/img/gadugadu.ico"/></a>&nbsp\;&nbsp\;&nbsp\;<![endif]-->]]>
+			<![CDATA[<![if !IE]><a href="gg:]]><CombinedFieldRef name="GaduGaduName"/>
+			<![CDATA["><img src="/themes/aa\_theme/img/gadugadu.ico"/></a>&nbsp\;&nbsp\;&nbsp\;<![endif]>]]>
+		</CombinedField>		
+		 <CombinedField 
+			name="InstantMessaging" 
+			phrase="Instant Messaging|Instant Messaging services used by the person">
+			<![CDATA[&nbsp\;&nbsp\;&nbsp\;]]>
+			<CombinedFieldRef name="SMSLinkIcon"/>
+			<CombinedFieldRef name="SkypeLinkIcon"/>
+			<CombinedFieldRef name="GaduGaduLinkIcon"/>			
+		</CombinedField>
+		<ForeignField 
+			name="Username"  key="PersonID" 
+			foreignTable="usr" foreignKey="PersonID" foreignField="Username" joinType="left" 
+			phrase="Username|The user's login name"/>
+		<TableField 
+			name="UsernameTemplate" type="varchar(25)" 
+			phrase="Username|The user's login name."/>
+		
+		<TableField 
+			name="ThisAttachmentID" type="int" dbFlags="unsigned"  
+			phrase="Attachment ID from att|ID of the attachment"/>
+		<ForeignField 
+			name="ThisAttachment" key="ThisAttachmentID" 
+			foreignTable="att" foreignKey="AttachmentID"  foreignField="Description"  
+			phrase="Attachment description|User defined attachment description">
+			<ListCondition fieldName="RelatedModuleID" mode="equals">
+				<StaticValue value="ppl"/>
+			</ListCondition>
+			<ListCondition fieldName="RelatedRecordID" mode="equals">
+				<FieldValue value="PersonID"/>
+			</ListCondition> 
+		</ForeignField>
+		<CalculatedField 
+			name="AttachmentPict" calcFunction="img_from_att" params="+ppl PersonID ThisAttachmentID #150 #150"  
+			phrase="Attachment Picture|Picture saved as the attachment"/>
+				
+		<TableField 
+			name="WorkAddress1" type="varchar(128)" 
+			phrase="Work Street|Physical street address of the location where the individual works"/>
+		<TableField 
+			name="WorkCountryID" type="int" dbFlags="unsigned" 
+			phrase="Work Country|A combined field used to associate this country with another record"/>
+		<ForeignField 
+			name="WorkCountry"  key="WorkCountryID" 
+			foreignTable="ctr" foreignKey="CountryID" foreignField="CountryName" joinType="left" 
+			phrase="Work Country|The county in which the person works"/>
+		<TableField 
+			name="WorkCity" type="varchar(50)"
+			phrase="Work City|City where the individual works"/>
+		<TableField 
+			name="WorkPostalCode" type="varchar(50)"
+			phrase="Work Postal Code|Postal code used to direct mail to the individual's work address"/>
+		<TableField 
+			name="WorkPhone" type="varchar(50)" validate="regexr: /^[ ]*([+](?:[0-9] ?){6,14}[0-9])[ ]*$/$1/"
+			phrase="Work Phone|Telephone number of the individual at their place of work"/>		
+		<CombinedField
+			name="WorkPhoneLinkIcon"  
+			phrase="Work Phone|Telephone number of the individual at their place of work">
+			<![CDATA[<!--[if IE]><a  target="_blank"  href="tel:]]>
+			<CombinedFieldRef name="WorkPhone"/><![CDATA[">]]>
+			<CombinedFieldRef name="WorkPhone"/><![CDATA[</a><![endif]-->]]>
+			<![CDATA[<![if !IE]><a href="tel:]]>
+			<CombinedFieldRef name="WorkPhone"/><![CDATA[">]]>
+			<CombinedFieldRef name="WorkPhone"/><![CDATA[</a><![endif]>]]>
+		</CombinedField>		
+		<TableField 
+			name="WorkExtension" type="varchar(50)" 
+			phrase="Work Extension|Telephone extension used to direct calls to an individual"/>
+		<TableField 
+			name="WorkFax" type="varchar(50)" validate="regexr: /^[ ]*([+](?:[0-9] ?){6,14}[0-9])[ ]*$/$1/"
+			phrase="Work Fax|Facsimile telephone number of the individual at work"/>
+		<TableField 
+			name="WorkEmail" type="varchar(128)" validate="notEmpty" 
+			phrase="Work Email|Email address used by the individual at work"/>
+		<TableField 
+			name="WorkBuilding" type="varchar(50)" 
+			phrase="Work Building|Building where the individual works"/>
+		<TableField 
+			name="WorkFloor" type="varchar(10)" 
+			phrase="Work Floor|Floor of the room where the individual works"/>
+		<TableField 
+			name="WorkRoom" type="varchar(10)" 
+			phrase="Work Room Number|Room where the individual works"/>
+		<TableField 
+			name="InternalNumber" type="varchar(25)"
+			phrase="Internal number|Internal number of a person in the organization"/>		
+		<CombinedField 
+			name="SearchSelect" 
+			phrase="Search Select Name|A combination of fields used by the SearchSelectGrid to identify the persons listed">
+			<CombinedFieldRef name="DisplayName"/>_-_<CombinedFieldRef name="OrganizationShortName"/>
+		</CombinedField>
+		<CombinedField 
+			name="WorkAddress" 
+			phrase="Work Address|Physical street address where the person can be located at work">
+			<CombinedFieldRef name="WorkAddress1"/><![CDATA[<br />]]>_<CombinedFieldRef name="WorkPostalCode"/>_<CombinedFieldRef name="WorkCity"/><![CDATA[<br />]]><CombinedFieldRef name="WorkCountry"/>
+		</CombinedField>		
+		<CombinedField 
+			name="RecordLabel" 
+			phrase="Record Label|The short, concise, label of the record for display purposes">
+			<CombinedFieldRef name="DisplayName"/>;_<CombinedFieldRef name="Organization"/>
+		</CombinedField>
+		<CombinedField 
+			name="Person" 
+			phrase="Description|A combined field used to describe this person when associating him or her with other records">
+			<CombinedFieldRef name="DisplayName"/>;_<CombinedFieldRef name="Organization"/>
+		</CombinedField>
+		
+		<TableField 
+			name="PersonStatusID" type="int"  defaultValue="#1" validate="RequireSelection"  
+			phrase="Status|Current status of the person in the organization"/>			
+		<CodeField 
+			name="PersonStatus" key="PersonStatusID"  codeTypeID="303" 
+			phrase="Status|Current status of the person in the organization"/>
+		<CodeField 
+			name="PersonStatus1" key="PersonStatusID"  codeTypeID="301" 
+			phrase="Status|Current status of the person in the organization"/>
+		 <CombinedField 
+			name="PersonStatusGraph" 
+			phrase="Status|Current status of the person in the organization">
+			<![CDATA[<div style="font-size:24px\;color:#9ABEEA\;">]]><CombinedFieldRef name="PersonStatus1"/><![CDATA[</div>]]>
+		</CombinedField>
+		<TableField 
+			name="LocationID" type="int" validate="RequireSelection"  
+			phrase="Location|Name used to identify the location in the organization"/>			
+		<ForeignField 
+			name="Location"  key="LocationID" 
+			foreignTable="loc" foreignKey="LocationID" foreignField="Name"
+			phrase="Location|Name used to identify the location in the organization"/>
+		<LinkField 
+			name="LocationLink" foreignModuleID="loc" recordIDField="LocationID" 
+			phrase="Location|Name used to identify the location in the organization"/>
+		<ForeignField 
+			name="LocationOrgFunctionID"  key="LocationID" 
+			foreignTable="loc" foreignKey="LocationID" foreignField="OrgFunctionID"
+			phrase="Level|Function in the organization like: headquarters, department, branch, section, etc"/>
+		<CodeField  
+			name="LocationOrgFunction" key="LocationOrgFunctionID"  codeTypeID="308"
+			phrase="Level|Function in the organization like: headquarters, department, branch, section, etc"/>
+		<CombinedField 
+			name="LocationFunction" 
+			phrase="Location|Function and name used to identify the location in the organization">
+			<CombinedFieldRef name="LocationOrgFunction"/>_<CombinedFieldRef name="Location"/>
+		</CombinedField>	
+		
+		<!-- Bussiness process role implemntaion  -->
+		<TableField 
+			name="RolesSum" type="int" 
+			phrase="Roles|Associate special roles with the person"/>
+		<CalculatedField 
+			name="RolesSumSign" calcFunction="repeat_sign" params="RolesSum #|"  
+			phrase="Roles|Associate special roles with the person"/>
+		<CombinedField 
+			name="RolesSumGraph" 
+			phrase="Roles|Associate special roles with the person">
+			<![CDATA[<div style="color:#9ABEEA\;\">]]>
+			<CombinedFieldRef name="RolesSumSign"/><![CDATA[</div>]]>
+		</CombinedField>
+		
+		<TableField 
+			name="Consultant" type="bool" dbFlags="default 0" validate="RequireSelection" 
+			phrase="Consultant|This person is a consultant for decisions making"/>		
+		
+		<TableField 
+			name="BusinesscardDecisionmaker" type="bool" dbFlags="default 0" validate="RequireSelection"
+			phrase="Business card decision maker|This person is a business card decision maker"/>
+		<CalculatedField 
+			name="BusinesscardDecisionmakerSign" calcFunction="flipflop" params="BusinesscardDecisionmaker #&#9679; #&#9675;"  
+			phrase="Business card decision maker|This person is a business card decision maker"/>
+		<CombinedField 
+			name="BusinesscardDecisionmakerGraph" 
+			phrase="Business card decision maker|This person is a business card decision maker">
+			<![CDATA[<div style="font-size:24px\;color:#9ABEEA\;\padding-left:20px">]]>
+			<CombinedFieldRef name="BusinesscardDecisionmakerSign"/><![CDATA[</div>]]>
+		</CombinedField>
+		
+		<TableField 
+			name="BusinesscardHandler" type="bool" dbFlags="default 0" validate="RequireSelection"
+			phrase="Business card handler|This person is a business card handler"/>
+		<CalculatedField 
+			name="BusinesscardHandlerSign" calcFunction="flipflop" params="BusinesscardHandler #&#9679; #&#9675;"  
+			phrase="Business card handler|This person is a business card handler"/>
+		<CombinedField 
+			name="BusinesscardHandlerGraph" 
+			phrase="Business card handler|This person is a business card handler">
+			<![CDATA[<div style="font-size:24px\;color:#9ABEEA\;\padding-left:20px">]]>
+			<CombinedFieldRef name="BusinesscardHandlerSign"/><![CDATA[</div>]]>
+		</CombinedField>
+		
+		<TableField 
+			name="HotelreservationDecisionmaker" type="bool" dbFlags="default 0" validate="RequireSelection"
+			phrase="Hotel reservation decision maker|This person is a hotel reservation decision maker"/>
+		<CalculatedField 
+			name="HotelreservationDecisionmakerSign" calcFunction="flipflop" params="HotelreservationDecisionmaker #&#9679; #&#9675;"  
+			phrase="Hotel reservation decision maker|This person is a hotel reservation decision maker"/>
+		<CombinedField 
+			name="HotelreservationDecisionmakerGraph" 
+			phrase="Hotel reservation decision maker|This person is a hotel reservation decision maker">
+			<![CDATA[<div style="font-size:24px\;color:#9ABEEA\;\padding-left:20px">]]>
+			<CombinedFieldRef name="HotelreservationDecisionmakerSign"/><![CDATA[</div>]]>
+		</CombinedField>
+		
+		<TableField 
+			name="HotelreservationHandler" type="bool" dbFlags="default 0" validate="RequireSelection"
+			phrase="Hotel reservation handler|This person is a hotel reservation handler"/>
+		<CalculatedField 
+			name="HotelreservationHandlerSign" calcFunction="flipflop" params="HotelreservationHandler #&#9679; #&#9675;"  
+			phrase="Hotel reservation handler|This person is a hotel reservation handler"/>
+		<CombinedField 
+			name="HotelreservationHandlerGraph" 
+			phrase="Hotel reservation handler|This person is a hotel reservation handler">
+			<![CDATA[<div style="font-size:24px\;color:#9ABEEA\;\padding-left:20px">]]>
+			<CombinedFieldRef name="HotelreservationHandlerSign"/><![CDATA[</div>]]>
+		</CombinedField>
+			
+		<TableField 
+			name="TrainticketDecisionmaker" type="bool" dbFlags="default 0" validate="RequireSelection"
+			phrase="Train ticket decision maker|This person is a train ticket decision maker"/>
+		<CalculatedField 
+			name="TrainticketDecisionmakerSign" calcFunction="flipflop" params="TrainticketDecisionmaker #&#9679; #&#9675;"  
+			phrase="Train ticket decision maker|This person is a train ticket decision maker"/>
+		<CombinedField 
+			name="TrainticketDecisionmakerGraph" 
+			phrase="Train ticket decision maker|This person is a train ticket decision maker">
+			<![CDATA[<div style="font-size:24px\;color:#9ABEEA\;\padding-left:20px">]]>
+			<CombinedFieldRef name="TrainticketDecisionmakerSign"/><![CDATA[</div>]]>
+		</CombinedField>
+		
+		<TableField 
+			name="TrainticketHandler" type="bool" dbFlags="default 0" validate="RequireSelection"
+			phrase="Train ticket handler|This person is a train ticket handler"/>
+		<CalculatedField 
+			name="TrainticketHandlerSign" calcFunction="flipflop" params="TrainticketHandler #&#9679; #&#9675;"  
+			phrase="Train ticket handler|This person is a train ticket handler"/>
+		<CombinedField 
+			name="TrainticketHandlerGraph" 
+			phrase="Train ticket handler|This person is a train ticket handler">
+			<![CDATA[<div style="font-size:24px\;color:#9ABEEA\;\padding-left:20px">]]>
+			<CombinedFieldRef name="TrainticketHandlerSign"/><![CDATA[</div>]]>
+		</CombinedField>
+		
+		<TableField 
+			name="VacationHandler" type="bool" dbFlags="default 0" validate="RequireSelection"
+			phrase="Vacation handler|This person is a vacation handler"/>
+		<CalculatedField 
+			name="VacationHandlerSign" calcFunction="flipflop" params="VacationHandler #&#9679; #&#9675;"  
+			phrase="Vacation handler|This person is a vacation handler"/>
+		<CombinedField 
+			name="VacationHandlerGraph" 
+			phrase="Vacation handler|This person is a vacation handler">
+			<![CDATA[<div style="font-size:24px\;color:#9ABEEA\;\padding-left:20px">]]>
+			<CombinedFieldRef name="VacationHandlerSign"/><![CDATA[</div>]]>
+		</CombinedField>
+		
+		<TableField 
+			name="VacationDecisionmaker" type="bool" dbFlags="default 0" validate="RequireSelection"
+			phrase="Vacation decision maker|This person is a vacation decision maker"/>
+		<CalculatedField 
+			name="VacationDecisionmakerSign" calcFunction="flipflop" params="VacationDecisionmaker #&#9679; #&#9675;"  
+			phrase="Vacation decision maker|This person is a vacation decision maker"/>
+		<CombinedField 
+			name="VacationDecisionmakerGraph" 
+			phrase="Vacation decision maker|This person is a vacation decision maker">
+			<![CDATA[<div style="font-size:24px\;color:#9ABEEA\;\padding-left:20px">]]>
+			<CombinedFieldRef name="VacationDecisionmakerSign"/><![CDATA[</div>]]>
+		</CombinedField>
+		
+		<TableField 
+			name="RepairorderHandler" type="bool" dbFlags="default 0" validate="RequireSelection"
+			phrase="Repair order handler|This person is a repair order handler"/>
+		<CalculatedField 
+			name="RepairorderHandlerSign" calcFunction="flipflop" params="RepairorderHandler #&#9679; #&#9675;"  
+			phrase="Repair order handler|This person is a repair order handler"/>
+		<CombinedField 
+			name="RepairorderHandlerGraph" 
+			phrase="Repair order handler|This person is a repair order handler">
+			<![CDATA[<div style="font-size:24px\;color:#9ABEEA\;\padding-left:20px">]]>
+			<CombinedFieldRef name="RepairorderHandlerSign"/><![CDATA[</div>]]>
+		</CombinedField>
+		
+		<TableField 
+			name="RepairorderDecisionmaker" type="bool" dbFlags="default 0" validate="RequireSelection"
+			phrase="Repair order decision maker|This person is a repair order decision maker"/>
+		<CalculatedField 
+			name="RepairorderDecisionmakerSign" calcFunction="flipflop" params="RepairorderDecisionmaker #&#9679; #&#9675;"  
+			phrase="Repair order decision maker|This person is a repair order decision maker"/>
+		<CombinedField 
+			name="RepairorderDecisionmakerGraph" 
+			phrase="Repair order decision maker|This person is a repair order decision maker">
+			<![CDATA[<div style="font-size:24px\;color:#9ABEEA\;\padding-left:20px">]]>
+			<CombinedFieldRef name="RepairorderDecisionmakerSign"/><![CDATA[</div>]]>
+		</CombinedField>
+		
+		<TableField 
+			name="HelpdeskHandler" type="bool" dbFlags="default 0" validate="RequireSelection"
+			phrase="Help desk handler|This person is a help desk handler"/>
+		<CalculatedField 
+			name="HelpdeskHandlerSign" calcFunction="flipflop" params="HelpdeskHandler #&#9679; #&#9675;"  
+			phrase="Help desk handler|This person is a help desk handler"/>
+		<CombinedField 
+			name="HelpdeskHandlerGraph" 
+			phrase="Help desk handler|This person is a help desk handler">
+			<![CDATA[<div style="font-size:24px\;color:#9ABEEA\;\padding-left:20px">]]>
+			<CombinedFieldRef name="HelpdeskHandlerSign"/><![CDATA[</div>]]>
+		</CombinedField>
+		
+		<TableField 
+			name="HelpdeskDecisionmaker" type="bool" dbFlags="default 0" validate="RequireSelection"
+			phrase="Help desk decision maker|This person is a help desk decision maker"/>
+		<CalculatedField 
+			name="HelpdeskDecisionmakerSign" calcFunction="flipflop" params="HelpdeskDecisionmaker #&#9679; #&#9675;"  
+			phrase="Help desk decision maker|This person is a help desk decision maker"/>
+		<CombinedField 
+			name="HelpdeskDecisionmakerGraph" 
+			phrase="Help desk decision maker|This person is a help desk decision maker">
+			<![CDATA[<div style="font-size:24px\;color:#9ABEEA\;\padding-left:20px">]]>
+			<CombinedFieldRef name="HelpdeskDecisionmakerSign"/><![CDATA[</div>]]>
+		</CombinedField>
+		
+		<TableField 
+			name="InternalorderHandler" type="bool" dbFlags="default 0" validate="RequireSelection"
+			phrase="Internal order handler|This person is a internal order handler"/>
+		<CalculatedField 
+			name="InternalorderHandlerSign" calcFunction="flipflop" params="InternalorderHandler #&#9679; #&#9675;"  
+			phrase="Internal order handler|This person is a internal order handler"/>
+		<CombinedField 
+			name="InternalorderHandlerGraph" 
+			phrase="Internal order handler|This person is a internal order handler">
+			<![CDATA[<div style="font-size:24px\;color:#9ABEEA\;\padding-left:20px">]]>
+			<CombinedFieldRef name="InternalorderHandlerSign"/><![CDATA[</div>]]>
+		</CombinedField>
+		
+		<TableField 
+			name="InternalorderDecisionmaker" type="bool" dbFlags="default 0" validate="RequireSelection"
+			phrase="Internal order decision maker|This person is a internal order decision maker"/>
+		<CalculatedField 
+			name="InternalorderDecisionmakerSign" calcFunction="flipflop" params="InternalorderDecisionmaker #&#9679; #&#9675;"  
+			phrase="Internal order decision maker|This person is a internal order decision maker"/>
+		<CombinedField 
+			name="InternalorderDecisionmakerGraph" 
+			phrase="Internal order decision maker|This person is a internal order decision maker">
+			<![CDATA[<div style="font-size:24px\;color:#9ABEEA\;\padding-left:20px">]]>
+			<CombinedFieldRef name="InternalorderDecisionmakerSign"/><![CDATA[</div>]]>
+		</CombinedField>
+		
+		<TableField 
+			name="AdvanceHandler" type="bool" dbFlags="default 0" validate="RequireSelection"
+			phrase="Advance handler|This person is a advance handler"/>
+		<CalculatedField 
+			name="AdvanceHandlerSign" calcFunction="flipflop" params="AdvanceHandler #&#9679; #&#9675;"  
+			phrase="Advance handler|This person is a advance handler"/>
+		<CombinedField 
+			name="AdvanceHandlerGraph" 
+			phrase="Advance handler|This person is a advance handler">
+			<![CDATA[<div style="font-size:24px\;color:#9ABEEA\;\padding-left:20px">]]>
+			<CombinedFieldRef name="AdvanceHandlerSign"/><![CDATA[</div>]]>
+		</CombinedField>
+		
+		<TableField 
+			name="AdvanceDecisionmaker" type="bool" dbFlags="default 0" validate="RequireSelection"
+			phrase="Advance decision maker|This person is a advance decision maker"/>
+		<CalculatedField 
+			name="AdvanceDecisionmakerSign" calcFunction="flipflop" params="AdvanceDecisionmaker #&#9679; #&#9675;"  
+			phrase="Advance decision maker|This person is a advance decision maker"/>
+		<CombinedField 
+			name="AdvanceDecisionmakerGraph" 
+			phrase="Advance decision maker|This person is a advance decision maker">
+			<![CDATA[<div style="font-size:24px\;color:#9ABEEA\;\padding-left:20px">]]>
+			<CombinedFieldRef name="AdvanceDecisionmakerSign"/><![CDATA[</div>]]>
+		</CombinedField>
+		
+		<TableField 
+			name="CollateralHandler" type="bool" dbFlags="default 0" validate="RequireSelection"
+			phrase="Marketing collateral handler|This person is a marketing collateral handler"/>
+		<CalculatedField 
+			name="CollateralHandlerSign" calcFunction="flipflop" params="CollateralHandler #&#9679; #&#9675;"  
+			phrase="Marketing collateral handler|This person is a marketing collateral handler"/>
+		<CombinedField 
+			name="CollateralHandlerGraph" 
+			phrase="Marketing collateral handler|This person is a marketing collateral handler">
+			<![CDATA[<div style="font-size:24px\;color:#9ABEEA\;\padding-left:20px">]]>
+			<CombinedFieldRef name="CollateralHandlerSign"/><![CDATA[</div>]]>
+		</CombinedField>
+		
+		<TableField 
+			name="CollateralDecisionmaker" type="bool" dbFlags="default 0" validate="RequireSelection"
+			phrase="Marketing collateral  decision maker|This person is marketing collateral  decision maker"/>
+		<CalculatedField 
+			name="CollateralDecisionmakerSign" calcFunction="flipflop" params="CollateralDecisionmaker #&#9679; #&#9675;"  
+			phrase="Marketing collateral  decision maker|This person is marketing collateral  decision maker"/>
+		<CombinedField 
+			name="CollateralDecisionmakerGraph" 
+			phrase="Marketing collateral  decision maker|This person is marketing collateral  decision maker">
+			<![CDATA[<div style="font-size:24px\;color:#9ABEEA\;\padding-left:20px">]]>
+			<CombinedFieldRef name="CollateralDecisionmakerSign"/><![CDATA[</div>]]>
+		</CombinedField>
+		
+		<TableField 
+			name="InvoiceHandler" type="bool" dbFlags="default 0" validate="RequireSelection"
+			phrase="Invoice handler|This person is a invoice handler"/>
+		<CalculatedField 
+			name="InvoiceHandlerSign" calcFunction="flipflop" params="InvoiceHandler #&#9679; #&#9675;"  
+			phrase="Invoice handler|This person is a invoice handler"/>
+		<CombinedField 
+			name="InvoiceHandlerGraph" 
+			phrase="Invoice handler|This person is a invoice handler">
+			<![CDATA[<div style="font-size:24px\;color:#9ABEEA\;\padding-left:20px">]]>
+			<CombinedFieldRef name="InvoiceHandlerSign"/><![CDATA[</div>]]>
+		</CombinedField>
+		
+		<TableField 
+			name="InvoiceDecisionmaker" type="bool" dbFlags="default 0" validate="RequireSelection"
+			phrase="Invoice decision maker|This person is invoice decision maker"/>
+		<CalculatedField 
+			name="InvoiceDecisionmakerSign" calcFunction="flipflop" params="InvoiceDecisionmaker #&#9679; #&#9675;"  
+			phrase="Invoice decision maker|This person is invoice decision maker"/>
+		<CombinedField 
+			name="InvoiceDecisionmakerGraph" 
+			phrase="Invoice decision maker|This person is invoice decision maker">
+			<![CDATA[<div style="font-size:24px\;color:#9ABEEA\;\padding-left:20px">]]>
+			<CombinedFieldRef name="InvoiceDecisionmakerSign"/><![CDATA[</div>]]>
+		</CombinedField>
+		
+		<TableField 
+			name="BusinesstripHandler" type="bool" dbFlags="default 0" validate="RequireSelection"
+			phrase="Business trip handler|This person is a business trip handler"/>
+		<CalculatedField 
+			name="BusinesstripHandlerSign" calcFunction="flipflop" params="BusinesstripHandler #&#9679; #&#9675;"  
+			phrase="Business trip handler|This person is a business trip handler"/>
+		<CombinedField 
+			name="BusinesstripHandlerGraph" 
+			phrase="Business trip handler|This person is a business trip handler">
+			<![CDATA[<div style="font-size:24px\;color:#9ABEEA\;\padding-left:20px">]]>
+			<CombinedFieldRef name="BusinesstripHandlerSign"/><![CDATA[</div>]]>
+		</CombinedField>
+		
+		<TableField 
+			name="BusinesstripDecisionmaker" type="bool" dbFlags="default 0" validate="RequireSelection"
+			phrase="Business trip decision maker|This person is business trip decision maker"/>
+		<CalculatedField 
+			name="BusinesstripDecisionmakerSign" calcFunction="flipflop" params="BusinesstripDecisionmaker #&#9679; #&#9675;"  
+			phrase="Business trip decision maker|This person is business trip decision maker"/>
+		<CombinedField 
+			name="BusinesstripDecisionmakerGraph" 
+			phrase="Business trip decision maker|This person is business trip decision maker">
+			<![CDATA[<div style="font-size:24px\;color:#9ABEEA\;\padding-left:20px">]]>
+			<CombinedFieldRef name="BusinesstripDecisionmakerSign"/><![CDATA[</div>]]>
+		</CombinedField>
+		
+		<TableField 
+			name="TripexpensesHandler" type="bool" dbFlags="default 0" validate="RequireSelection"
+			phrase="Business trip expenses handler|This person is a business trip reimbursable expenses handler"/>
+		<CalculatedField 
+			name="TripexpensesHandlerSign" calcFunction="flipflop" params="TripexpensesHandler #&#9679; #&#9675;"  
+			phrase="Business trip expenses handler|This person is a business trip reimbursable expenses handler"/>
+		<CombinedField 
+			name="TripexpensesHandlerGraph" 
+			phrase="Business trip expenses handler|This person is a business trip reimbursable expenses handler">
+			<![CDATA[<div style="font-size:24px\;color:#9ABEEA\;\padding-left:20px">]]>
+			<CombinedFieldRef name="TripexpensesHandlerSign"/><![CDATA[</div>]]>
+		</CombinedField>
+		
+		<TableField 
+			name="TripexpensesDecisionmaker" type="bool" dbFlags="default 0" validate="RequireSelection"
+			phrase="Business trip expenses decision maker|This person is business trip reimbursable expenses decision maker"/>
+		<CalculatedField 
+			name="TripexpensesDecisionmakerSign" calcFunction="flipflop" params="TripexpensesDecisionmaker #&#9679; #&#9675;"  
+			phrase="Business trip expenses decision maker|This person is business trip reimbursable expenses decision maker"/>
+		<CombinedField 
+			name="TripexpensesDecisionmakerGraph" 
+			phrase="Business trip expenses decision maker|This person is business trip reimbursable expenses decision maker">
+			<![CDATA[<div style="font-size:24px\;color:#9ABEEA\;\padding-left:20px">]]>
+			<CombinedFieldRef name="TripexpensesDecisionmakerSign"/><![CDATA[</div>]]>
+		</CombinedField>
+		
+		<TableField 
+			name="FlightbookingDecisionmaker" type="bool" dbFlags="default 0" validate="RequireSelection"
+			phrase="Flight booking decision maker|This person is flight booking decision maker"/>
+		<CalculatedField 
+			name="FlightbookingDecisionmakerSign" calcFunction="flipflop" params="FlightbookingDecisionmaker #&#9679; #&#9675;"  
+			phrase="Flight booking decision maker|This person is flight booking decision maker"/>
+		<CombinedField 
+			name="FlightbookingDecisionmakerGraph" 
+			phrase="Flight booking decision maker|This person is flight booking decision maker">
+			<![CDATA[<div style="font-size:24px\;color:#9ABEEA\;\padding-left:20px">]]>
+			<CombinedFieldRef name="FlightbookingDecisionmakerSign"/><![CDATA[</div>]]>
+		</CombinedField>
+		
+		<TableField 
+			name="FlightbookingHandler" type="bool" dbFlags="default 0" validate="RequireSelection"
+			phrase="Flight booking handler|This person is a flight booking handler"/>
+		<CalculatedField 
+			name="FlightbookingHandlerSign" calcFunction="flipflop" params="FlightbookingHandler #&#9679; #&#9675;"  
+			phrase="Flight booking handler|This person is a flight booking handler"/>
+		<CombinedField 
+			name="FlightbookingHandlerGraph" 
+			phrase="Flight booking handler|This person is a flight booking handler">
+			<![CDATA[<div style="font-size:24px\;color:#9ABEEA\;\padding-left:20px">]]>
+			<CombinedFieldRef name="FlightbookingHandlerSign"/><![CDATA[</div>]]>
+		</CombinedField>
+		
+		<!-- Beautifiers -->
+		<StaticField 
+			name="ruler1" type="text" content="" phrase=" "/>
+		<StaticField 
+			name="ruler2" type="text" content="" phrase=" "/>
+		<StaticField 
+			name="ruler3" type="text" content="" phrase=" "/>
+		<StaticField 
+			name="ruler10" type="text" content="" phrase=" "/>
+		<StaticField 
+			name="ruler11" type="text" content="" phrase=" "/>		
+		<StaticField 
+			name="ruler101" type="text" content="" phrase=" "/>
+		<StaticField 
+			name="ruler102" type="text" content="" phrase=" "/>	
+		<StaticField 
+			name="ruler103" type="text" content="" phrase=" "/>
+		<StaticField 
+			name="ruler104" type="text" content="" phrase=" "/>
+		<StaticField 
+			name="ruler105" type="text" content="" phrase=" "/>
+		<StaticField 
+			name="ruler106" type="text" content="" phrase=" "/>
+		<StaticField 
+			name="ruler107" type="text" content="" phrase=" "/>
+		<StaticField 
+			name="ruler108" type="text" content="" phrase=" "/>
+		<StaticField 
+			name="ruler109" type="text" content="" phrase=" "/>
+		<StaticField 
+			name="ruler110" type="text" content="" phrase=" "/>
+		<StaticField 
+			name="ruler111" type="text" content="" phrase=" "/>
+		<StaticField 
+			name="ruler112" type="text" content="" phrase=" "/>
+			
+	</ModuleFields>
+	<ModuleInfo>
+		<PrimaryKey>
+			<FieldRef name="PersonID"/>
+		</PrimaryKey>
+        <UniquenessIndex name="DisplayName_OrganizationID">
+            <FieldRef name="DisplayName"/>
+            <FieldRef name="OrganizationID"/>
+        </UniquenessIndex>
+		<OwnerField name="OrganizationID"/>
+		<RecordDescriptionField name="Person"/>
+		<RecordLabelField name="RecordLabel"/>
+	</ModuleInfo>
+	<SubModules>
+		<SubModule 
+			name="Supervisors" parentKey="PersonID"
+			moduleID="ppls"  localKey="_PersonID"/>
+		<SubModule
+			name="Pictures" parentKey="PersonID"
+			moduleID="att" localKey="RelatedRecordID">
+			<SubModuleCondition field="RelatedModuleID" value="ppl"/> 
+		</SubModule>
+		<SubModule 
+			name="Absentdays" parentKey="PersonID"
+			moduleID="xad" localKey="_OwnedBy"/>		
+	</SubModules>
+	<RecordSummaryFields>
+		<ViewField name="PersonID"/>
+		<ViewField name="Organization" link="OrganizationLink"/>
+		<ViewField name="LocationFunction" link="LocationLink"/>
+		<ViewField name="FirstLastName"/>
+		<ViewField name="DisplayName"/>
+		<ViewField name="PersonStatus"/>
+	</RecordSummaryFields>
+	<Screens>
+		<ListScreen name="List" phrase="List|List people">
+			<ListField name="PersonID" phrase="ID"/>
+			<ListField name="LastName"/>
+			<ListField name="FirstName"/>
+			<ListField name="PersonStatusGraph" align="center" phrase="Coworker"/>			
+			<ListField name="Organization"/>
+			<ListField name="LocationOrgFunction" align="center"/>
+			<ListField name="Location" align="center"/>	
+			<ListField name="RolesSumGraph" align="center" phrase="Roles"/>			
+            <OrderByField name="LastName"/>
+			<OrderByField name="FirstName"/>
+		</ListScreen>
+		<SearchScreen name="Search" phrase="Search|Search people">
+			<EditField name="PersonID" FromTo="no" size="50" maxLength="250"/>	
+			<OrgComboField name="OrganizationID" findMode="text" suppressItemAdd="yes"/>
+			<ComboField name="LocationID" findMode="text" suppressItemAdd="yes"/>
+			<CodeComboField name="LocationOrgFunctionID" findMode="text" suppressItemAdd="yes"/>
+			<CodeComboField name="PersonStatusID" suppressItemAdd="yes"/>
+			<EditField name="InternalNumber" size="25" maxLength="25"/>
+			<EditField name="LastName" size="50" maxLength="50"/>
+			<EditField name="FirstName" size="50" maxLength="50"/>
+			<EditField name="MiddleName" size="50" maxLength="50"/>
+			<EditField name="DisplayName" size="50" maxLength="50"/>
+			<EditField name="Username" size="25" maxLength="25"/>			
+			<EditField name="WorkEmail" size="75" maxLength="128"/>
+			<EditField name="MobilePhone" size="50" maxLength="50"/>
+			<EditField name="WorkPhone" size="50" maxLength="50"/>
+			<EditField name="WorkExtension" size="5" maxLength="5"/>
+			<EditField name="WorkFax" size="50" maxLength="50"/>
+			<EditField name="SkypeName" size="50" maxLength="50"/>			
+			<EditField name="WorkBuilding" size="50" maxLength="50"/>
+			<EditField name="WorkFloor" size="10" maxLength="10"/>
+			<EditField name="WorkRoom" size="10" maxLength="10"/>
+			<EditField name="WorkAddress1" size="50" maxLength="128"/>
+			<EditField name="WorkPostalCode" size="50" maxLength="50"/>			
+			<EditField name="WorkCity" size="50" maxLength="50"/>
+			<ComboField name="WorkCountryID" findMode="text" suppressItemAdd="yes"/>
+			<ViewField name="ruler1"/>
+			<CheckBoxField name="Consultant"/>
+			<CheckBoxField name="BusinesscardDecisionmaker"/>
+			<CheckBoxField name="BusinesscardHandler"/>
+			<CheckBoxField name="HotelreservationDecisionmaker"/>
+			<CheckBoxField name="HotelreservationHandler"/>
+			<CheckBoxField name="TrainticketDecisionmaker"/>
+			<CheckBoxField name="TrainticketHandler"/>
+			<CheckBoxField name="VacationDecisionmaker"/>
+			<CheckBoxField name="VacationHandler"/>
+			<CheckBoxField name="RepairorderDecisionmaker"/>
+			<CheckBoxField name="RepairorderHandler"/>
+			<CheckBoxField name="HelpdeskDecisionmaker"/>
+			<CheckBoxField name="HelpdeskHandler"/>
+			<CheckBoxField name="InternalorderDecisionmaker"/>
+			<CheckBoxField name="InternalorderHandler"/>
+			<CheckBoxField name="AdvanceDecisionmaker"/>
+			<CheckBoxField name="AdvanceHandler"/>
+			<CheckBoxField name="CollateralDecisionmaker"/>
+			<CheckBoxField name="CollateralHandler"/>
+			<CheckBoxField name="InvoiceDecisionmaker"/>
+			<CheckBoxField name="InvoiceHandler"/>
+			<CheckBoxField name="BusinesstripDecisionmaker"/>
+			<CheckBoxField name="BusinesstripHandler"/>
+			<CheckBoxField name="TripexpensesDecisionmaker"/>
+			<CheckBoxField name="TripexpensesHandler"/>
+			<CheckBoxField name="FlightbookingDecisionmaker"/>
+			<CheckBoxField name="FlightbookingHandler"/>
+		</SearchScreen>
+		<ViewScreen name="View" phrase="View|View summary information about a person">
+			<ViewField name="PersonID"/>
+			<ViewField name="ruler1"/>
+			<ViewField name="AttachmentPict" goEditScreen="Photo"/>
+			<ViewField name="ruler10"/>
+			<ViewField name="FirstLastName"/>
+			<ViewField name="DisplayName"/>
+			<ViewField name="Username"/>
+			<ViewField name="Organization" link="OrganizationLink"/>
+			<ViewField name="LocationFunction" link="LocationLink"/>
+			<ViewField name="PersonStatus"/>	
+			<ViewField name="InternalNumber"/>
+			<ViewField name="ruler2"/>			
+			<ViewField name="WorkEmail" link="WorkEmail"/>
+			<ViewField name="MobilePhoneLinkIcon">
+				<ViewField name="SMSLinkIcon1"/>
+			</ViewField>
+			<ViewField name="WorkPhoneLinkIcon"/>
+			<ViewField name="WorkExtension"/>
+			<ViewField name="WorkFax"/>			
+			<ViewField name="SkypeLink"/>
+			<ViewField name="GaduGaduLink"/>
+			<ViewField name="ruler3"/>			
+			<ViewField name="WorkBuilding"/>
+			<ViewField name="WorkFloor"/>
+			<ViewField name="WorkRoom"/>			
+			<ViewField name="WorkAddress" goEditScreen="Form"/>
+			<ViewScreenSection name="Absentdays" phrase="Absent days from work">
+				<ViewGrid moduleID="xad"/>
+			</ViewScreenSection>
+			<ViewScreenSection name="Supervisors" phrase="Supervisors">
+				<ViewGrid moduleID="ppls" goEditScreen="Supervisors"/>
+			</ViewScreenSection>
+			<ViewScreenSection name="Roles" phrase="Roles in the organization">	
+				<!-- <ViewField name="Consultant"/> -->
+				<ViewField name="BusinesscardDecisionmakerGraph"/>
+				<ViewField name="BusinesscardHandlerGraph"/>
+				<ViewField name="ruler101"/>
+				<ViewField name="HotelreservationDecisionmakerGraph"/>				
+				<ViewField name="HotelreservationHandlerGraph"/>
+				<ViewField name="ruler102"/>
+				<ViewField name="TrainticketDecisionmakerGraph"/>				
+				<ViewField name="TrainticketHandlerGraph"/>	
+				<ViewField name="ruler103"/>				
+				<ViewField name="VacationDecisionmakerGraph"/>
+				<ViewField name="VacationHandlerGraph"/>
+				<ViewField name="ruler104"/>
+				<ViewField name="RepairorderDecisionmakerGraph"/>
+				<ViewField name="RepairorderHandlerGraph"/>
+				<ViewField name="ruler105"/>
+				<ViewField name="HelpdeskDecisionmakerGraph"/>
+				<ViewField name="HelpdeskHandlerGraph"/>
+				<ViewField name="ruler106"/>
+				<ViewField name="InternalorderDecisionmakerGraph"/>
+				<ViewField name="InternalorderHandlerGraph"/>
+				<ViewField name="ruler107"/>
+				<ViewField name="AdvanceDecisionmakerGraph"/>
+				<ViewField name="AdvanceHandlerGraph"/>
+				<ViewField name="ruler108"/>
+				<ViewField name="CollateralDecisionmakerGraph"/>
+				<ViewField name="CollateralHandlerGraph"/>
+				<ViewField name="ruler109"/>
+				<ViewField name="InvoiceDecisionmakerGraph"/>
+				<ViewField name="InvoiceHandlerGraph"/>
+				<ViewField name="ruler110"/>
+				<ViewField name="BusinesstripDecisionmakerGraph"/>
+				<ViewField name="BusinesstripHandlerGraph"/>
+				<ViewField name="ruler111"/>
+				<ViewField name="TripexpensesDecisionmakerGraph"/>
+				<ViewField name="TripexpensesHandlerGraph"/>
+				<ViewField name="ruler112"/>
+				<ViewField name="FlightbookingDecisionmakerGraph"/>
+				<ViewField name="FlightbookingHandlerGraph" goEditScreen="Roles"/>
+			</ViewScreenSection>						
+		</ViewScreen>
+		<EditScreen name="Form" phrase="Form|Edit summary information about a person">
+			<OrgComboField name="OrganizationID" findMode="text" suppressItemAdd="yes"/>
+			<ComboField name="LocationID" findMode="text" suppressItemAdd="yes"/>
+			<CodeComboField name="PersonStatusID" suppressItemAdd="yes"/>
+			<EditField name="InternalNumber" size="25" maxLength="25"/>			
+			<EditField name="LastName" size="50" maxLength="50"/>
+			<EditField name="FirstName" size="50" maxLength="50"/>
+			<EditField name="MiddleName" size="50" maxLength="50"/>
+			<EditField name="DisplayName" size="50" maxLength="50"/>			
+			<EditField name="WorkEmail" size="75" maxLength="128"/>
+			<EditField name="MobilePhone" size="50" maxLength="50"/>
+			<EditField name="WorkPhone" size="50" maxLength="50"/>
+			<EditField name="WorkExtension" size="5" maxLength="5"/>
+			<EditField name="WorkFax" size="50" maxLength="50"/>
+			<EditField name="SkypeName" size="50" maxLength="50"/>
+			<EditField name="GaduGaduName" size="50" maxLength="50"/>				
+			<EditField name="WorkBuilding" size="50" maxLength="50"/>
+			<EditField name="WorkFloor" size="10" maxLength="10"/>
+			<EditField name="WorkRoom" size="10" maxLength="10"/>
+			<EditField name="WorkAddress1" size="50" maxLength="128"/>
+			<EditField name="WorkPostalCode" size="50" maxLength="50"/>
+			<EditField name="WorkCity" size="50" maxLength="50"/>			
+			<ComboField name="WorkCountryID" findMode="text" suppressItemAdd="yes"/>					
+		</EditScreen>
+		<EditScreen name="Photo" phrase="Photo|Photo from the saved attachment">
+			<RecordSummaryFieldsRef/>
+			<ViewField name="ruler1"/>			
+			<ComboField name="ThisAttachmentID" suppressItemAdd="yes"/> 
+			<ViewGrid moduleID="att"/>		
+		</EditScreen>
+		<EditScreen name="Supervisors" phrase="Supervisors|People supevising the person">
+			<RecordSummaryFieldsRef/>
+			<SelectGrid moduleID="ppls" goViewAnchor="Associations"/>
+		</EditScreen>		
+		<EditScreen name="Roles" phrase="Roles|Associate special roles with the person">
+			<RecordSummaryFieldsRef/>
+			<ViewField name="ruler1"/>
+			<ViewField name="ruler10"/>
+			<!-- <CheckBoxField name="Consultant"/> -->
+			<CheckBoxField name="BusinesscardDecisionmaker"/>
+			<CheckBoxField name="BusinesscardHandler"/>
+			<ViewField name="ruler101"/>
+			<CheckBoxField name="HotelreservationDecisionmaker"/>
+			<CheckBoxField name="HotelreservationHandler"/>
+			<ViewField name="ruler102"/>
+			<CheckBoxField name="TrainticketDecisionmaker"/>
+			<CheckBoxField name="TrainticketHandler"/>
+			<ViewField name="ruler103"/>
+			<CheckBoxField name="VacationDecisionmaker"/>
+			<CheckBoxField name="VacationHandler"/>
+			<ViewField name="ruler104"/>
+			<CheckBoxField name="RepairorderDecisionmaker"/>
+			<CheckBoxField name="RepairorderHandler"/>
+			<ViewField name="ruler105"/>
+			<CheckBoxField name="HelpdeskDecisionmaker"/>
+			<CheckBoxField name="HelpdeskHandler"/>
+			<ViewField name="ruler106"/>
+			<CheckBoxField name="InternalorderDecisionmaker"/>
+			<CheckBoxField name="InternalorderHandler"/>
+			<ViewField name="ruler107"/>
+			<CheckBoxField name="AdvanceDecisionmaker"/>
+			<CheckBoxField name="AdvanceHandler"/>
+			<ViewField name="ruler108"/>
+			<CheckBoxField name="CollateralDecisionmaker"/>
+			<CheckBoxField name="CollateralHandler"/>
+			<ViewField name="ruler109"/>
+			<CheckBoxField name="InvoiceDecisionmaker"/>
+			<CheckBoxField name="InvoiceHandler"/>
+			<ViewField name="ruler110"/>
+			<CheckBoxField name="BusinesstripDecisionmaker"/>
+			<CheckBoxField name="BusinesstripHandler"/>	
+			<ViewField name="ruler111"/>
+			<CheckBoxField name="TripexpensesDecisionmaker"/>
+			<CheckBoxField name="TripexpensesHandler"/>
+			<ViewField name="ruler112"/>
+			<CheckBoxField name="FlightbookingDecisionmaker"/>
+			<CheckBoxField name="FlightbookingHandler"/>			
+		</EditScreen>
+	</Screens>	
+	<Exports>
+		<ViewGrid moduleID="ppl" phrase="People">
+			<InvisibleField name="PersonID"/>
+			<ViewField name="DisplayName" phrase="Person"/>
+			<ViewField name="Organization" phrase="Unit"/>			
+            <ViewField name="WorkEmail" link="WorkEmail"/>
+			<ViewField name="MobilePhoneLinkIcon"/>
+			<ViewField name="InstantMessaging"/>
+		</ViewGrid>
+		<EditGrid moduleID="ppl" phrase="People">
+			<GridForm>
+				<InvisibleField name="PersonID"/>
+				<EditField name="LastName" size="50" maxLength="50"/>
+				<EditField name="FirstName" size="50" maxLength="50"/>
+				<EditField name="MiddleName" size="50" maxLength="50"/>
+				<EditField name="DisplayName" size="50" maxLength="50"/>
+				<EditField name="WorkEmail" size="75" maxLength="128"/>				
+				<EditField name="MobilePhone" size="50" maxLength="50"/>
+				<EditField name="SkypeName" size="50" maxLength="50"/>
+			</GridForm>
+			<InvisibleField name="PersonID"/>
+			<ViewField name="DisplayName" phrase="Person"/>
+			<ViewField name="Organization" phrase="Unit"/>
+			<ViewField name="WorkEmail" link="WorkEmail"/>
+			<ViewField name="MobilePhoneLinkIcon"/>
+			<ViewField name="InstantMessaging"/>
+		</EditGrid>
+	</Exports>
+    <Charts>
+        <PieChart name="Pie01" title="People By Organization">
+            <GroupByField name="OrganizationShortName"/>
+            <SummaryField name="PersonID" type="count"/>
+        </PieChart>
+        <ParetoChart name="Pareto01" title="People By Organization">
+            <GroupByField name="OrganizationShortName"/>
+            <SummaryField name="PersonID" type="count"/>
+        </ParetoChart>
+    </Charts>
+	<Documentation>
+		<DocumentationSection sectionID="Introduction" title="Wprowadzenie">		
+<![CDATA[
+<br/>	
+<p>Wprowadzenie do obsługi systemu jest dostępne po naciśnięciu przycisku „Tutorial”, który znajduje się na Listwie Głównej u góry ekranu przeglądarki. Tutorial zawiera prezentację:</p>
+<ul>
+<li>Koncepcji systemu:</li>
+<ul>
+<li>związku lista-wiersz jako podstawy modułu,</li>
+<li>pojęcia działań w kontekście listy,</li>
+<li>pojęcia działań w kontekście wiersza,</li>
+<li>powiązania wiersza z innymi modułami,</li>
+</ul>
+<li>Logowania i nawigacji po systemie;</li>
+<li>Funkcjonalności dostępnych na ekranie Listy;</li>
+<li>Funkcjonalności dostępnych na ekranie Wiersza;</li>
+<li>Funkcjonalności związanych z edycją zawartości danych wiersza;</li>
+<li>Funkcjonalności raportów;</li>
+<li>Funkcjonalności wykresów.</li>
+</ul>
+<p>Powyższe możliwości systemu mogą być wypróbowane na modułach demonstracyjnych:</p>
+<ul>
+<li>Państwa;</li>
+<li>Województwa;</li>
+<li>Powiaty.</li>
+</ul>
+<p>Moduły demonstracyjne dostępne są po najechaniu myszą na "Menu Główne" w Listwie Głównej i wybranie ścieżki menu: "Menu Główne/Pomocnicze/Piaskownica/*". Zmiany wprowadzone w modułach demonstracyjnych nie mają wpływu na funkcje biznesowe aplikacji i mogą być wycofane przez administratora systemu.</p>
+]]>
+		</DocumentationSection>		
+	</Documentation>
+	<Revision author="$Author: mattias $" id="$Revision: 1655 $" date="$Date: 2009-05-24 00:32:08 +0200 (N, 24 maj 2009) $"/>
+</Module>

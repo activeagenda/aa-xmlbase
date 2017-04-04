@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Module 
+	name="User Log" moduleID="usrl" parentModule="usr"
+	allowAddRecord="no"
+	singularRecordName="Log Entry" pluralRecordName="Log Entries">
+ 
+	<ModuleFields>
+		<TableField 
+			name="EntryID" type="int" dbFlags="unsigned auto_increment not null" 
+			phrase="Record ID|An automatically assigned number used to track log entries"/>
+		<TableField 
+			name="PersonID" type="int" dbFlags="unsigned not null" 
+			phrase="User ID|The user to whom a permitted organization is assigned"/>
+		<ForeignField 
+			name="Person" key="PersonID"
+			foreignTable="ppl" foreignKey="PersonID" foreignField="DisplayName" joinType="left" 
+			phrase="Person|The person who is this user."/>
+		<LinkField 
+			name="PersonLink" foreignModuleID="ppl" recordIDField="PersonID" 
+			phrase="Person|The person who is this user."/>
+		<ForeignField 
+			name="OrganizationID" key="PersonID"
+			foreignTable="ppl" foreignKey="PersonID" foreignField="OrganizationID" 
+			phrase="Organization|Name of organization associated with the creating individual"/>
+		<ForeignField 
+			name="Organization" key="OrganizationID" 
+			foreignTable="org" foreignKey="OrganizationID" foreignField="Name"
+			phrase="Organization|Name of organization associated with the creating individual"/>		
+		<CombinedField 
+			name="EntryCreatedBy" 
+			phrase="Person|Event triggered by person from organization">
+			<CombinedFieldRef name="Person"/>_/_<CombinedFieldRef name="Organization"/>
+		</CombinedField>			
+		<TableField 
+			name="EventTypeID" type="int" dbFlags="unsigned not null" 
+			phrase="Event Type|The type of user entry being logged by the system" />
+		<CodeField 
+			name="EventType" key="EventTypeID" codeTypeID="302"
+			phrase="Event Type|The type of user entry being logged by the system"/>
+		<TableField 
+			name="EventDescription" type="text" dbFlags="not null" 
+			phrase="Event Description|Description of the event"/>
+		<TableField 
+			name="EventURL" type="text" dbFlags="default null" 
+			phrase="Event URL|URL of request that generated the event"/>
+		<TableField 
+			name="RemoteIP" type="varchar(15)"
+			phrase="Remote IP|The visiting user's IP address"/>
+		
+		<TableField 
+			name="Mobile" type="bool"
+			phrase="Mobile|The visiting user's client is mobile"/>
+		<CalculatedField 
+			name="MobileSign" calcFunction="flipflop" params="Mobile #&#9679; #&#9675;"  
+			phrase="Mobile|The visiting user's client is mobile"/>
+		<CombinedField 
+			name="MobileGraph" 
+			phrase="Mobile|The visiting user's client is mobile">
+			<![CDATA[<div class="gsblt">]]>
+			<CombinedFieldRef name="MobileSign"/><![CDATA[</div>]]>
+		</CombinedField>	
+			
+		<TableField 
+			name="Tablet" type="bool"
+			phrase="Tablet|The visiting user's client is a tablet"/>
+		<CalculatedField 
+			name="TabletSign" calcFunction="flipflop" params="Tablet #&#9679; #&#9675;"  
+			phrase="Tablet|The visiting user's client is a tablet"/>
+		<CombinedField 
+			name="TabletGraph" 
+			phrase="Tablet|The visiting user's client is a tablet">
+			<![CDATA[<div class="gsblt">]]>
+			<CombinedFieldRef name="TabletSign"/><![CDATA[</div>]]>
+		</CombinedField>	
+			
+		<TableField 
+			name="_ModDate" type="datetime" 
+			phrase="Date and time|Date and time of access to the system"/>
+		<CombinedField 
+			name="EntryCreationDate" returnType="date" lookupType="created"  
+			phrase="Date and time|Date and time of access to the system">
+			<CombinedFieldRef name="_ModDate"/>
+		</CombinedField>
+		
+		<CombinedField 
+			name="RecordLabel" 
+			phrase="Record Label|The short, concise, label of the record for display purposes">
+			<CombinedFieldRef name="_ModDate"/>;_<CombinedFieldRef name="EventType"/>
+		</CombinedField>
+		<CombinedField 
+			name="RecordDescription" 
+			phrase="Record Description|A combined field used to describe this record when associating it with other records">
+			<CombinedFieldRef name="_ModDate"/>;_<CombinedFieldRef name="EventType"/>
+		</CombinedField>
+		
+		<StaticField 
+			name="ruler1" type="text" content="" phrase=" "/>
+		<StaticField 
+			name="ruler2" type="text" content="" phrase=" "/>
+			
+	</ModuleFields>
+	<ModuleInfo>
+		<PrimaryKey>
+			<FieldRef name="EntryID"/>
+		</PrimaryKey>
+		<Index name="PersonID_EventTypeID_ModDate">
+			<FieldRef name="PersonID"/>
+			<FieldRef name="EventTypeID"/>
+			<FieldRef name="_ModDate"/>
+		</Index>
+		<RecordDescriptionField name="RecordDescription"/>
+        <RecordLabelField name="RecordLabel"/>
+	</ModuleInfo>
+	<Screens>
+		<ListScreen name="List">
+			<ListField name="EntryID" phrase="ID"/>
+			<ListField name="EntryCreationDate" align="center"/>
+			<ListField name="EventType" align="center" phrase="Event"/>
+			<ListField name="EntryCreatedBy"/>
+			<ListField name="RemoteIP" align="center" phrase="IP"/>
+			<ListField name="MobileGraph" align="center"/>
+			<ListField name="TabletGraph" align="center"/>			
+			<OrderByField name="EntryID" direction="desc"/>
+		</ListScreen>
+        <SearchScreen name="Search">
+			<EditField name="EntryID" FromTo="no" size="50" maxLength="250"/>
+			<ViewField name="ruler1"/>
+            <PersonComboField name="PersonID" findMode="alpha"/>
+			<CodeComboField name="EventTypeID" findMode="text"/>
+			<DateField name="_ModDate"/>
+            <EditField name="EventURL" size="75" maxLength="128"/>
+			<ViewField name="ruler2"/>
+            <EditField name="RemoteIP" size="20" maxLength="20"/>
+			<CheckBoxField name="Mobile"/>
+			<CheckBoxField name="Tablet"/>
+        </SearchScreen>
+		<ViewScreen name="View">
+			<ViewField name="EntryID"/>
+			<ViewField name="ruler1"/>
+			<ViewField name="EntryCreatedBy" link="PersonLink"/>
+			<ViewField name="EntryCreationDate"/>
+			<ViewField name="EventType"/>
+			<ViewField name="EventDescription"/>
+			<ViewField name="EventURL"/>
+			<ViewField name="ruler2"/>
+			<ViewField name="RemoteIP"/>
+			<ViewField name="Mobile"/>
+			<ViewField name="Tablet"/>			
+		</ViewScreen>
+	</Screens>
+    <Charts>
+        <PieChart name="Pie01" title="Entries By Person">
+            <GroupByField name="Person"/>
+            <SummaryField name="EntryID" type="count"/>
+        </PieChart>
+        <ParetoChart name="Pareto01" title="Entries By Person">
+            <GroupByField name="Person"/>
+            <SummaryField name="EntryID" type="count"/>
+        </ParetoChart>
+        <PieChart name="Pie02" title="Entries By IP Address">
+            <GroupByField name="RemoteIP"/>
+            <SummaryField name="EntryID" type="count"/>
+        </PieChart>
+        <ParetoChart name="Pareto02" title="Entries By IP Address">
+            <GroupByField name="RemoteIP"/>
+            <SummaryField name="EntryID" type="count"/>
+        </ParetoChart>
+		<BarChart name="Bar01" title="Entries By Year">
+			<GroupByField name="_ModDate" dateInterval="year"/>
+			<SummaryField name="EntryID" type="count"/>
+		</BarChart>
+		<BarChart name="Bar02" title="Entries By Quarter">
+			<GroupByField name="_ModDate" dateInterval="yearquarter"/>
+			<SummaryField name="EntryID" type="count"/>
+		</BarChart>
+		<BarChart name="Bar03" title="Entries By Month">
+			<GroupByField name="_ModDate" dateInterval="yearmonth"/>
+			<SummaryField name="EntryID" type="count"/>
+		</BarChart>
+		<BarChart name="Bar04" title="Entries By Week">
+			<GroupByField name="_ModDate" dateInterval="yearweek"/>
+			<SummaryField name="EntryID" type="count"/>
+		</BarChart>
+		<BarChart name="Bar05" title="Entries By Day">
+			<GroupByField name="_ModDate"/>
+			<SummaryField name="EntryID" type="count"/>
+		</BarChart>
+    </Charts>
+	<Documentation>
+		<DocumentationSection sectionID="Introduction" title="Wprowadzenie">		
+			  <div id='introduction' align="center"/><script type='text/javascript'>play_tutorial( 'introduction', 'tut_intro.flv')</script>
+		</DocumentationSection>		
+	</Documentation>
+	<Revision author="$Author: mattias $" id="$Revision: 1517 $" date="$Date: 2009-02-12 16:58:12 +0100 (Cz, 12 lut 2009) $"/>
+</Module>

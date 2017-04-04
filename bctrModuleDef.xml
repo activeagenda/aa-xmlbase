@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Module 
+	name="Countries in sandbox" moduleID="bctr"
+	 updateImports="yes" isMasterData="yes"  
+	 singularRecordName="Country" pluralRecordName="Countries"
+	 defaultMenuPath="Main Menu / Sandbox / Countries">
+	 
+	<ModuleFields>
+		<TableField 
+			name="CountryID" type="int" dbFlags="unsigned auto_increment not null" 
+			phrase="Country ID|An internal ID number to identify a country" 
+				deleteKeys="bsta.CountryID" deleteOnIdGlobals="att nts cos lnk"/>
+		<TableField 
+			name="CountryName" type="varchar(50)" dbFlags="" phrase="Country Name|The name of the country in this site's default language" sample="United States of America"/>
+		<TableField 
+			name="NativeCountryName" type="varchar(50)" dbFlags="" phrase="Native Country Name|The name of the country in its native language" sample="Sverige"/>
+		<TableField 
+			name="CountryAbbreviation" type="varchar(5)" phrase="Country Abbreviation|The internationally recognized abbreviation of the country name" sample="USA"/>
+		<CombinedField 
+			name="RecordLabel" phrase="Record Label|The short, concise, label of the record for display purposes" sample="United States of America (USA)"><CombinedFieldRef name="CountryName"/>_(<CombinedFieldRef name="CountryAbbreviation"/>)</CombinedField>
+		<CombinedField 
+			name="Country" phrase="Country|A combined field used to associate this country with another record" sample="United States of America (USA)"><CombinedFieldRef name="CountryName"/>_(<CombinedFieldRef name="CountryAbbreviation"/>)</CombinedField>
+	</ModuleFields>
+	<ModuleInfo>
+		<PrimaryKey>
+			<FieldRef name="CountryID"/>
+		</PrimaryKey>
+		<RecordDescriptionField name="Country"/>
+		<RecordLabelField name="RecordLabel"/>
+	</ModuleInfo>
+	<SubModules>
+		<SubModule name="States" moduleID="bsta"  parentKey="CountryID" localKey="CountryID"/>
+	</SubModules>
+	<Screens>
+		<ListScreen name="List">
+			<ListField name="CountryID" phrase="ID"/>
+			<ListField name="Country" phrase="Country Combined Field"/>
+			<ListField name="CountryName" phrase="Country Name"/>
+			<ListField name="NativeCountryName" phrase="Native Country Name"/>
+			<ListField name="CountryAbbreviation" phrase="Country Abbreviation"/>
+		</ListScreen>
+		<SearchScreen name="Search">
+			<EditField name="CountryID" FromTo="no" size="50" maxLength="250"/>
+			<EditField name="CountryName" size="75" maxLength="50"/>
+			<EditField name="NativeCountryName" size="75" maxLength="50"/>
+			<EditField name="CountryAbbreviation" size="10" maxLength="5"/>
+		</SearchScreen>
+		<ViewScreen name="View">
+			<ViewField name="CountryID"/>
+			<ViewField name="Country"/>
+			<ViewField name="NativeCountryName"/>
+			<ViewField name="CountryAbbreviation" goEditScreen="Form"/>
+			<ViewScreenSection name="Associations" phrase="Associations">
+				<ViewGrid moduleID="bsta" rowIDon="CountryID" goEditScreen="States"/>
+			</ViewScreenSection>
+		</ViewScreen>
+		<EditScreen name="Form" phrase="Form|Edit summary information about a country">
+			<ViewField name="CountryID"/>
+			<EditField name="CountryName" size="75" maxLength="50"/>
+			<EditField name="NativeCountryName" size="75" maxLength="50"/>
+			<EditField name="CountryAbbreviation" size="10" maxLength="5"/>
+		</EditScreen>
+		<EditScreen name="States" phrase="State|The name of the state or similar geographic zone">
+			<RecordSummaryFieldsRef/>
+			<EditGrid moduleID="bsta" rowIDon="CountryID" goViewAnchor="Associations"/>
+		</EditScreen>
+	</Screens>
+	<RecordSummaryFields>
+		<ViewField name="CountryID"/>
+		<ViewField name="Country"/>
+		<ViewField name="CountryAbbreviation"/>	
+	</RecordSummaryFields>
+	<Documentation>
+		<DocumentationSection sectionID="Introduction" title="Wprowadzenie">		
+<![CDATA[
+<br/>	
+<p>Wprowadzenie do obsługi systemu jest dostępne po naciśnięciu przycisku „Tutorial”, który znajduje się na Listwie Głównej u góry ekranu przeglądarki. Tutorial zawiera prezentację:</p>
+<ul>
+<li>Koncepcji systemu:</li>
+<ul>
+<li>związku lista-wiersz jako podstawy modułu,</li>
+<li>pojęcia działań w kontekście listy,</li>
+<li>pojęcia działań w kontekście wiersza,</li>
+<li>powiązania wiersza z innymi modułami,</li>
+</ul>
+<li>Logowania i nawigacji po systemie;</li>
+<li>Funkcjonalności dostępnych na ekranie Listy;</li>
+<li>Funkcjonalności dostępnych na ekranie Wiersza;</li>
+<li>Funkcjonalności związanych z edycją zawartości danych wiersza;</li>
+<li>Funkcjonalności raportów;</li>
+<li>Funkcjonalności wykresów.</li>
+</ul>
+<p>Powyższe możliwości systemu mogą być wypróbowane na modułach demonstracyjnych:</p>
+<ul>
+<li>Państwa;</li>
+<li>Województwa;</li>
+<li>Powiaty.</li>
+</ul>
+<p>Moduły demonstracyjne dostępne są po najechaniu myszą na "Menu Główne" w Listwie Głównej i wybranie ścieżki menu: "Menu Główne/Pomocnicze/Piaskownica/*". Zmiany wprowadzone w modułach demonstracyjnych nie mają wpływu na funkcje biznesowe aplikacji i mogą być wycofane przez administratora systemu.</p>
+]]>
+		</DocumentationSection>		
+	</Documentation>
+	<Revision author="$Author: mattias $" id="$Revision: 1513 $" date="$Date: 2009-02-10 21:20:45 +0100 (Wt, 10 lut 2009) $"/>
+</Module>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Module 
+	name="Dashboard Chart Conditions" moduleID="dsbcc" 
+	allowAdd="No"
+	singularRecordName="Dashboard Chart Condition" pluralRecordName="Dashboard Chart Conditions">
+	
+	<ModuleFields>
+		<TableField 
+			name="ConditionID" type="int" dbFlags="auto_increment not null" 
+			phrase="Condition ID|Record ID for conditions"/>
+		<TableField 
+			name="ModuleID" type="varchar(5)" dbFlags="not null" 
+			phrase="Module ID|A unique character combination identifying a module or sub-module"/>
+		<TableField 
+			name="UserID" type="int" dbFlags="not null" 
+			phrase="User ID|Person ID number of an associated user (special: 0 means installation default, -1 means app default)"/>
+		<TableField 
+			name="DashboardChartID" type="int" dbFlags="not null" 
+			phrase="Dashboard Chart ID|Record ID for dashboard charts"/>
+		<TableField 
+			name="ConditionField" type="varchar(50)" dbFlags="not null" 
+			phrase="Condition Field|The name of a form field (SearchFields may display several FormFields)."/>
+		<TableField 
+			name="ConditionValue" type="varchar(50)" dbFlags="not null" 
+			phrase="Condition Value|The value that the form field was submitted with."/>
+	</ModuleFields>
+	<ModuleInfo>
+		<PrimaryKey>
+			<FieldRef name="ConditionID"/>
+		</PrimaryKey>
+        <Index name="DashboardChartID">
+            <FieldRef name="DashboardChartID"/>
+        </Index>
+	</ModuleInfo>
+	<Revision author="$Author: mattias $" id="$Revision: 1517 $" date="$Date: 2009-02-12 16:58:12 +0100 (Cz, 12 lut 2009) $"/>
+</Module>

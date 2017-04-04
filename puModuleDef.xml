@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module name="Power Users" moduleID="pu" singularRecordName="Power user" pluralRecordName="Power users">
+	<ModuleFields>
+		<TableField 
+			name="PoweruserID" type="int" dbFlags="unsigned auto_increment not null" 
+			phrase="Power user ID|An automatically assigned number used to identify a record"/>
+		<TableField 
+			name="RelatedModuleID" type="varchar(5)" validate="noValidation" 
+			phrase="Related Module ID|A character ID assigned to each module of the application"/>
+		<ForeignField 
+			name="RelatedModule" foreignTable="mod" foreignKey="ModuleID" foreignField="Name" key="RelatedModuleID" joinType="left" 
+			phrase="Related Module|The name or title of the module which is associated with the power user" sample="Partnerships"/>
+		
+		<TableField 
+			name="PersonID" type="int" dbFlags="unsigned default 0" validate="RequireSelection" 
+			phrase="Person ID|ID of the power user" />
+		<ForeignField 
+			name="Person" foreignTable="ppl" foreignKey="PersonID" foreignField="DisplayName" key="PersonID" 
+			phrase="Person|Power user responsible for the module"/>	
+        <CombinedField 
+			name="PersonLink" 
+			phrase="Person link|An internal link to the people module record">
+			<![CDATA[internal:view.php?mdl=ppl&rid=]]><CombinedFieldRef name="PersonID"/>
+		</CombinedField>			
+		<ForeignField 
+			name="MobilePhone" foreignTable="ppl" foreignKey="PersonID" foreignField="MobilePhone" key="PersonID" 
+			phrase="Mobile phone|Mobile phone of the power user responsible for the module"/>
+		<CombinedField
+			name="MobilePhoneLinkIcon"  
+			phrase="Mobile Phone|Mobile telephone number of the individual">
+			<![CDATA[<!--[if IE]><a  target="_blank"  href="tel:]]>
+			<CombinedFieldRef name="MobilePhone"/><![CDATA[">]]>
+			<CombinedFieldRef name="MobilePhone"/><![CDATA[</a><![endif]-->]]>
+			<![CDATA[<![if !IE]><a href="tel:]]>
+			<CombinedFieldRef name="MobilePhone"/><![CDATA[">]]>
+			<CombinedFieldRef name="MobilePhone"/><![CDATA[</a><![endif]>]]>			
+		</CombinedField>
+		<ForeignField 
+			name="WorkPhone" foreignTable="ppl" foreignKey="PersonID" foreignField="WorkPhone" key="PersonID" 
+			phrase="Work phone|Work phone of the power user responsible for the module"/>
+		<CombinedField
+			name="WorkPhoneLinkIcon"  
+			phrase="Work Phone|Telephone number of the individual at their place of work">
+			<![CDATA[<!--[if IE]><a  target="_blank"  href="tel:]]>
+			<CombinedFieldRef name="WorkPhone"/><![CDATA[">]]>
+			<CombinedFieldRef name="WorkPhone"/><![CDATA[</a><![endif]-->]]>
+			<![CDATA[<![if !IE]><a href="tel:]]>
+			<CombinedFieldRef name="WorkPhone"/><![CDATA[">]]>
+			<CombinedFieldRef name="WorkPhone"/><![CDATA[</a><![endif]>]]>
+		</CombinedField>
+		<ForeignField 
+			name="WorkExtension" foreignTable="ppl" foreignKey="PersonID" foreignField="WorkExtension" key="PersonID" 
+			phrase="Work phone extension|Work phone extension of the power user responsible for the module"/>
+		<ForeignField 
+			name="WorkEmail" foreignTable="ppl" foreignKey="PersonID" foreignField="WorkEmail" key="PersonID" 
+			phrase="Work email|Work email of the power user responsible for the module"/>		
+		<ForeignField 
+			name="OrganizationID" foreignTable="ppl" foreignKey="PersonID" foreignField="OrganizationID" key="PersonID" 
+			phrase="Organization|Name of organization associated with the individual"/>
+		<ForeignField 
+			name="Organization" foreignTable="org" foreignKey="OrganizationID" foreignField="Name" key="OrganizationID" 
+			phrase="Organization|Name of organization associated with the individual"/>
+		<CombinedField name="PersonOrganization"  
+			phrase="Person|Power user responsible for the module">
+			<CombinedFieldRef name="Person"/>_/_<CombinedFieldRef name="Organization"/>
+		</CombinedField>
+		
+			
+		<TableField 
+			name="SupportsData" type="bool" validate="RequireSelection" 
+			phrase="Supports data handling|The person supports other users in data handling in the module"/>
+		<CalculatedField 
+			name="SupportsDataIf" calcFunction="flipflop_onone" params="SupportsData #1"  
+			phrase="Supports data handling|The person supports other users in data handling in the module"/>	
+		<CombinedField 
+			name="SupportsDataTxt"  
+			phrase="Supports data handling|The person supports other users in data handling in the module">
+			<![CDATA[<!--]]><CombinedFieldRef name="SupportsDataIf"/>
+			<![CDATA[--> <li>Pomaga przy wprowadzaniu danych</li>]]>	
+		</CombinedField>		
+		
+		<TableField 
+			name="SupportsOperation" type="bool" validate="RequireSelection" 
+			phrase="Supports module operation|The person supports other users in module operation"/>
+		<CalculatedField 
+			name="SupportsOperationIf" calcFunction="flipflop_onone" params="SupportsOperation #1"  
+			phrase="Supports module operation|The person supports other users in module operation"/>	
+		<CombinedField 
+			name="SupportsOperationTxt"  
+			phrase="Supports module operation|The person supports other users in module operation">
+			<![CDATA[<!--]]><CombinedFieldRef name="SupportsOperationIf"/>
+			<![CDATA[--> <li>Pomaga w obsłudze modułu</li>]]>	
+		</CombinedField>		
+		
+		<TableField 
+			name="SupportsFaults" type="bool"  validate="RequireSelection" 
+			phrase="Supports fault handling|The person supports other users in fault handling"/>
+		<CalculatedField 
+			name="SupportsFaultsIf" calcFunction="flipflop_onone" params="SupportsFaults #1"  
+			phrase="Supports fault handling|The person supports other users in fault handling"/>	
+		<CombinedField 
+			name="SupportsFaultsTxt"  
+			phrase="Supports fault handling|The person supports other users in fault handling">
+			<![CDATA[<!--]]><CombinedFieldRef name="SupportsFaultsIf"/>
+			<![CDATA[--> <li>Przyjmuje zgłoszenia usterek modułu</li>]]>	
+		</CombinedField>
+
+		<TableField 
+			name="SupportsOther" type="varchar(50)"
+			phrase="Other support|The person supports other users in listed problems" />
+		<CombinedField name="SupportsOtherTxt"  
+			phrase="Other support|The person supports other users in listed problems">
+			<![CDATA[<li>]]><CombinedFieldRef name="SupportsOther"/><![CDATA[</li>]]>	
+		</CombinedField>		
+		
+		<CombinedField name="Supportstext"  
+			phrase="Support|Support provided by the power user">
+			<![CDATA[<ul>]]>
+			<CombinedFieldRef name="SupportsDataTxt"/>
+			<CombinedFieldRef name="SupportsOperationTxt"/>
+			<CombinedFieldRef name="SupportsFaultsTxt"/>
+			<CombinedFieldRef name="SupportsOtherTxt"/>
+			<![CDATA[</ul>]]>	
+		</CombinedField>		
+		
+		<CombinedField 
+			name="Poweruser" 
+			phrase="Description|A combined field used to describe this record when associating it with other records">
+			<CombinedFieldRef name="RelatedModule"/>;_<CombinedFieldRef name="Person"/>
+		</CombinedField>
+		<ForeignField 
+			name="_Mobile"  key="PersonID" 
+			foreignTable="ppl" foreignKey="PersonID" foreignField="MobilePhone"
+			phrase="Mobile Phone|Mobile telephone number of the individual"/>       	
+        <CombinedField 
+			name="_MobileLinkIcon" 
+			phrase="Mobile Phone|Mobile telephone number of the individual">
+			<![CDATA[<!--[if IE]><a  target="_blank"  href="tel:]]><CombinedFieldRef name="_Mobile"/>
+			<![CDATA["><img src="/themes/aa\_theme/img/telephone.png"/></a>&nbsp\;&nbsp\;&nbsp\;<![endif]-->]]>
+			<![CDATA[<![if !IE]><a href="tel:]]><CombinedFieldRef name="_Mobile"/>
+			<![CDATA["><img src="/themes/aa\_theme/img/telephone.png"/></a>&nbsp\;&nbsp\;&nbsp\;<![endif]>]]>
+		</CombinedField>
+		<CombinedField 
+			name="_SMSLinkIcon" 
+			phrase="Mobile Phone|Mobile telephone number of the individual">
+			<![CDATA[<!--[if IE]><a  target="_blank"  href="sms:]]><CombinedFieldRef name="_Mobile"/>
+			<![CDATA["><img src="/themes/aa\_theme/img/sms.png"/></a>&nbsp\;&nbsp\;&nbsp\;<![endif]-->]]>
+			<![CDATA[<![if !IE]><a href="sms:]]><CombinedFieldRef name="_Mobile"/>
+			<![CDATA["><img src="/themes/aa\_theme/img/sms.png"/></a>&nbsp\;&nbsp\;&nbsp\;<![endif]>]]>
+		</CombinedField>
+		
+		<ForeignField 
+			name="_Skype"  key="PersonID" 
+			foreignTable="ppl" foreignKey="PersonID" foreignField="SkypeName"
+			phrase="Skype Name|The name used by the person to participate in Skype"/>
+        <CombinedField 
+			name="_SkypeLinkIcon" 
+			phrase="Skype Name|The name used by the person to participate in Skype">
+			<![CDATA[<!--[if IE]><a  target="_blank"  href="skype:]]><CombinedFieldRef name="_Skype"/>
+			<![CDATA["><img src="/themes/aa\_theme/img/skype.ico"/></a>&nbsp\;&nbsp\;&nbsp\;<![endif]-->]]>
+			<![CDATA[<![if !IE]><a href="skype:]]><CombinedFieldRef name="_Skype"/>
+			<![CDATA["><img src="/themes/aa\_theme/img/skype.ico"/></a>&nbsp\;&nbsp\;&nbsp\;<![endif]>]]>
+		</CombinedField>
+
+		<ForeignField 
+			name="_GaduGadu"  key="PersonID" 
+			foreignTable="ppl" foreignKey="PersonID" foreignField="GaduGaduName"
+			phrase="Gadu Gadu Name|The name used by the person to participate in Gadu Gadu services"/>
+        <CombinedField 
+			name="_GaduGaduLinkIcon" 
+			phrase="Gadu Gadu Name|The name used by the person to participate in Gadu Gadu services">
+			<![CDATA[<!--[if IE]><a  target="_blank"  href="gg:]]><CombinedFieldRef name="_GaduGadu"/>
+			<![CDATA["><img src="/themes/aa\_theme/img/gadugadu.ico"/></a>&nbsp\;&nbsp\;&nbsp\;<![endif]-->]]>
+			<![CDATA[<![if !IE]><a href="gg:]]><CombinedFieldRef name="_GaduGadu"/>
+			<![CDATA["><img src="/themes/aa\_theme/img/gadugadu.ico"/></a>&nbsp\;&nbsp\;&nbsp\;<![endif]>]]>
+		</CombinedField>		
+		
+		<CombinedField 
+			name="_MobileIMLinkIcon" 
+			phrase="Phone and Instant Messaging|Link from browser to establish phone and instant messaging connection">
+			<![CDATA[&nbsp\;&nbsp\;&nbsp\;]]>	
+			<CombinedFieldRef name="_SMSLinkIcon"/>
+			<CombinedFieldRef name="_SkypeLinkIcon"/>
+			<CombinedFieldRef name="_GaduGaduLinkIcon"/>
+		</CombinedField>
+		
+		<CombinedField 
+			name="RecordLabel" 
+			phrase="Record Label|The short, concise, label of the record for display purposes">
+			<CombinedFieldRef name="RelatedModule"/>_;_<CombinedFieldRef name="Person"/>
+		</CombinedField>
+		
+		<StaticField 
+			name="ruler1" type="text" content="" phrase=" "/>
+		<StaticField 
+			name="ruler2" type="text" content="" phrase=" "/>
+	</ModuleFields>
+	
+	<ModuleInfo>
+		<PrimaryKey>
+			<FieldRef name="PoweruserID"/>
+		</PrimaryKey>
+		<Index name="RelatedModuleID1">
+			<FieldRef name="RelatedModuleID"/>
+		</Index>
+		<OwnerField name="OrganizationID"/>
+		<RecordDescriptionField name="RecordLabel"/>
+		<RecordLabelField name="RecordLabel"/>
+	</ModuleInfo>
+	<Screens>
+		<ListScreen name="List">
+			<ListField name="PoweruserID" phrase="ID"/>			
+            <ListField name="RelatedModule"/>			
+			<ListField name="PersonOrganization"/>
+			<ListField name="Supportstext" />
+		</ListScreen>
+		<SearchScreen name="Search">
+			<EditField name="PoweruserID" FromTo="no" size="50" maxLength="250"/>
+			<ViewField name="ruler1"/>
+            <ComboField name="RelatedModuleID" listField="RelatedModule"/>
+			<PersonComboField name="PersonID" findMode="alpha"/>
+			<ViewField name="ruler2"/>
+			<CheckBoxField name="SupportsData"/>
+			<CheckBoxField name="SupportsOperation"/>
+			<CheckBoxField name="SupportsFaults"/>
+			<EditField name="SupportsOther" size="50" maxLength="50"/>			
+		</SearchScreen>
+		<ViewScreen name="View">
+			<ViewField name="PoweruserID"/>
+			<ViewField name="ruler1"/>
+			<ViewField name="RelatedModule"/>
+			<ViewField name="ruler2"/>	
+			<ViewField name="PersonOrganization" link="PersonLink"/>			
+			<ViewField name="MobilePhoneLinkIcon"/>
+			<ViewField name="WorkPhoneLinkIcon"/>
+			<ViewField name="WorkExtension"/>
+			<ViewField name="WorkEmail" link="WorkEmail"/>
+			<ViewField name="_MobileIMLinkIcon"/>
+			<ViewField name="Supportstext"/>			
+		</ViewScreen>
+		<EditScreen name="Form" phrase="Form|Edit summary information about a power user and module">
+			<ViewField name="PoweruserID"/>
+			<ViewField name="ruler1"/>
+			<ComboField name="RelatedModuleID" listField="RelatedModule" suppressItemAdd="yes"/>
+			<PersonComboField name="PersonID" findMode="alpha" suppressItemAdd="yes"/>
+			<CheckBoxField name="SupportsData"/>
+			<CheckBoxField name="SupportsOperation"/>
+			<CheckBoxField name="SupportsFaults"/>
+			<EditField name="SupportsOther" size="50" maxLength="50"/>			
+		</EditScreen>
+	</Screens>	
+	<Documentation>
+		<DocumentationSection sectionID="Introduction" title="Wprowadzenie">		
+<![CDATA[
+<br/>	
+<p>Wprowadzenie do obsługi systemu jest dostępne po naciśnięciu przycisku „Tutorial”, który znajduje się na Listwie Głównej u góry ekranu przeglądarki. Tutorial zawiera prezentację:</p>
+<ul>
+<li>Koncepcji systemu:</li>
+<ul>
+<li>związku lista-wiersz jako podstawy modułu,</li>
+<li>pojęcia działań w kontekście listy,</li>
+<li>pojęcia działań w kontekście wiersza,</li>
+<li>powiązania wiersza z innymi modułami,</li>
+</ul>
+<li>Logowania i nawigacji po systemie;</li>
+<li>Funkcjonalności dostępnych na ekranie Listy;</li>
+<li>Funkcjonalności dostępnych na ekranie Wiersza;</li>
+<li>Funkcjonalności związanych z edycją zawartości danych wiersza;</li>
+<li>Funkcjonalności raportów;</li>
+<li>Funkcjonalności wykresów.</li>
+</ul>
+<p>Powyższe możliwości systemu mogą być wypróbowane na modułach demonstracyjnych:</p>
+<ul>
+<li>Państwa;</li>
+<li>Województwa;</li>
+<li>Powiaty.</li>
+</ul>
+<p>Moduły demonstracyjne dostępne są po najechaniu myszą na "Menu Główne" w Listwie Głównej i wybranie ścieżki menu: "Menu Główne/Pomocnicze/Piaskownica/*". Zmiany wprowadzone w modułach demonstracyjnych nie mają wpływu na funkcje biznesowe aplikacji i mogą być wycofane przez administratora systemu.</p>
+]]>
+		</DocumentationSection>		
+	</Documentation>
+	<Revision author="$Author: jwach $" id="$Revision: 1515 $" date="$Date: 2010-04-08 $"/>
+</Module>

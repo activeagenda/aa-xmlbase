@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Module 
+	name="User Search Defaults" moduleID="usrsd"  allowAdd="No"
+	singularRecordName="Search Default" pluralRecordName="Search Defaults">
+	
+	<ModuleFields>
+		<TableField 
+			name="ConditionID" type="int" dbFlags="auto_increment not null" 
+			phrase="Condition ID|Record ID for conditions"/>
+		<TableField 
+			name="ModuleID" type="varchar(5)" dbFlags="not null" 
+			phrase="Module ID|A unique character combination identifying a module or sub-module"/>
+		<TableField 
+			name="UserID" type="int" dbFlags="not null" 
+			phrase="User ID|Person ID number of an associated user (special: 0 means installation default, -1 means app default)"/>
+		<TableField 
+			name="ConditionField" type="varchar(128)" dbFlags="not null" 
+			phrase="Condition Field|The name of a form field (SearchFields may display several FormFields)."/>
+		<TableField 
+			name="ConditionValue" type="varchar(255)" dbFlags="not null" 
+			phrase="Condition Value|The value that the form field was submitted with."/>
+	</ModuleFields>
+	<ModuleInfo>
+		<PrimaryKey>
+			<FieldRef name="ConditionID"/>
+		</PrimaryKey>
+		<Index name="UserID_ModuleID">
+			<FieldRef name="UserID"/>
+			<FieldRef name="ModuleID"/>
+		</Index>
+	</ModuleInfo>
+	<Revision author="$Author: mattias $" id="$Revision: 1406 $" date="$Date: 2009-01-27 07:56:18 +0100 (Wt, 27 sty 2009) $"/>
+</Module>

@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Module
+	name="Code Items" moduleID="cod" 
+	updateImports="yes" dataCollectionForm="yes" isMasterData="yes" 
+	singularRecordName="Code Item" pluralRecordName="Code Items">
+
+    <ModuleFields>
+        <TableField 
+			name="RecordID" type="int" dbFlags="unsigned not null auto_increment" 
+			phrase="Record ID|A unique ID for internal database purposes (primary key)"/>
+        <TableField 
+			name="CodeID" type="int" dbFlags="not null" 
+			phrase="Code ID|A number used to track code records"/>
+        <TableField 
+			name="CodeTypeID" type="int" dbFlags="not null" 
+			phrase="Code Type ID|A number used to track code records"/>
+        <TableField 
+			name="SortOrder" type="int" 
+			phrase="Sort Order|A numerical value to define the placement of this code in an ordered list, such as drop-down list."/>
+        <TableField 
+			name="Value" type="varchar(25)" 
+			phrase="Value|This field has special meaning for different code types. It can be used to limit a list of codes based on a matching value."/>
+        <TableField 
+			name="Description" type="varchar(255)" 
+			phrase="Description|The text that should be displayed for this code. This is the standard-language text (English). Additional languages are supported by adding columns using the standard language ID as the name." sample="Supplier"/>
+        <ForeignField 
+			name="CodeTypeTitle" key="CodeTypeID"
+			foreignTable="codt" foreignKey="CodeTypeID" foreignField="Name" joinType="left" 
+			phrase="Code Type|The name of the present code type."/>
+        <ForeignField 
+			name="CodeTypeDescription" key="CodeTypeID" 
+			foreignTable="codt" foreignKey="CodeTypeID" foreignField="Description"  joinType="left" 
+			phrase="Description|A clarifying descrition of the code type"/>
+        <CombinedField 
+			name="RecordLabel" 
+			phrase="Record Label|The short, concise, label of the record for display purposes">
+			<CombinedFieldRef name="CodeTypeTitle"/>;_<CombinedFieldRef name="Description"/>
+		</CombinedField>
+        <CombinedField 
+			name="Code" 
+			phrase="Code|A combined field used to describer the record when associating it with other records">
+			<CombinedFieldRef name="CodeTypeTitle"/>;_<CombinedFieldRef name="Description"/>
+		</CombinedField>
+	</ModuleFields>
+    <ModuleInfo>
+        <PrimaryKey>
+            <FieldRef name="RecordID"/>
+        </PrimaryKey>
+        <UniquenessIndex name="CodeID_CodeTypeID">
+            <FieldRef name="CodeID"/>
+            <FieldRef name="CodeTypeID"/>
+        </UniquenessIndex>
+        <UniquenessIndex name="Description_CodeTypeID">
+            <FieldRef name="Description"/>
+            <FieldRef name="CodeTypeID"/>
+        </UniquenessIndex>
+        <Index name="CodeTypeID">
+            <FieldRef name="CodeTypeID"/>
+        </Index>
+        <!--<OwnerField name="OrganizationID"/>-->
+        <!--<RecordDescriptionField name="Code"/> REMOVED - MJT 02/09/06. This functionality will not work due to more than one PK-->
+        <RecordLabelField name="RecordLabel"/>
+    </ModuleInfo>
+    <Screens>
+        <ListScreen name="List" phrase="List|List codes">
+            <ListField name="RecordID"/>
+            <ListField name="CodeTypeID" phrase="ID"/>
+            <ListField name="CodeTypeTitle" phrase="Code Type"/>
+            <ListField name="CodeID" phrase="Code ID"/>
+            <ListField name="Description" phrase="Description"/>
+            <ListField name="SortOrder" phrase="Sort Order"/>
+            <ListField name="Value" phrase="Value"/>
+        </ListScreen>
+        <ViewScreen name="CodeView" phrase="View|View codes">
+            <ViewField name="RecordID"/>
+            <ViewField name="CodeTypeID"/>
+            <ViewField name="CodeTypeTitle"/>
+            <ViewField name="CodeID"/>
+            <ViewField name="Description"/>
+            <ViewField name="SortOrder"/>
+            <ViewField name="Value"/>
+        </ViewScreen>
+        <EditScreen name="CodeEdit" phrase="Form|Edit codes">
+            <ViewField name="RecordID"/>
+            <ViewField name="CodeTypeID"/>
+            <ViewField name="CodeTypeTitle"/>
+            <EditField name="CodeID" size="10" maxLength="10"/>
+            <EditField name="Description" size="50" maxLength="128"/>
+            <EditField name="SortOrder" size="10" maxLength="10"/>
+            <EditField name="Value" size="15" maxLength="25"/>
+        </EditScreen>
+    </Screens>
+    <Exports>
+        <ViewGrid moduleID="cod" phrase="Code Items">
+            <InvisibleField name="RecordID"/>
+            <ViewField name="CodeID" phrase="Code ID" sample="1"/>
+            <InvisibleField name="CodeTypeID" phrase="Code Type ID"/>
+            <ViewField name="Description" phrase="Description" sample="Human Safety"/>
+            <ViewField name="SortOrder" phrase="Sort Order" sample="10"/>
+            <ViewField name="Value" phrase="Value" sample="1"/>
+        </ViewGrid>
+        <EditGrid moduleID="cod" phrase="Code Items" name="CodeEdit">
+            <InvisibleField name="RecordID"/>
+            <EditField name="CodeID" size="10" maxLength="10" phrase="Code ID"/>
+            <InvisibleField name="CodeTypeID"/>
+            <EditField name="Description" size="50" maxLength="128" phrase="Description"/>
+            <EditField name="SortOrder" size="10" maxLength="10" phrase="Sort Order"/>
+            <EditField name="Value" size="15" maxLength="25" phrase="Value"/>
+        </EditGrid>
+    </Exports>
+    <Documentation>
+		<DocumentationSection sectionID="Introduction" title="Wprowadzenie">		
+<![CDATA[
+<br/>	
+<p>Wprowadzenie do obsługi systemu jest dostępne po naciśnięciu przycisku „Tutorial”, który znajduje się na Listwie Głównej u góry ekranu przeglądarki. Tutorial zawiera prezentację:</p>
+<ul>
+<li>Koncepcji systemu:</li>
+<ul>
+<li>związku lista-wiersz jako podstawy modułu,</li>
+<li>pojęcia działań w kontekście listy,</li>
+<li>pojęcia działań w kontekście wiersza,</li>
+<li>powiązania wiersza z innymi modułami,</li>
+</ul>
+<li>Logowania i nawigacji po systemie;</li>
+<li>Funkcjonalności dostępnych na ekranie Listy;</li>
+<li>Funkcjonalności dostępnych na ekranie Wiersza;</li>
+<li>Funkcjonalności związanych z edycją zawartości danych wiersza;</li>
+<li>Funkcjonalności raportów;</li>
+<li>Funkcjonalności wykresów.</li>
+</ul>
+<p>Powyższe możliwości systemu mogą być wypróbowane na modułach demonstracyjnych:</p>
+<ul>
+<li>Państwa;</li>
+<li>Województwa;</li>
+<li>Powiaty.</li>
+</ul>
+<p>Moduły demonstracyjne dostępne są po najechaniu myszą na "Menu Główne" w Listwie Głównej i wybranie ścieżki menu: "Menu Główne/Pomocnicze/Piaskownica/*". Zmiany wprowadzone w modułach demonstracyjnych nie mają wpływu na funkcje biznesowe aplikacji i mogą być wycofane przez administratora systemu.</p>
+]]>
+		</DocumentationSection>		
+	</Documentation>
+    <Revision author="$Author: dan $" id="$Revision: 1583 $" date="$Date: 2009-04-28 07:11:50 +0200 (Wt, 28 kwi 2009) $"/>
+</Module>

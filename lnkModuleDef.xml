@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Module 
+	name="Links" moduleID="lnk" 
+	allowAddRecord="no" isGlobal="yes" 
+	singularRecordName="Link" pluralRecordName="Links">
+	
+	<ModuleFields>
+		<TableField 
+			name="LinkID" type="int" dbFlags="unsigned auto_increment not null" 
+			phrase="Link ID|Numerical ID used track links associated with records throughout the application"/>
+		
+		<TableField 
+			name="RelatedModuleID" type="varchar(5)" validate="noValidation" 
+			phrase="Related Module ID|A character ID assigned to each module of the application"/>
+		<ForeignField 
+			name="RelatedModule"  key="RelatedModuleID"
+			foreignTable="mod" foreignKey="ModuleID" foreignField="Name" joinType="left" 
+			phrase="Related Module|The name or title of the module which is associated with the record"/>
+		
+        <!-- Module Level Related Module section -->
+        <CalculatedField 
+			name="IsModuleLevel" type="boolean" 
+			calcFunction="is_equal" params="RelatedModuleID +mod" 
+			phrase="Module Level|Displays 1 if the action is a module level action"/>
+        <CalculatedField 
+			name="DisplayRelatedRecordID" type="varchar(5)" 
+			calcFunction="if" params="IsModuleLevel +list RelatedRecordID" 
+			phrase="Related Record"/>
+
+        <ForeignField 
+			name="ModuleLevelRelatedModuleID"  key="RelatedRecordID"
+			foreignTable="mod" foreignKey="RecordID" foreignField="ModuleID" joinType="left" 
+			phrase="Module Level Related Module|The name or title of the module which is associated with the record"/>
+        <CalculatedField 
+			name="DisplayRelatedModuleID" type="varchar(5)" 
+			calcFunction="if" params="IsModuleLevel ModuleLevelRelatedModuleID RelatedModuleID" 
+			phrase="Related Module"/>
+
+        <ForeignField 
+			name="ModuleLevelRelatedModule"  key="RelatedRecordID"
+			foreignTable="mod" foreignKey="RecordID" foreignField="Name" joinType="left" 
+			phrase="Module Level Related Module|The name or title of the module which is associated with the record"/>
+        <CalculatedField 
+			name="DisplayRelatedModule" type="text" 
+			calcFunction="if" params="IsModuleLevel ModuleLevelRelatedModule RelatedModule" 
+			phrase="Related Module|The name or title of the module which is associated with the record"/>
+
+        <CombinedField 
+			name="ModuleLevelRelatedModuleRecord" 
+			phrase="Module Level Related Record|A combined field used to display the related module name and that is is a module level item">
+			<CombinedFieldRef name="ModuleLevelRelatedModule"/>
+		</CombinedField>
+        <CalculatedField 
+			name="DisplayRelatedModuleRecord" type="text" 
+			calcFunction="if" params="IsModuleLevel ModuleLevelRelatedModuleRecord RelatedModuleRecord" 
+			phrase="Related Record|A combined field used to display the related module name and what record, if any, it is related to"/>
+
+        <CombinedField 
+			name="ModuleLevelRelatedRecordLink" 
+			phrase="Related Record Link|An internal link to the related record.">
+			internal:global.php?mdl=<CombinedFieldRef name="DisplayRelatedModuleID"/>&amp;rid=list&amp;gmd=lnk
+		</CombinedField>
+        <CalculatedField 
+			name="DisplayRelatedRecordLink" type="text" 
+			calcFunction="if" params="IsModuleLevel ModuleLevelRelatedRecordLink RelatedRecordLink" 
+			phrase="Related Record Link|An internal link to the related record."/>
+        <!-- End Module Level Related Module section -->
+		
+		<TableField 
+			name="RelatedRecordID" type="int" validate="noValidation" 
+			phrase="Related Record ID|The unique ID of the related record within the related module"/>
+		<DynamicForeignField 
+			name="RelatedRecordDescription" key="RelatedRecordID" 
+			moduleIDField="RelatedModuleID" foreignField="RecordDescription" joinType="left" 
+			phrase="Record Description|A description of the related record based on a combination of field values assigned from within the related module"/>
+		<TableField 
+			name="LinkAddress" type="varchar(255)" validate="notEmpty" 
+			phrase="Link Address|A valid address associated with a Web page or other information which is relevant to the related record"/>
+		<TableField 
+			name="LinkTitle" type="varchar(128)" validate="notEmpty" 
+			phrase="Link Title|Short description of the link"/>
+				
+		<!-- Record manipulation and ownership-->				
+		<RecordMetaField  
+			name="_ThisCreatedByPersonID"  returnType="userID" lookupType="created" 
+			phrase="Created By|Record created by person"/>
+		<ForeignField 
+			name="_ThisCreatedByPerson" foreignTable="ppl" foreignKey="PersonID" foreignField="DisplayName" key="_ThisCreatedByPersonID" 
+			phrase="Created By|Record created by person"/>
+		<ForeignField 
+			name="_ThisCreatedByOrganizationID" foreignTable="ppl" foreignKey="PersonID" foreignField="OrganizationID" key="_ThisCreatedByPersonID" 
+			phrase="Organization|Name of organization associated with the creating individual"/>
+		<ForeignField 
+			name="_ThisCreatedByOrganization" foreignTable="org" foreignKey="OrganizationID" foreignField="Name" key="_ThisCreatedByOrganizationID" 
+			phrase="Organization|Name of organization associated with the creating individual"/>		
+		<RecordMetaField 
+			name="_ThisCreationDate"  returnType="date" lookupType="created"  
+			phrase="Created|Record created on date"/>
+		<CombinedField 
+			name="_ThisCreated" 
+			phrase="Created|Created on date by person from organization">
+			<CombinedFieldRef name="_ThisCreationDate"/>_<CombinedFieldRef name="_ThisCreatedByPerson"/>_/_<CombinedFieldRef name="_ThisCreatedByOrganization"/>
+		</CombinedField>
+		<RecordMetaField  
+			name="_ThisLastChangedByPersonID"  returnType="userID" lookupType="modified" 
+			phrase="Last Changed by|Last changed by person"/>
+		<ForeignField 
+			name="_ThisLastChangedByPerson" foreignTable="ppl" foreignKey="PersonID" foreignField="DisplayName" key="_ThisLastChangedByPersonID" 
+			phrase="Last Changed By|Last changed by person"/>
+		<ForeignField 
+			name="_ThisLastChangedByOrganizationID" foreignTable="ppl" foreignKey="PersonID" foreignField="OrganizationID" key="_ThisLastChangedByPersonID" 
+			phrase="Organization|Name of organization associated with the last changing individual"/>
+		<ForeignField 
+			name="_ThisLastChangedByOrganization" foreignTable="org" foreignKey="OrganizationID" foreignField="Name" key="_ThisLastChangedByOrganizationID" 
+			phrase="Organization|Name of organization associated with the last changing individual"/>		
+		<RecordMetaField 
+			name="_ThisLastChangedDate"  returnType="date" lookupType="modified"  
+			phrase="Last Modified|Record modified last on date"/>
+		<CombinedField 
+			name="_ThisLastChanged" 
+			phrase="Last Modified|Last modified on date by person from organization">
+			<CombinedFieldRef name="_ThisLastChangedDate"/>_<CombinedFieldRef name="_ThisLastChangedByPerson"/>_/_<CombinedFieldRef name="_ThisLastChangedByOrganization"/>
+		</CombinedField>
+		<TableField 
+			name="_OwnedBy" type="int" dbFlags="unsigned default 0" validate="eval: userID_is( $_OwnedBy )" defaultValue="userID" orgListOptions="intpar" 
+			phrase="Link owner|Displays link owners name"/>
+		<ForeignField 
+			name="_Owned" foreignTable="ppl" foreignKey="PersonID" foreignField="DisplayName" key="_OwnedBy" 
+			phrase="Link owner|Displays link owners name"/>
+		<LinkField 
+			name="_OwnedLink" foreignModuleID="ppl" recordIDField="_OwnedBy" 
+			phrase="Link owner|Displays link owners name"/>
+		<ForeignField 
+			name="_OrganizationID" foreignTable="ppl" foreignKey="PersonID" foreignField="OrganizationID" key="_OwnedBy" 
+			phrase="Organization|Name of organization associated with the owner"/>
+		<ForeignField 
+			name="_Organization" foreignTable="org" foreignKey="OrganizationID" foreignField="Name" key="_OrganizationID" 
+			phrase="Organization|Name of organization associated with the owner"/>
+		<CombinedField name="_OwnedOrganization"  
+			phrase="Link owner|Displays link owners name and his organization name">
+			<CombinedFieldRef name="_Owned"/>_/_<CombinedFieldRef name="_Organization"/>
+		</CombinedField>  
+		
+		<LinkField 
+			name="RelatedRecordLink" moduleIDField="RelatedModuleID" recordIDField="RelatedRecordID" 
+			phrase="Related Record Link|An internal link to the related record."/>		
+		<CombinedField 
+			name="RelatedModuleRecord" 
+			phrase="Related Record|A combined field used to display the related module name and record ID" sample="Corrective Actions | Record ID: 3"><CombinedFieldRef name="RelatedModule"/>_(ID_Rekordu:_<CombinedFieldRef name="RelatedRecordID"/>)</CombinedField>
+		<CombinedField 
+			name="RecordLabel" 
+			phrase="Record Label|The short, concise, label of the record for display purposes">
+			<CombinedFieldRef name="LinkTitle"/>
+		</CombinedField>
+		<CombinedField 
+			name="Link" phrase="Link|A combined field used to describe this link when associating it with other records">
+			<CombinedFieldRef name="LinkTitle"/>
+		</CombinedField>
+		
+		<StaticField 
+			name="ruler1" type="text" content="" 
+			phrase=" "/>	
+		<StaticField 
+			name="ruler2" type="text" content="" phrase=" "/>			
+		<StaticField 
+			name="ruler3" type="text" content="" phrase=" "/>
+	</ModuleFields>
+	<ModuleInfo>
+		<PrimaryKey>
+			<FieldRef name="LinkID"/>
+		</PrimaryKey>
+		<Index name="RelatedModuleIDRecordID">
+			<FieldRef name="RelatedModuleID"/>
+			<FieldRef name="RelatedRecordID"/>
+			<FieldRef name="_Deleted"/>
+		</Index>
+		<OwnerField name="_OrganizationID"/>
+		<RecordDescriptionField name="Link"/>
+		<RecordLabelField name="RecordLabel"/>
+	</ModuleInfo>
+	<Screens>
+		<ListScreen name="List">
+			<ListField name="LinkID" phrase="ID"/>
+            <ListField name="DisplayRelatedModule" align="center"/>
+            <ListField name="RelatedRecordDescription" link="DisplayRelatedRecordLink"/>
+            <InvisibleField name="DisplayRelatedRecordLink"/>
+			<ListField name="LinkTitle"/>
+			<ListField name="LinkAddress" link="LinkAddress"/>
+		</ListScreen>
+		<SearchScreen name="Search">
+			<EditField name="LinkID" FromTo="no" size="50" maxLength="250"/>		
+            <ComboField name="DisplayRelatedModuleID" listField="RelatedModule" findMode="text"/>
+			<InvisibleField name="RelatedRecordID"/>			
+			<EditField name="LinkTitle" size="50" maxLength="128"/>
+			<EditField name="LinkAddress" size="50" maxLength="128"/>			
+			<PersonComboField name="_OwnedBy" findMode="text" suppressItemAdd="yes"/>
+		</SearchScreen>
+		<ViewScreen name="View">
+			<ViewField name="LinkID"/>
+			<ViewField name="ruler1"/>
+			<ViewField name="LinkAddress" link="LinkAddress"/>
+			<ViewField name="LinkTitle"/>
+			<ViewField name="ruler2"/>
+            <ViewField name="DisplayRelatedModuleRecord" link="DisplayRelatedRecordLink"/>
+			<ViewField name="RelatedRecordDescription"/>			
+			<ViewField name="ruler3"/>			
+			<ViewField name="_OwnedOrganization" link="_OwnedLink"/>
+			<ViewField name="_ThisCreated"/>
+			<ViewField name="_ThisLastChanged"/>
+		</ViewScreen>
+		<EditScreen name="Form" phrase="Form|Edit summary information about a link">
+			<ViewField name="LinkID"/>
+            <ViewField name="DisplayRelatedModuleRecord" link="DisplayRelatedRecordLink"/>
+			<ViewField name="RelatedRecordDescription"/>
+			<ViewField name="ruler1"/>
+			<EditField name="LinkAddress" size="75" maxLength="255"/>
+			<EditField name="LinkTitle" size="75" maxLength="128"/>
+			<ViewField name="ruler2"/>
+			<HiddenField name="_OwnedBy"/>
+			<ViewField name="_OwnedOrganization"/>			
+		</EditScreen>
+	</Screens>
+	<Exports>
+		<ViewGrid moduleID="lnk" phrase="Links" rowIDon="RelatedRecordID" moduleOn="DisplayRelatedModuleID">
+			<InvisibleField name="LinkID" sample="2"/>
+			<ViewField name="LinkTitle" link="LinkAddress" phrase="Link"/>			
+			<ViewField name="_OwnedOrganization" link="_OwnedLink" phrase="Owner"/>
+			<OrderByField name="LinkTitle"/>
+		</ViewGrid>
+		<EditGrid 
+			moduleID="lnk" phrase="Links"
+			allowEditOn="_OwnedBy" rowIDon="RelatedRecordID" moduleOn="DisplayRelatedModuleID">
+			<InvisibleField name="_OwnedBy"/>
+			<InvisibleField name="LinkID" sample="45"/>
+			<ViewField name="LinkTitle"/>
+			<ViewField name="LinkAddress" link="LinkAddress"/>
+			<ViewField name="_OwnedOrganization" phrase="Owner"/>
+			<OrderByField name="LinkTitle"/>
+			<GridForm>
+				<InvisibleField name="LinkID"/>
+                <EditField name="LinkAddress" size="50" maxLength="128"/>
+				<EditField name="LinkTitle" size="50" maxLength="128"/>
+				<ViewField name="ruler1"/>
+				<HiddenField name="_OwnedBy"/>
+				<ViewField name="_OwnedOrganization"/>
+			</GridForm>			
+		</EditGrid>
+	</Exports>	
+	<Documentation>
+		<DocumentationSection sectionID="Introduction" title="Wprowadzenie">		
+<![CDATA[
+<br/>	
+<p>Wprowadzenie do obsługi systemu jest dostępne po naciśnięciu przycisku „Tutorial”, który znajduje się na Listwie Głównej u góry ekranu przeglądarki. Tutorial zawiera prezentację:</p>
+<ul>
+<li>Koncepcji systemu:</li>
+<ul>
+<li>związku lista-wiersz jako podstawy modułu,</li>
+<li>pojęcia działań w kontekście listy,</li>
+<li>pojęcia działań w kontekście wiersza,</li>
+<li>powiązania wiersza z innymi modułami,</li>
+</ul>
+<li>Logowania i nawigacji po systemie;</li>
+<li>Funkcjonalności dostępnych na ekranie Listy;</li>
+<li>Funkcjonalności dostępnych na ekranie Wiersza;</li>
+<li>Funkcjonalności związanych z edycją zawartości danych wiersza;</li>
+<li>Funkcjonalności raportów;</li>
+<li>Funkcjonalności wykresów.</li>
+</ul>
+<p>Powyższe możliwości systemu mogą być wypróbowane na modułach demonstracyjnych:</p>
+<ul>
+<li>Państwa;</li>
+<li>Województwa;</li>
+<li>Powiaty.</li>
+</ul>
+<p>Moduły demonstracyjne dostępne są po najechaniu myszą na "Menu Główne" w Listwie Głównej i wybranie ścieżki menu: "Menu Główne/Pomocnicze/Piaskownica/*". Zmiany wprowadzone w modułach demonstracyjnych nie mają wpływu na funkcje biznesowe aplikacji i mogą być wycofane przez administratora systemu.</p>
+]]>
+		</DocumentationSection>		
+	</Documentation>
+	<Revision author="$Author: mattias $" id="$Revision: 1515 $" date="$Date: 2009-02-11 18:59:24 +0100 (Śr, 11 lut 2009) $"/>
+</Module>

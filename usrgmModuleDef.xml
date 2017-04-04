@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Module 
+	name="User Group Membership" moduleID="usrgm" parentModule="usrg"
+	allowAddRecord="no" isMasterData="yes"	
+	singularRecordName="Member" pluralRecordName="Members">
+	
+    <ModuleFields>
+        <TableField
+			name="MembershipID" type="int" dbFlags="unsigned not null auto_increment"
+			phrase="Record ID|An automatically assigned number used to track group memberships"/>
+        <TableField
+			name="UserGroupID" type="int" validate="notEmpty" dbFlags="unsigned not null"
+			phrase="Group|The group to which a member is assigned"/>
+        <ForeignField
+			name="UserGroup" foreignTable="usrg" foreignKey="UserGroupID" foreignField="Name"
+			key="UserGroupID" joinType="left"
+			phrase="Group|The user group that this permission is assigned to."/>
+        <ForeignField
+			name="SessionTimeout" foreignTable="usrg" foreignKey="UserGroupID" foreignField="SessionTimeout"
+			key="UserGroupID" joinType="left"
+			phrase="Session Timeout|If the application settings allow it, a value assigned here will affect the user's session timeout. Members of this group will get the smallest timeout of all groups they are a member of, unless an explicit timeout is set in the Users module."/>
+        <TableField
+			name="PersonID" type="int" validate="notEmpty" dbFlags="unsigned not null"
+			phrase="Person ID|The Person ID of the associated person (users must have a matching record in the People module)."/>
+        <ForeignField
+			name="Person" foreignTable="ppl" foreignKey="PersonID" foreignField="DisplayName" key="PersonID" joinType="left"
+			phrase="Person|The person who is this user."/>
+        <ForeignField
+			name="OrganizationID" foreignTable="ppl" foreignKey="PersonID" foreignField="OrganizationID"
+			key="PersonID" joinType="left"
+			phrase="Organization|The user's organization"/>
+        <ForeignField
+			name="Organization" foreignTable="org" foreignKey="OrganizationID" foreignField="Name"
+			key="OrganizationID" joinType="left"
+			phrase="Organization|The user's organization"/>	
+		
+		<TableField
+			name="MembershipCounter" type="int" dbFlags="default 0"
+			phrase="Membership counter|How many times a person needs a membership in the group"/>
+		
+		<StaticField 
+				name="ruler1" type="text" content="" phrase=" "/>			
+	</ModuleFields>
+    <ModuleInfo>
+        <PrimaryKey>
+            <FieldRef name="MembershipID"/>
+        </PrimaryKey>
+    </ModuleInfo>
+    <Screens>
+      <ListScreen name="List" allowDelete="no">
+        <ListField name="MembershipID" phrase="ID"/>
+        <ListField name="UserGroup"/>
+        <ListField name="Person"/>
+		<ListField name="Organization"/>
+      </ListScreen>
+      <SearchScreen name="Search">
+        <ComboField name="UserGroupID" findMode="text"/>
+        <PersonComboField name="PersonID" findMode="text"/>
+		<OrgComboField name="OrganizationID" findMode="text"/>
+      </SearchScreen>
+	   <ViewScreen name="View">
+        <ViewField name="MembershipID" phrase="ID"/>
+		<ViewField name="ruler1"/>
+        <ViewField name="UserGroup"/>
+        <ViewField name="Person"/>
+		<ViewField name="Organization"/>
+      </ViewScreen>
+    </Screens>
+    <Exports>
+        <ViewGrid moduleID="usrgm" phrase="User Group Members">
+            <InvisibleField name="MembershipID"/>
+            <ViewField name="Person"/>
+            <ViewField name="Organization"/>
+        </ViewGrid>
+        <SearchSelectGrid moduleID="usrgm" phrase="User Group Members" primaryListField="Person">
+          <SearchForm>
+            <OrgComboField name="OrganizationID" findMode="text"/>
+          </SearchForm>
+        </SearchSelectGrid>
+        <SelectGrid moduleID="usrgm" phrase="User Groups" primaryListField="UserGroup"/>
+    </Exports>
+    <Revision author="$Author: mattias $" id="$Revision: 1056 $" date="$Date: 2007-11-07 14:25:18 -0800 (Wed, 07 Nov 2007) $"/>
+</Module>

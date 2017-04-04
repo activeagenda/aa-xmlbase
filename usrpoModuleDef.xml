@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Module 
+	name="User Permission Organizations" moduleID="usrpo" parentModule="usr" 
+	allowAddRecord="no" isMasterData="yes"
+	singularRecordName="Permitted Organization" pluralRecordName="Permitted Organizations">
+	
+	<ModuleFields>
+		<TableField name="PermitOrganizationID" type="int" dbFlags="unsigned auto_increment not null" phrase="Record ID|An automatically assigned number used to track permissions" sample="1"/>
+		<TableField name="PersonID" type="int" dbFlags="unsigned not null" phrase="User ID|The user to whom a permitted organization is assigned" sample="1"/>
+		<ForeignField name="Person" foreignTable="ppl" foreignKey="PersonID" foreignField="DisplayName" key="PersonID" joinType="left" phrase="Person|The person who is this user." sample="Mattias Thorslund"/>
+		<TableField name="OrganizationID" type="int" defaultValue="defaultorgID" dbFlags="unsigned not null" phrase="Organization ID|The organization that the user is assigned a permission to" sample="1"/>
+		<ForeignField name="Organization" foreignTable="org" foreignKey="OrganizationID" foreignField="Name" key="OrganizationID" joinType="left" phrase="Organization|The organization that the user is assigned a permission to" sample="Active Agenda, HQ"/>
+	</ModuleFields>
+	<ModuleInfo>
+		<PrimaryKey>
+			<FieldRef name="PermitOrganizationID"/>
+		</PrimaryKey>
+	</ModuleInfo>
+	<Screens>
+		<ListScreen name="List" allowDelete="no">
+			<ListField name="PermitOrganizationID" phrase="ID"/>
+			<ListField name="Person" phrase="Person"/>
+			<ListField name="Organization" phrase="Organization"/>
+		</ListScreen>
+        <SearchScreen name="Search">
+			<EditField name="PermitOrganizationID" FromTo="no" size="50" maxLength="250"/>
+            <PersonComboField name="PersonID" findMode="alpha"/>
+			<OrgComboField name="OrganizationID" findMode="text"/>
+        </SearchScreen>
+		<ViewScreen name="View">
+			<ViewField name="PermitOrganizationID"/>
+			<ViewField name="Person"/>
+			<ViewField name="Organization"/>
+		</ViewScreen>
+	</Screens>
+	<Exports>
+        <ViewGrid moduleID="usrpo" phrase="Permitted Organizations">
+			<InvisibleField name="PermitOrganizationID"/>
+			<ViewField name="Organization"/>
+		</ViewGrid>
+      <SelectGrid moduleID="usrpo" phrase="Permitted Organizations" primaryListField="Organization" orgListOptions="allpar"/>
+	</Exports>
+    <Charts>
+        <PieChart name="Pie01" title="Permissions By Person">
+            <GroupByField name="Person"/>
+            <SummaryField name="PermitOrganizationID" type="count"/>
+        </PieChart>
+        <ParetoChart name="Pareto01" title="Permissions By Person">
+            <GroupByField name="Person"/>
+            <SummaryField name="PermitOrganizationID" type="count"/>
+        </ParetoChart>
+        <PieChart name="Pie02" title="Permissions By Organization">
+            <GroupByField name="Organization"/>
+            <SummaryField name="PermitOrganizationID" type="count"/>
+        </PieChart>
+        <ParetoChart name="Pareto02" title="Permissions By Organization">
+            <GroupByField name="Organization"/>
+            <SummaryField name="PermitOrganizationID" type="count"/>
+        </ParetoChart>
+    </Charts>
+	<Revision author="$Author: mattias $" id="$Revision: 1515 $" date="$Date: 2009-02-11 18:59:24 +0100 (Śr, 11 lut 2009) $"/>
+</Module>

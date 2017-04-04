@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module name="Module Reports" moduleID="modrp" singularRecordName="Module Report" pluralRecordName="Module Reports" allowAddRecord="No" isSystemModule="yes">
+	<ModuleFields>
+		<TableField name="ModuleReportID" type="int" dbFlags="unsigned auto_increment not null" phrase="Report ID|An automatically assigned number used to associate module charts with modules" sample="1"/>
+		<TableField name="ModuleID" type="varchar(5)" dbFlags="not null" phrase="Module|The name of the module" sample="2"/>
+		<ForeignField name="Module" foreignTable="mod" foreignKey="ModuleID" foreignField="Name" key="ModuleID" joinType="left" phrase="Module|The name of the module" sample="Corrective Actions"/>
+		<TableField name="Name" type="varchar(50)" dbFlags="" phrase="Name|A unique name or code that identifies the report" sample="2"/>
+		<TableField name="Title" type="varchar(50)" dbFlags="" phrase="Title|A descriptive title" sample="2"/>
+		<TableField name="LocationLevel" type="varchar(10)" dbFlags="" phrase="Record or List" sample="2"/>
+		<TableField name="LocationGroup" type="varchar(20)" dbFlags="" phrase="Group name" sample="2"/>
+		<TableField name="Format" type="varchar(15)" dbFlags="" phrase="Format" sample="2"/>
+	</ModuleFields>
+	<ModuleInfo>
+		<PrimaryKey>
+			<FieldRef name="ModuleReportID"/>
+		</PrimaryKey>
+		<Index name="Level">
+			<FieldRef name="ModuleReportID"/>
+			<FieldRef name="LocationLevel"/>
+		</Index>
+	</ModuleInfo>
+    <Screens>
+        <ListScreen name="List" phrase="List|List reports">
+            <ListField name="ModuleReportID" phrase="ID"/>
+            <ListField name="Module" phrase="Module"/>
+            <ListField name="Name" phrase="Name"/>
+            <ListField name="Title" phrase="Title"/>
+            <ListField name="LocationLevel" phrase="Location Level"/>
+            <ListField name="LocationGroup" phrase="Location Group"/>
+            <ListField name="Format" phrase="Format"/>
+        </ListScreen>
+    </Screens>
+	<Revision author="$Author: dan $" id="$Revision: 1512 $" date="$Date: 2009-02-10 19:44:34 +0100 (Wt, 10 lut 2009) $"/>
+</Module>

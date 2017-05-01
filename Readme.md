@@ -1,5 +1,5 @@
-#  What is XMLbase
-XMLbase is a a basic set of modules needed by the fork of Active Agenda to work. It must be allways installed but can be modfied if needed
+#  What is aa-xmlbase
+aa-xmlbase is a a basic set of modules needed by the fork of Active Agenda to work. It must be allways installed but can be modfied if needed.
 
 # Installation
 For details how to install the framework and the [BOf ::](https://activeagenda.github.io) look at https://github.com/activeagenda/documentation 

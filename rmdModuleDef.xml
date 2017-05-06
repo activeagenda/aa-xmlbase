@@ -258,10 +258,10 @@
 		<EditGrid moduleID="rmd" phrase="Reminders" allowEditOn="_OwnedBy" rowIDon="RelatedRecordID" moduleOn="DisplayRelatedModuleID">
 			<InvisibleField name="_OwnedBy"/>
 			<InvisibleField name="ReminderID"/>
-			<InvisibleField name="StartDate"/>
-			<ViewField name="_OwnedOrganization"/>			
-			<ViewField name="PeriodStartDate"/>
+			<InvisibleField name="StartDate"/>			
 			<ViewField name="Message1"/>
+			<ViewField name="_Owned"/>			
+			<ViewField name="PeriodStartDate"/>			
 			<OrderByField name="_OwnedOrganization"/>
 			<OrderByField name="StartDate" direction="desc"/>				
 			<GridForm>

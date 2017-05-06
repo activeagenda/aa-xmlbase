@@ -115,6 +115,13 @@
 			phrase="Last Modified|Last modified on date by person from organization">
 			<CombinedFieldRef name="_ThisLastChangedDate"/>_<CombinedFieldRef name="_ThisLastChangedByPerson"/>_/_<CombinedFieldRef name="_ThisLastChangedByOrganization"/>
 		</CombinedField>
+		<CombinedField 
+			name="_ThisLastChangedDate1" 
+			phrase="Last Modified|Record modified last on date">
+			<![CDATA[<span class="crtfld">]]>	
+			<CombinedFieldRef name="_ThisLastChangedDate"/>
+			<![CDATA[</span>]]>	
+		</CombinedField>
 		<TableField 
 			name="_OwnedBy" type="int" dbFlags="unsigned default 0" validate="eval: userID_is( $_OwnedBy )" defaultValue="userID" orgListOptions="intpar" 
 			phrase="Note owner|Displays note owners name"/>
@@ -133,7 +140,13 @@
 		<CombinedField name="_OwnedOrganization"  
 			phrase="Note owner|Displays note owners name and his organization name">
 			<CombinedFieldRef name="_Owned"/>_/_<CombinedFieldRef name="_Organization"/>
-		</CombinedField>  
+		</CombinedField>
+		<CombinedField name="_Owned1"  
+			phrase="Note owner|Displays note owners name">
+			<![CDATA[<span class="ownrfld">]]>	
+			<CombinedFieldRef name="_Owned"/>
+			<![CDATA[</span>]]>	
+		</CombinedField> 
 		
 		<LinkField 
 			name="RelatedRecordLink" moduleIDField="RelatedModuleID" recordIDField="RelatedRecordID" 
@@ -225,8 +238,8 @@
 			<InvisibleField name="_OwnedBy"/>
 			<InvisibleField name="NoteID"/>
 			<ViewField name="NoteDetail1"/>
-			<ViewField name="_OwnedOrganization" phrase="Author"/>
-			<ViewField name="_ThisLastChangedDate"/>
+			<ViewField name="_Owned1" phrase="Author"/>
+			<ViewField name="_ThisLastChangedDate1"/>
 			<OrderByField name="NoteID" direction="desc"/>
 			<GridForm>
 				<MemoField name="NoteDetail" rows="10" cols="60"/>

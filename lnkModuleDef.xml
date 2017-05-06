@@ -140,7 +140,13 @@
 		<CombinedField name="_OwnedOrganization"  
 			phrase="Link owner|Displays link owners name and his organization name">
 			<CombinedFieldRef name="_Owned"/>_/_<CombinedFieldRef name="_Organization"/>
-		</CombinedField>  
+		</CombinedField> 
+		<CombinedField name="_Owned1"  
+			phrase="Link owner|Displays link owners name">
+			<![CDATA[<span class="ownrfld">]]>	
+			<CombinedFieldRef name="_Owned"/>
+			<![CDATA[</span>]]>	
+		</CombinedField>  		
 		
 		<LinkField 
 			name="RelatedRecordLink" moduleIDField="RelatedModuleID" recordIDField="RelatedRecordID" 
@@ -235,7 +241,7 @@
 			<InvisibleField name="LinkID" sample="45"/>
 			<ViewField name="LinkTitle"/>
 			<ViewField name="LinkAddress" link="LinkAddress"/>
-			<ViewField name="_OwnedOrganization" phrase="Owner"/>
+			<ViewField name="_Owned1" phrase="Owner"/>
 			<OrderByField name="LinkTitle"/>
 			<GridForm>
 				<InvisibleField name="LinkID"/>

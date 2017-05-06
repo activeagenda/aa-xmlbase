@@ -156,6 +156,12 @@
 			phrase="Tag owner|Displays tag owners name and his organization name">
 			<CombinedFieldRef name="_Owned"/>_/_<CombinedFieldRef name="_Organization"/>
 		</CombinedField>  
+		<CombinedField name="_Owned1"  
+			phrase="Tag owner|Displays tag owners name">
+			<![CDATA[<span class="ownrfld">]]>	
+			<CombinedFieldRef name="_Owned"/>
+			<![CDATA[</span>]]>	
+		</CombinedField>
 				
 		<CombinedField 
 			name="RelatedModuleRecord" 
@@ -245,7 +251,7 @@
 			<InvisibleField name="_OwnedBy"/>
 			<InvisibleField name="TagID"/>
 			<ViewField name="Tag" link="TagLink" align="center"/>
-			<ViewField name="_OwnedOrganization" phrase="Owner"/>
+			<ViewField name="_Owned1" phrase="Owner"/>
 			<OrderByField name="Tag"/>	
 			<GridForm>
 				<InvisibleField name="TagID"/>

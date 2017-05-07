@@ -255,7 +255,7 @@
 			rowIDon="RelatedRecordID" moduleOn="DisplayRelatedModuleID">
 			<InvisibleField name="NotificationID"/>			
 			<ViewField name="SentDate" phrase="State changed on"/>
-			<ViewField name="ProcessState1"/>
+			<ViewField name="ProcessState1" align="center"/>
 			<ViewField name="SenderAndOrganization" link="SenderLink"/>
 			<ViewField name="Remark"/>			
 			<OrderByField name="NotificationID" direction="desc"/>

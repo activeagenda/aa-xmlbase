@@ -102,8 +102,6 @@ will be displayed one level deeper in the hierarchy, below the containing elemen
 		<Category phrase="Organizational structure">	
 			<ModuleLink moduleID="ppl" phrase="People"/>		
 			<ModuleLink moduleID="org" phrase="Organizations"/>
-			<ModuleLink moduleID="loc" phrase="Locations"/>	
-			<ModuleLink moduleID="locb" phrase="Buildings"/>
 		</Category>			
 		<Category phrase="Administration">			
 			<ModuleLink moduleID="usr" phrase="Users"/>
@@ -117,6 +115,5 @@ will be displayed one level deeper in the hierarchy, below the containing elemen
 				<ModuleLink moduleID="bcti" phrase="Counties"/>				
 		</Category>
 		<ModuleLink moduleID="usrds" phrase="User Desktop Shortcuts"/>
-        <InternalLink primary="myPassword" phrase="Change Your Password"/>
 	</Category>
 </Navigation>

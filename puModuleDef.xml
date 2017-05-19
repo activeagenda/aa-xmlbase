@@ -160,20 +160,7 @@
 			<![CDATA["><img src="/themes/aa\_theme/img/skype.ico"/></a>&nbsp\;&nbsp\;&nbsp\;<![endif]-->]]>
 			<![CDATA[<![if !IE]><a href="skype:]]><CombinedFieldRef name="_Skype"/>
 			<![CDATA["><img src="/themes/aa\_theme/img/skype.ico"/></a>&nbsp\;&nbsp\;&nbsp\;<![endif]>]]>
-		</CombinedField>
-
-		<ForeignField 
-			name="_GaduGadu"  key="PersonID" 
-			foreignTable="ppl" foreignKey="PersonID" foreignField="GaduGaduName"
-			phrase="Gadu Gadu Name|The name used by the person to participate in Gadu Gadu services"/>
-        <CombinedField 
-			name="_GaduGaduLinkIcon" 
-			phrase="Gadu Gadu Name|The name used by the person to participate in Gadu Gadu services">
-			<![CDATA[<!--[if IE]><a  target="_blank"  href="gg:]]><CombinedFieldRef name="_GaduGadu"/>
-			<![CDATA["><img src="/themes/aa\_theme/img/gadugadu.ico"/></a>&nbsp\;&nbsp\;&nbsp\;<![endif]-->]]>
-			<![CDATA[<![if !IE]><a href="gg:]]><CombinedFieldRef name="_GaduGadu"/>
-			<![CDATA["><img src="/themes/aa\_theme/img/gadugadu.ico"/></a>&nbsp\;&nbsp\;&nbsp\;<![endif]>]]>
-		</CombinedField>		
+		</CombinedField>			
 		
 		<CombinedField 
 			name="_MobileIMLinkIcon" 
@@ -181,7 +168,6 @@
 			<![CDATA[&nbsp\;&nbsp\;&nbsp\;]]>	
 			<CombinedFieldRef name="_SMSLinkIcon"/>
 			<CombinedFieldRef name="_SkypeLinkIcon"/>
-			<CombinedFieldRef name="_GaduGaduLinkIcon"/>
 		</CombinedField>
 		
 		<CombinedField 

@@ -27,6 +27,7 @@ cp modfnModuleDef.xml $AA_PATH/active_agenda/xml/modfnModuleDef.xml
 cp ntfModuleDef.xml	$AA_PATH/active_agenda/xml/ntfModuleDef.xml
 cp ntsModuleDef.xml	$AA_PATH/active_agenda/xml/ntsModuleDef.xml
 cp puModuleDef.xml 	$AA_PATH/active_agenda/xml/puModuleDef.xml
+cp pplModuleDef.xml 	$AA_PATH/active_agenda/xml/pplModuleDef.xml
 cp rdcModuleDef.xml	$AA_PATH/active_agenda/xml/rdcModuleDef.xml
 cp rmdModuleDef.xml $AA_PATH/active_agenda/xml/rmdModuleDef.xml
 cp smcModuleDef.xml	$AA_PATH/active_agenda/xml/smcModuleDef.xml

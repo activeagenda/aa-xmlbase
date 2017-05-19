@@ -13,5 +13,4 @@
             <FieldRef name="ModuleChartID"/>
         </PrimaryKey>
     </ModuleInfo>
-    <Revision author="$Author: mattias $" id="$Revision: 1585 $" date="$Date: 2009-04-28 16:47:09 +0200 (Wt, 28 kwi 2009) $"/>
 </Module>

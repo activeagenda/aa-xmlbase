@@ -30,5 +30,4 @@
             <ListField name="Format" phrase="Format"/>
         </ListScreen>
     </Screens>
-	<Revision author="$Author: dan $" id="$Revision: 1512 $" date="$Date: 2009-02-10 19:44:34 +0100 (Wt, 10 lut 2009) $"/>
 </Module>

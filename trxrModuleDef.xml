@@ -45,5 +45,4 @@
             <ViewField name="ActionTypeID"/>
         </ViewGrid>
     </Exports>
-    <Revision author="$Author: dan $" id="$Revision: 949 $" date="$Date: 2007-08-07 12:41:58 -0700 (Tue, 07 Aug 2007) $"/>
 </Module>

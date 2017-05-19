@@ -30,5 +30,4 @@
 			<FieldRef name="ModuleID"/>
 		</Index>
 	</ModuleInfo>
-	<Revision author="$Author: mattias $" id="$Revision: 1406 $" date="$Date: 2009-01-27 07:56:18 +0100 (Wt, 27 sty 2009) $"/>
 </Module>

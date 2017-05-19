@@ -50,5 +50,4 @@
         </SearchSelectGrid>
         <SelectGrid moduleID="usrwm" phrase="Workgroups" primaryListField="WorkGroup"/>
     </Exports>
-    <Revision author="$Author: mattias $" id="$Revision: 1056 $" date="$Date: 2007-11-07 14:25:18 -0800 (Wed, 07 Nov 2007) $"/>
 </Module>

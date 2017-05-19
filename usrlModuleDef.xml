@@ -192,5 +192,4 @@
 			  <div id='introduction' align="center"/><script type='text/javascript'>play_tutorial( 'introduction', 'tut_intro.flv')</script>
 		</DocumentationSection>		
 	</Documentation>
-	<Revision author="$Author: mattias $" id="$Revision: 1517 $" date="$Date: 2009-02-12 16:58:12 +0100 (Cz, 12 lut 2009) $"/>
 </Module>

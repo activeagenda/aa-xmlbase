@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <Module name="Module Generating Times" moduleID="modgt" singularRecordName="Generating Time" pluralRecordName="Generating Times" allowAddRecord="no">
     <ModuleFields>
         <TableField name="RecordID" type="int" dbFlags="unsigned auto_increment not null" phrase="Record ID|An automatically assigned number used to track generating times" sample="1"/>
@@ -13,6 +14,5 @@
             <FieldRef name="ModuleID"/>
             <FieldRef name="Duration"/>
         </Index>
-    </ModuleInfo>
-    <Revision author="$Author: mattias $" id="$Revision: 1512 $" date="$Date: 2009-02-10 19:44:34 +0100 (Wt, 10 lut 2009) $"/>
+    </ModuleInfo>     
 </Module>

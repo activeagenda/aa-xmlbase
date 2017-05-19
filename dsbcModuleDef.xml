@@ -30,5 +30,4 @@
 			<FieldRef name="DashboardChartID"/>
 		</PrimaryKey>
 	</ModuleInfo>
-	<Revision author="$Author: mattias $" id="$Revision: 1517 $" date="$Date: 2009-02-12 16:58:12 +0100 (Cz, 12 lut 2009) $"/>
 </Module>

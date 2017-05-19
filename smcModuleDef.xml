@@ -19,6 +19,5 @@
 			<FieldRef name="SubModuleID"/>
 			<FieldRef name="SubRecordID"/>
 		</Index>
-	</ModuleInfo>
-	<Revision author="$Author: mattias $" id="$Revision: 1512 $" date="$Date: 2009-02-10 19:44:34 +0100 (Wt, 10 lut 2009) $"/>
+	</ModuleInfo>	 
 </Module>

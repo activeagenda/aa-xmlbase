@@ -67,6 +67,5 @@
             <OrgComboField name="OrganizationID" findMode="text"/>
             <EditField name="Value" phrase="Record Description"/>
         </SearchScreen>
-    </Screens>
-	<Revision author="$Author: mattias $" id="$Revision: 1512 $" date="$Date: 2009-02-10 19:44:34 +0100 (Wt, 10 lut 2009) $"/>
+    </Screens>	 
 </Module>

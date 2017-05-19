@@ -108,6 +108,5 @@
 		<DocumentationSection sectionID="Introduction" title="Wprowadzenie">		
 			  <div id='introduction' align="center"/><script type='text/javascript'>play_tutorial( 'introduction', 'tut_intro.flv')</script>
 		</DocumentationSection>		
-	</Documentation>
-	<Revision author="$Author: mattias $" id="$Revision: 1512 $" date="$Date: 2009-02-10 19:44:34 +0100 (Wt, 10 lut 2009) $"/>
+	</Documentation>	 
 </Module>
